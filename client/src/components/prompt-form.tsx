@@ -71,7 +71,21 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Position the head in a classical portrait pose",
       "Create a dynamic angle with head tilted dramatically",
       "Show the person looking off to the side pensively",
-      "Position with chin resting on hand thoughtfully"
+      "Position with chin resting on hand thoughtfully",
+      "Turn to show complete right side profile with clean silhouette",
+      "Look down with humble, contemplative expression",
+      "Angle the face slightly upward with proud, regal bearing",
+      "Create a candid pose looking naturally to the left",
+      "Show three-quarter view from the back looking over shoulder",
+      "Position facing away but head turned back toward camera",
+      "Tilt head forward with mysterious shadow over eyes",
+      "Look up and to the side with dreamy, distant gaze",
+      "Create asymmetrical pose with head tilted at sharp angle",
+      "Show profile view with chin slightly raised in defiance",
+      "Position with head resting back against surface relaxed",
+      "Create portrait angle with face turned 45 degrees right",
+      "Show frontal view but eyes looking off to the side",
+      "Position head straight but body angled for dynamic effect"
     ],
     style_changes: [
       "Transform to a vintage, sepia-toned photograph from the 1920s",

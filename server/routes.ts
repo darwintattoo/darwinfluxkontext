@@ -12,7 +12,15 @@ import sharp from 'sharp';
 
 const generateImageSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
-  inputImageUrl: z.string().url().optional(),
+  inputImageUrl: z.string().optional().refine((val) => {
+    if (!val || val === "") return true; // Allow empty string
+    try {
+      new URL(val);
+      return true;
+    } catch {
+      return val.startsWith('/images/'); // Allow static file paths
+    }
+  }, "Invalid URL or file path"),
   width: z.number().optional().default(1024),
   height: z.number().optional().default(1024),
   aspectRatio: z.string().optional().default("match_input_image"),
