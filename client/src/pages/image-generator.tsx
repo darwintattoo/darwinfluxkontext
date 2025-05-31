@@ -31,7 +31,7 @@ export default function ImageGenerator() {
               <div>
                 <div className="text-xs text-slate-500 mb-1">Created by Usuario</div>
                 <h1 className="text-xl font-bold text-slate-50">TattooStencilPro</h1>
-                <p className="text-xs text-slate-400">Powered by FLUX Kontext Max</p>
+                <p className="text-xs font-semibold text-indigo-400">Powered by FLUX Kontext Max</p>
               </div>
             </div>
             
