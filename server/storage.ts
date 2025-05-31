@@ -35,7 +35,8 @@ export class DatabaseStorage implements IStorage {
     const images = await db
       .select()
       .from(generatedImages)
-      .orderBy(desc(generatedImages.createdAt));
+      .orderBy(desc(generatedImages.createdAt))
+      .limit(20); // Limit to last 20 images for better performance
     return images;
   }
 

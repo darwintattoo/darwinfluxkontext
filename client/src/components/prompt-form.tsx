@@ -150,7 +150,9 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         title: "Success",
         description: "Image generated successfully!",
       });
+      // Force immediate refresh of images
       queryClient.invalidateQueries({ queryKey: ["/api/images"] });
+      queryClient.refetchQueries({ queryKey: ["/api/images"] });
       setGenerationTimer(0);
     },
     onError: (error: any) => {

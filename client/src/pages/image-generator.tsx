@@ -12,8 +12,9 @@ export default function ImageGenerator() {
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
 
-  const { data: images = [], isLoading } = useQuery<GeneratedImage[]>({
+  const { data: images = [], isLoading, isFetching } = useQuery<GeneratedImage[]>({
     queryKey: ["/api/images"],
+    refetchInterval: 2000, // Auto-refresh every 2 seconds when generating
   });
 
   const hasApiKey = !!localStorage.getItem("replicate_api_token");
@@ -51,6 +52,11 @@ export default function ImageGenerator() {
 
           {/* Gallery */}
           <div className="lg:col-span-2">
+            {isFetching && !isLoading && (
+              <div className="mb-4 p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg text-blue-400 text-sm text-center">
+                Updating gallery...
+              </div>
+            )}
             <ImageGallery 
               images={images} 
               isLoading={isLoading}
