@@ -247,7 +247,12 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 sticky top-24">
-      <h2 className="text-lg font-semibold mb-4 text-slate-200">Generate Image</h2>
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-slate-200">Generate Image</h2>
+        <div className="text-xs text-slate-400 mt-1">
+          {language === 'es' ? 'Impulsado por FLUX Kontext Max AI' : 'Powered by FLUX Kontext Max AI'}
+        </div>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Input Image Upload */}
@@ -399,12 +404,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
           </div>
         </Button>
 
-        {/* AI Model Attribution */}
-        <div className="text-center">
-          <div className="text-xs text-slate-400">
-            {language === 'es' ? 'Impulsado por FLUX Kontext Max AI' : 'Powered by FLUX Kontext Max AI'}
-          </div>
-        </div>
+
 
         {/* Image editing mode indicator */}
         {inputImageUrl && (
