@@ -408,136 +408,145 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       <div className="mt-6 pt-6 border-t border-slate-700">
         <h3 className="text-sm font-medium text-slate-300 mb-3">Quick Prompts</h3>
         
-        <div className="space-y-3">
-          {/* Face Poses - Primary */}
-          <div>
+        <div className="space-y-4">
+          {/* Category Buttons - Horizontal */}
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_poses' ? '' : 'face_poses')}
-              className="w-full flex items-center justify-between p-3 bg-blue-600/20 hover:bg-blue-600/30 rounded-lg text-sm font-medium text-blue-300 border border-blue-600/30"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                promptCategory === 'face_poses' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+              }`}
             >
-              <span>🎭 Face Poses</span>
-              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_poses' ? 'rotate-180' : ''}`} />
+              🎭 Face Poses
             </button>
-            {promptCategory === 'face_poses' && (
-              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                {promptSuggestions.face_poses.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                    onClick={() => setPrompt(suggestion)}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Face Expressions */}
-          <div>
+            
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_expressions' ? '' : 'face_expressions')}
-              className="w-full flex items-center justify-between p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg text-sm font-medium text-slate-300 border border-slate-600/30"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                promptCategory === 'face_expressions' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+              }`}
             >
-              <span>😊 Face Expressions</span>
-              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_expressions' ? 'rotate-180' : ''}`} />
+              😊 Expressions
             </button>
-            {promptCategory === 'face_expressions' && (
-              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                {promptSuggestions.face_expressions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                    onClick={() => setPrompt(suggestion)}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Camera Angles */}
-          <div>
+            
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'camera_angles' ? '' : 'camera_angles')}
-              className="w-full flex items-center justify-between p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg text-sm font-medium text-slate-300 border border-slate-600/30"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                promptCategory === 'camera_angles' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+              }`}
             >
-              <span>📷 Camera Angles</span>
-              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'camera_angles' ? 'rotate-180' : ''}`} />
+              📷 Angles
             </button>
-            {promptCategory === 'camera_angles' && (
-              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                {promptSuggestions.camera_angles.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                    onClick={() => setPrompt(suggestion)}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Style Changes */}
-          <div>
+            
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'style_changes' ? '' : 'style_changes')}
-              className="w-full flex items-center justify-between p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg text-sm font-medium text-slate-300 border border-slate-600/30"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                promptCategory === 'style_changes' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+              }`}
             >
-              <span>🎨 Artistic Styles</span>
-              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'style_changes' ? 'rotate-180' : ''}`} />
+              🎨 Artistic
             </button>
-            {promptCategory === 'style_changes' && (
-              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                {promptSuggestions.style_changes.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                    onClick={() => setPrompt(suggestion)}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Tattoo Styles */}
-          <div>
+            
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'general' ? '' : 'general')}
-              className="w-full flex items-center justify-between p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg text-sm font-medium text-slate-300 border border-slate-600/30"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                promptCategory === 'general' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+              }`}
             >
-              <span>🖤 Tattoo Styles</span>
-              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'general' ? 'rotate-180' : ''}`} />
+              🖤 Tattoo
             </button>
-            {promptCategory === 'general' && (
-              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                {promptSuggestions.general.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                    onClick={() => setPrompt(suggestion)}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
+
+          {/* Selected Category Content */}
+          {promptCategory === 'face_poses' && (
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.face_poses.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {promptCategory === 'face_expressions' && (
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.face_expressions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {promptCategory === 'camera_angles' && (
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.camera_angles.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {promptCategory === 'style_changes' && (
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.style_changes.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {promptCategory === 'general' && (
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.general.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
