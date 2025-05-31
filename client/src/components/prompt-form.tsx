@@ -239,7 +239,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
                 <img 
                   src={inputImageUrl} 
                   alt="Input reference" 
-                  className="w-full h-32 object-cover rounded-lg border border-slate-600"
+                  className="w-full h-auto max-h-48 object-contain rounded-lg border border-slate-600"
                 />
                 <Button
                   type="button"
