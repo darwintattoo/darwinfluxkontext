@@ -392,15 +392,49 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 transition-all duration-200"
         >
           <div className="flex items-center justify-center">
-            <Wand2 className="mr-2 h-4 w-4" />
             {generateMutation.isPending ? (
-              <div className="flex items-center">
-                <span>Generating...</span>
-                <span className="ml-2 text-indigo-200 font-mono">
-                  {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')}
-                </span>
+              <div className="flex items-center space-x-3">
+                {/* Circular Progress Indicator */}
+                <div className="relative">
+                  <svg className="w-6 h-6 transform -rotate-90" viewBox="0 0 36 36">
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="16"
+                      fill="none"
+                      className="stroke-slate-400"
+                      strokeWidth="2"
+                    />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="16"
+                      fill="none"
+                      className="stroke-blue-400"
+                      strokeWidth="2"
+                      strokeDasharray={`${(generationTimer / 120) * 100} 100`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-sm font-medium">
+                    {language === 'es' ? 'Generando...' : 'Generating...'}
+                  </div>
+                  <div className="text-xs text-blue-300 font-mono">
+                    {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')} • {Math.round((generationTimer / 120) * 100)}%
+                  </div>
+                </div>
               </div>
-            ) : 'Generate Image'}
+            ) : (
+              <>
+                <Wand2 className="mr-2 h-4 w-4" />
+                {language === 'es' ? 'Generar Imagen' : 'Generate Image'}
+              </>
+            )}
           </div>
         </Button>
 
