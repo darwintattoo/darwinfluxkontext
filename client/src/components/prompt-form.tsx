@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ChevronDown, Wand2, Info, Upload, X, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,13 +10,25 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-export default function PromptForm() {
+interface PromptFormProps {
+  referenceImageUrl?: string;
+}
+
+export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   const [prompt, setPrompt] = useState("Make the text 3D, floating in space on a city street");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [imageSize, setImageSize] = useState("1024x1024");
   const [aspectRatio, setAspectRatio] = useState("match_input_image");
-  const [inputImageUrl, setInputImageUrl] = useState("");
+  const [inputImageUrl, setInputImageUrl] = useState(referenceImageUrl || "");
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
+
+  // Update inputImageUrl when referenceImageUrl changes
+  React.useEffect(() => {
+    if (referenceImageUrl) {
+      setInputImageUrl(referenceImageUrl);
+      setPrompt("Change the expression to a warm, genuine smile");
+    }
+  }, [referenceImageUrl]);
   const [promptCategory, setPromptCategory] = useState("general");
   
   const promptSuggestions = {
