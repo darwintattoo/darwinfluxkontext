@@ -7,6 +7,7 @@ import Replicate from "replicate";
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { nanoid } from 'nanoid';
+import sharp from 'sharp';
 
 const generateImageSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
@@ -148,12 +149,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
           
           const imageBuffer = Buffer.concat(chunks);
-          console.log("Image buffer size:", imageBuffer.length);
+          console.log("Original image buffer size:", imageBuffer.length);
           
-          // Convertir a base64 data URL
-          const base64 = imageBuffer.toString('base64');
-          imageUrl = `data:image/png;base64,${base64}`;
-          console.log("Created data URL, length:", imageUrl.length);
+          // Compress image significantly for deployment compatibility
+          try {
+            const compressedBuffer = await sharp(imageBuffer)
+              .png({ 
+                quality: 75,
+                compressionLevel: 9,
+                progressive: true
+              })
+              .resize(800, 800, { 
+                fit: 'inside',
+                withoutEnlargement: true 
+              })
+              .toBuffer();
+            
+            console.log("Compressed image buffer size:", compressedBuffer.length);
+            console.log("Compression ratio:", Math.round((1 - compressedBuffer.length / imageBuffer.length) * 100) + "%");
+            
+            const base64 = compressedBuffer.toString('base64');
+            imageUrl = `data:image/png;base64,${base64}`;
+            console.log("Created compressed data URL, length:", imageUrl.length);
+          } catch (compressionError) {
+            console.error("Image compression failed, using original:", compressionError);
+            const base64 = imageBuffer.toString('base64');
+            imageUrl = `data:image/png;base64,${base64}`;
+            console.log("Created original data URL, length:", imageUrl.length);
+          }
         } catch (streamError) {
           console.error("Error reading async stream:", streamError);
           throw new Error("Failed to read image stream");
