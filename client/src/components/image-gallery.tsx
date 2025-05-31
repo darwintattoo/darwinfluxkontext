@@ -1,4 +1,5 @@
-import { Download, Share, Expand, Trash2, Loader2, Edit } from "lucide-react";
+import { Download, Share, Expand, Trash2, Loader2, Edit, ToggleLeft, ToggleRight } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -15,6 +16,8 @@ interface ImageGalleryProps {
 export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference }: ImageGalleryProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [compareEnabled, setCompareEnabled] = useState(false);
+  const [sliderPosition, setSliderPosition] = useState(50);
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -151,6 +154,17 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
                 )}
               </div>
               <div className="flex items-center space-x-2">
+                {latestImage.inputImageUrl && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setCompareEnabled(!compareEnabled)}
+                    className="text-slate-400 hover:text-slate-300"
+                  >
+                    {compareEnabled ? <ToggleRight className="h-4 w-4" /> : <ToggleLeft className="h-4 w-4" />}
+                    Compare
+                  </Button>
+                )}
                 <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">
                   Complete
                 </span>
@@ -159,12 +173,74 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
           </div>
           
           <div className="relative group">
-            <img 
-              src={latestImage.imageUrl}
-              alt={latestImage.prompt}
-              className="w-full h-auto cursor-pointer transition-transform duration-300 group-hover:scale-105"
-              onClick={() => onImageSelect(latestImage)}
-            />
+            {compareEnabled && latestImage.inputImageUrl ? (
+              <div className="relative overflow-hidden">
+                {/* Before Image (Reference) */}
+                <div 
+                  className="absolute inset-0 z-10"
+                  style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+                >
+                  <img 
+                    src={latestImage.inputImageUrl}
+                    alt="Reference image"
+                    className="w-full h-auto object-cover"
+                  />
+                  <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-sm">
+                    Before
+                  </div>
+                </div>
+                
+                {/* After Image (Generated) */}
+                <img 
+                  src={latestImage.imageUrl}
+                  alt={latestImage.prompt}
+                  className="w-full h-auto cursor-pointer"
+                  onClick={() => onImageSelect(latestImage)}
+                />
+                <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-1 rounded text-sm">
+                  After
+                </div>
+                
+                {/* Slider */}
+                <div 
+                  className="absolute inset-y-0 z-20 w-1 bg-white shadow-lg cursor-ew-resize"
+                  style={{ left: `${sliderPosition}%` }}
+                  onMouseDown={(e) => {
+                    const startX = e.clientX;
+                    const startPosition = sliderPosition;
+                    const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                    
+                    const handleMouseMove = (e: MouseEvent) => {
+                      if (rect) {
+                        const newPosition = Math.max(0, Math.min(100, 
+                          startPosition + ((e.clientX - startX) / rect.width) * 100
+                        ));
+                        setSliderPosition(newPosition);
+                      }
+                    };
+                    
+                    const handleMouseUp = () => {
+                      document.removeEventListener('mousemove', handleMouseMove);
+                      document.removeEventListener('mouseup', handleMouseUp);
+                    };
+                    
+                    document.addEventListener('mousemove', handleMouseMove);
+                    document.addEventListener('mouseup', handleMouseUp);
+                  }}
+                >
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center">
+                    <div className="w-3 h-3 border-2 border-gray-400 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <img 
+                src={latestImage.imageUrl}
+                alt={latestImage.prompt}
+                className="w-full h-auto cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                onClick={() => onImageSelect(latestImage)}
+              />
+            )}
             
             {/* Image Actions Overlay */}
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
