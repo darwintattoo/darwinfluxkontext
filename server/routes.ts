@@ -62,12 +62,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Usar el SDK de Replicate con el modelo correcto
       const output = await replicate.run("black-forest-labs/flux-kontext-max", { input });
       
-      // El output es la URL de la imagen generada
-      const imageUrl = Array.isArray(output) ? output[0] : output;
+      console.log("Replicate output:", output);
       
-      if (!imageUrl) {
+      // El output puede ser una URL directa o un array
+      let imageUrl: string;
+      if (typeof output === 'string') {
+        imageUrl = output;
+      } else if (Array.isArray(output) && output.length > 0) {
+        imageUrl = output[0];
+      } else {
+        console.error("Unexpected output format:", output);
         return res.status(500).json({ 
-          error: "No image was generated" 
+          error: "No image was generated - unexpected output format" 
+        });
+      }
+      
+      if (!imageUrl || typeof imageUrl !== 'string') {
+        console.error("Invalid image URL:", imageUrl);
+        return res.status(500).json({ 
+          error: "No valid image URL was generated" 
         });
       }
 
