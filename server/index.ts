@@ -6,6 +6,12 @@ const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+// Serve static images directory
+app.use('/images', express.static('public/images', {
+  maxAge: '1y',
+  etag: false
+}));
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

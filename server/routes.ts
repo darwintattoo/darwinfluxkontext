@@ -4,6 +4,9 @@ import { storage } from "./storage";
 import { insertImageSchema } from "@shared/schema";
 import { z } from "zod";
 import Replicate from "replicate";
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { join } from 'path';
+import { nanoid } from 'nanoid';
 
 const generateImageSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
@@ -32,7 +35,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.set({
           'Content-Type': 'image/png',
           'Content-Length': imageBuffer.length,
-          'Cache-Control': 'public, max-age=31536000'
+          'Cache-Control': 'public, max-age=31536000',
+          'Access-Control-Allow-Origin': '*',
+          'Cross-Origin-Resource-Policy': 'cross-origin'
         });
         
         return res.send(imageBuffer);
@@ -46,16 +51,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all generated images (with optimized URLs for deployment)
+  // Get all generated images (optimized for deployment)
   app.get("/api/images", async (req, res) => {
     try {
       const images = await storage.getGeneratedImages();
-      // Convert base64 URLs to optimized endpoint URLs for better performance
-      const optimizedImages = images.map(image => ({
-        ...image,
-        imageUrl: image.imageUrl.startsWith('data:image/') ? `/api/image/${image.id}` : image.imageUrl
-      }));
-      res.json(optimizedImages);
+      
+      // For deployment, check if we should use optimized URLs or base64
+      const isProduction = process.env.NODE_ENV === 'production' || req.headers.host?.includes('.replit.app');
+      
+      if (isProduction) {
+        // In production, try base64 but with smaller payloads by chunking
+        const optimizedImages = images.map(image => ({
+          ...image,
+          // Keep original imageUrl for now, but we could implement chunking later
+          imageUrl: image.imageUrl
+        }));
+        res.json(optimizedImages);
+      } else {
+        // In development, use the optimized endpoint
+        const baseUrl = req.protocol + '://' + req.get('host');
+        const optimizedImages = images.map(image => ({
+          ...image,
+          imageUrl: image.imageUrl.startsWith('data:image/') ? `${baseUrl}/api/image/${image.id}` : image.imageUrl
+        }));
+        res.json(optimizedImages);
+      }
     } catch (error) {
       console.error("Error fetching images:", error);
       res.status(500).json({ error: "Failed to fetch images" });
