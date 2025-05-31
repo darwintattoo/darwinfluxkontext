@@ -1,5 +1,5 @@
 import { X, Download, Share } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import type { GeneratedImage } from "@shared/schema";
@@ -87,6 +87,10 @@ export default function ImageModal({ image, isOpen, onClose }: ImageModalProps) 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] p-0 bg-slate-800 border-slate-700">
+        <DialogTitle className="sr-only">Generated Image Details</DialogTitle>
+        <DialogDescription className="sr-only">
+          View and interact with the generated image: {image.prompt}
+        </DialogDescription>
         <div className="relative">
           <Button
             variant="ghost"
