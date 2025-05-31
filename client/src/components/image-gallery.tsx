@@ -321,7 +321,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
               <div className="flex items-center space-x-4">
                 <span>{formatDate(latestImage.createdAt)}</span>
                 <span>{latestImage.width}x{latestImage.height}</span>
-                <span>${latestImage.cost || "0.05"}</span>
+                <span>${latestImage.cost || "0.08"}</span>
               </div>
               <Button
                 size="sm"

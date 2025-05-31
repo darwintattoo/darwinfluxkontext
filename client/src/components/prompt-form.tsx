@@ -364,7 +364,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         {/* Cost Estimate */}
         <div className="text-xs text-slate-400 text-center">
           <Info className="inline mr-1 h-3 w-3" />
-          Estimated cost: <span className="text-slate-300">$0.05</span> per generation
+          Estimated cost: <span className="text-slate-300">$0.08</span> per generation
           {inputImageUrl && (
             <div className="mt-1 text-amber-400">
               <Info className="inline mr-1 h-3 w-3" />
