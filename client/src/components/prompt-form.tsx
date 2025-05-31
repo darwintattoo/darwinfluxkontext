@@ -58,18 +58,18 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Create a sad, melancholic look with downturned mouth"
     ],
     face_poses: [
-      { icon: "🧑", text: "Front", prompt: "Front view looking directly at camera" },
-      { icon: "🫲", text: "Left turn", prompt: "Turn head slightly to the left" },
-      { icon: "🫱", text: "Right turn", prompt: "Turn head slightly to the right" },
-      { icon: "👤", text: "Profile", prompt: "Show complete side profile" },
-      { icon: "🧑‍🎨", text: "3/4 view", prompt: "Three-quarter angle view" },
-      { icon: "🙄", text: "Look up", prompt: "Look upward with hopeful gaze" },
-      { icon: "😔", text: "Look down", prompt: "Look down contemplatively" },
-      { icon: "🤳", text: "Over shoulder", prompt: "Look over shoulder toward camera" },
-      { icon: "😏", text: "Dramatic", prompt: "Create dramatic tilted angle" },
-      { icon: "🤔", text: "Chin on hand", prompt: "Chin resting on hand thoughtfully" },
-      { icon: "😌", text: "Dreamy", prompt: "Look up and to side with dreamy gaze" },
-      { icon: "🕺", text: "Dynamic", prompt: "Dynamic asymmetrical pose" }
+      { icon: "●", text: "Front", prompt: "Front view looking directly at camera" },
+      { icon: "◐", text: "Left turn", prompt: "Turn head slightly to the left" },
+      { icon: "◑", text: "Right turn", prompt: "Turn head slightly to the right" },
+      { icon: "◗", text: "Profile", prompt: "Show complete side profile" },
+      { icon: "◔", text: "3/4 view", prompt: "Three-quarter angle view" },
+      { icon: "▲", text: "Look up", prompt: "Look upward with hopeful gaze" },
+      { icon: "▼", text: "Look down", prompt: "Look down contemplatively" },
+      { icon: "◀", text: "Over shoulder", prompt: "Look over shoulder toward camera" },
+      { icon: "◆", text: "Dramatic", prompt: "Create dramatic tilted angle" },
+      { icon: "⬟", text: "Chin on hand", prompt: "Chin resting on hand thoughtfully" },
+      { icon: "✧", text: "Dreamy", prompt: "Look up and to side with dreamy gaze" },
+      { icon: "⬢", text: "Dynamic", prompt: "Dynamic asymmetrical pose" }
     ],
     camera_angles: [
       "Shot from above looking down at a bird's eye view angle",
