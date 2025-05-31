@@ -82,13 +82,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log("Replicate output received:", output);
       
-      // FLUX Kontext Max devuelve una URL de imagen según la documentación
+      // Manejar diferentes formatos de output de FLUX Kontext Max
       let imageUrl: string;
       
       if (typeof output === 'string') {
         imageUrl = output;
       } else if (Array.isArray(output) && output.length > 0) {
         imageUrl = output[0];
+      } else if (output && typeof output === 'object' && 'readable' in output) {
+        // Es un ReadableStream, necesitamos leerlo
+        const chunks: Uint8Array[] = [];
+        const reader = output.getReader();
+        
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+          }
+          
+          // Concatenar todos los chunks
+          const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+          const imageBuffer = new Uint8Array(totalLength);
+          let offset = 0;
+          for (const chunk of chunks) {
+            imageBuffer.set(chunk, offset);
+            offset += chunk.length;
+          }
+          
+          // Convertir a base64 data URL
+          const base64 = Buffer.from(imageBuffer).toString('base64');
+          imageUrl = `data:image/png;base64,${base64}`;
+        } finally {
+          reader.releaseLock();
+        }
       } else {
         console.error("Unexpected output format from FLUX Kontext Max:", output);
         return res.status(500).json({ 
