@@ -39,28 +39,65 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Add snow falling in the scene"
     ],
     face_expressions: [
-      "Change the expression to a warm, genuine smile",
-      "Make the person look surprised with raised eyebrows",
-      "Transform to a serious, contemplative expression",
-      "Add a subtle, mysterious smile",
-      "Make the eyes more expressive and bright",
-      "Change to a laughing, joyful expression"
+      "Change the expression to a warm, genuine smile with crinkled eyes",
+      "Make the person look surprised with raised eyebrows and wide eyes",
+      "Transform to a serious, contemplative expression with furrowed brow",
+      "Add a mischievous, playful grin with slight wink",
+      "Change to a peaceful, serene expression with soft closed eyes",
+      "Make the eyes look tired and weary with slight bags underneath",
+      "Add an expression of pure joy and hearty laughter",
+      "Create a mysterious, enigmatic smile like Mona Lisa",
+      "Show a shocked expression with mouth slightly open",
+      "Add a confident, determined look with intense piercing eyes",
+      "Create a dreamy, romantic expression with soft loving gaze",
+      "Show concern with worried, anxious furrowed features",
+      "Add a fierce, angry expression with clenched jaw",
+      "Create a sad, melancholic look with downturned mouth"
     ],
     face_poses: [
-      "Turn the head slightly to the left",
-      "Make the person look directly at the camera",
-      "Change to a three-quarter profile view",
-      "Tilt the head slightly upward",
-      "Make the person look over their shoulder",
-      "Change to a side profile silhouette"
+      "Turn the head to show a three-quarter profile view",
+      "Change to looking directly at the camera with intense eye contact",
+      "Tilt the head slightly to the left with a gentle romantic angle",
+      "Look upward with an aspirational, hopeful gaze toward the sky",
+      "Turn to show the complete left side profile silhouette",
+      "Lower the chin for a more dramatic, brooding angle",
+      "Look over the shoulder toward the camera seductively",
+      "Tilt the head back with chin raised confidently",
+      "Turn the face downward with eyes looking up mysteriously",
+      "Show a slight head turn to the right with soft natural lighting",
+      "Position the head in a classical portrait pose",
+      "Create a dynamic angle with head tilted dramatically",
+      "Show the person looking off to the side pensively",
+      "Position with chin resting on hand thoughtfully"
     ],
     style_changes: [
-      "Transform to a vintage, sepia-toned photograph",
-      "Make it look like a Renaissance oil painting",
-      "Convert to a modern digital art style",
-      "Add dramatic film noir lighting",
-      "Transform to watercolor painting style",
-      "Make it look like a pencil sketch portrait"
+      "Transform to a vintage, sepia-toned photograph from the 1920s",
+      "Convert to an oil painting in Renaissance style with rich colors",
+      "Apply cyberpunk neon lighting effects with blue and pink tones",
+      "Change to black and white film noir style with dramatic shadows",
+      "Transform into an impressionist painting with visible brushstrokes",
+      "Add art deco styling and geometric patterns in gold",
+      "Convert to a detailed pencil sketch or charcoal drawing",
+      "Apply pop art style with bright, contrasting colors",
+      "Transform to hyperrealistic digital art style",
+      "Add baroque painting style with dramatic chiaroscuro lighting"
+    ],
+    animals: [
+      "Make the cat sit upright with perfect posture and alert ears",
+      "Change the dog's expression to playful with tongue hanging out happily",
+      "Position the bird with wings spread wide in majestic flight",
+      "Make the horse rear up on hind legs dramatically against the sky",
+      "Show the lion with a regal pose and flowing mane in golden light",
+      "Position the elephant with trunk raised high triumphantly",
+      "Make the tiger crouch low in a hunting stance with intense focus",
+      "Show the wolf howling with head tilted back toward the full moon",
+      "Position the eagle perched proudly with piercing, intense gaze",
+      "Make the dolphin jump gracefully out of crystal clear blue water",
+      "Show the bear standing tall on hind legs intimidatingly",
+      "Position the deer grazing peacefully in a sunlit forest clearing",
+      "Make the monkey swing playfully from branch to branch",
+      "Show the snake coiled elegantly with head raised alertly",
+      "Position the owl with head turned almost completely around"
     ]
   };
 
@@ -323,6 +360,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               <SelectItem value="face_expressions">Face Expressions</SelectItem>
               <SelectItem value="face_poses">Face Poses</SelectItem>
               <SelectItem value="style_changes">Style Changes</SelectItem>
+              <SelectItem value="animals">Animal Poses & Expressions</SelectItem>
             </SelectContent>
           </Select>
         </div>
