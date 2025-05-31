@@ -10,6 +10,7 @@ import type { GeneratedImage } from "@shared/schema";
 export default function ImageGenerator() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
+  const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
 
   const { data: images = [], isLoading } = useQuery<GeneratedImage[]>({
     queryKey: ["/api/images"],
@@ -56,7 +57,7 @@ export default function ImageGenerator() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Input Panel */}
           <div className="lg:col-span-1">
-            <PromptForm />
+            <PromptForm referenceImageUrl={referenceImageUrl} />
           </div>
 
           {/* Gallery */}
@@ -65,6 +66,7 @@ export default function ImageGenerator() {
               images={images} 
               isLoading={isLoading}
               onImageSelect={setSelectedImage}
+              onUseAsReference={setReferenceImageUrl}
             />
           </div>
         </div>

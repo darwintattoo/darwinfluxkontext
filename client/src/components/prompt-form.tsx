@@ -17,12 +17,40 @@ export default function PromptForm() {
   const [aspectRatio, setAspectRatio] = useState("match_input_image");
   const [inputImageUrl, setInputImageUrl] = useState("");
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
-  const [recentPrompts] = useState([
-    "Make the text 3D, floating in space on a city street",
-    "Convert the building to modern architecture",
-    "Change the lighting to golden hour",
-    "Add snow falling in the scene"
-  ]);
+  const [promptCategory, setPromptCategory] = useState("general");
+  
+  const promptSuggestions = {
+    general: [
+      "Make the text 3D, floating in space on a city street",
+      "Convert the building to modern architecture", 
+      "Change the lighting to golden hour",
+      "Add snow falling in the scene"
+    ],
+    face_expressions: [
+      "Change the expression to a warm, genuine smile",
+      "Make the person look surprised with raised eyebrows",
+      "Transform to a serious, contemplative expression",
+      "Add a subtle, mysterious smile",
+      "Make the eyes more expressive and bright",
+      "Change to a laughing, joyful expression"
+    ],
+    face_poses: [
+      "Turn the head slightly to the left",
+      "Make the person look directly at the camera",
+      "Change to a three-quarter profile view",
+      "Tilt the head slightly upward",
+      "Make the person look over their shoulder",
+      "Change to a side profile silhouette"
+    ],
+    style_changes: [
+      "Transform to a vintage, sepia-toned photograph",
+      "Make it look like a Renaissance oil painting",
+      "Convert to a modern digital art style",
+      "Add dramatic film noir lighting",
+      "Transform to watercolor painting style",
+      "Make it look like a pencil sketch portrait"
+    ]
+  };
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -260,17 +288,34 @@ export default function PromptForm() {
         </div>
       </form>
       
-      {/* Recent Prompts */}
+      {/* Prompt Suggestions */}
       <div className="mt-6 pt-6 border-t border-slate-700">
-        <h3 className="text-sm font-medium text-slate-300 mb-3">Recent Prompts</h3>
-        <div className="space-y-2">
-          {recentPrompts.map((recentPrompt, index) => (
+        <h3 className="text-sm font-medium text-slate-300 mb-3">Prompt Suggestions</h3>
+        
+        {/* Category Selector */}
+        <div className="mb-3">
+          <Select value={promptCategory} onValueChange={setPromptCategory}>
+            <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-slate-50 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-slate-700 border-slate-600">
+              <SelectItem value="general">General Edits</SelectItem>
+              <SelectItem value="face_expressions">Face Expressions</SelectItem>
+              <SelectItem value="face_poses">Face Poses</SelectItem>
+              <SelectItem value="style_changes">Style Changes</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        {/* Suggestions */}
+        <div className="space-y-2 max-h-40 overflow-y-auto">
+          {promptSuggestions[promptCategory as keyof typeof promptSuggestions].map((suggestion, index) => (
             <button
               key={index}
-              onClick={() => setPrompt(recentPrompt)}
-              className="w-full text-left px-3 py-2 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-xs text-slate-400 hover:text-slate-300 transition-colors truncate"
+              onClick={() => setPrompt(suggestion)}
+              className="w-full text-left px-3 py-2 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-xs text-slate-400 hover:text-slate-300 transition-colors"
             >
-              {recentPrompt}
+              {suggestion}
             </button>
           ))}
         </div>

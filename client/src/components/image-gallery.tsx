@@ -1,4 +1,4 @@
-import { Download, Share, Expand, Trash2, Loader2 } from "lucide-react";
+import { Download, Share, Expand, Trash2, Loader2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -9,9 +9,10 @@ interface ImageGalleryProps {
   images: GeneratedImage[];
   isLoading: boolean;
   onImageSelect: (image: GeneratedImage) => void;
+  onUseAsReference?: (imageUrl: string) => void;
 }
 
-export default function ImageGallery({ images, isLoading, onImageSelect }: ImageGalleryProps) {
+export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference }: ImageGalleryProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -167,7 +168,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect }: Image
             
             {/* Image Actions Overlay */}
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <div className="flex space-x-3">
+              <div className="flex space-x-2">
                 <Button
                   size="sm"
                   variant="secondary"
@@ -190,6 +191,23 @@ export default function ImageGallery({ images, isLoading, onImageSelect }: Image
                 >
                   <Share className="h-4 w-4" />
                 </Button>
+                {onUseAsReference && (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="bg-amber-500/30 backdrop-blur-sm text-white hover:bg-amber-500/50"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUseAsReference(latestImage.imageUrl);
+                      toast({
+                        title: "Image loaded as reference",
+                        description: "You can now edit this image with a new prompt",
+                      });
+                    }}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   variant="secondary"
@@ -240,7 +258,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect }: Image
                 />
                 
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-1">
                     <Button
                       size="sm"
                       variant="secondary"
@@ -252,6 +270,23 @@ export default function ImageGallery({ images, isLoading, onImageSelect }: Image
                     >
                       <Download className="h-3 w-3" />
                     </Button>
+                    {onUseAsReference && (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="bg-amber-500/30 backdrop-blur-sm text-white hover:bg-amber-500/50 text-sm p-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onUseAsReference(image.imageUrl);
+                          toast({
+                            title: "Image loaded as reference",
+                            description: "You can now edit this image with a new prompt",
+                          });
+                        }}
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                    )}
                     <Button
                       size="sm"
                       variant="secondary"
