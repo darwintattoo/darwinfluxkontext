@@ -21,6 +21,8 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   const [aspectRatio, setAspectRatio] = useState("match_input_image");
   const [inputImageUrl, setInputImageUrl] = useState(referenceImageUrl || "");
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
+  const [generationTimer, setGenerationTimer] = useState(0);
+  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
 
   // Update inputImageUrl when referenceImageUrl changes
   React.useEffect(() => {
@@ -113,8 +115,21 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       height?: number; 
       aspectRatio?: string; 
     }) => {
-      const response = await apiRequest("POST", "/api/generate", data);
-      return response.json();
+      // Start timer
+      setGenerationTimer(0);
+      const interval = setInterval(() => {
+        setGenerationTimer(prev => prev + 1);
+      }, 1000);
+      setTimerInterval(interval);
+
+      try {
+        const response = await apiRequest("POST", "/api/generate", data);
+        return response.json();
+      } finally {
+        // Stop timer
+        clearInterval(interval);
+        setTimerInterval(null);
+      }
     },
     onSuccess: () => {
       toast({
@@ -122,6 +137,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         description: "Image generated successfully!",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/images"] });
+      setGenerationTimer(0);
     },
     onError: (error: any) => {
       toast({
@@ -129,6 +145,11 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         description: error.message || "Failed to generate image. Please try again.",
         variant: "destructive",
       });
+      setGenerationTimer(0);
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        setTimerInterval(null);
+      }
     },
   });
 
@@ -329,7 +350,14 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         >
           <div className="flex items-center justify-center">
             <Wand2 className="mr-2 h-4 w-4" />
-            {generateMutation.isPending ? 'Generating...' : 'Generate Image'}
+            {generateMutation.isPending ? (
+              <div className="flex items-center">
+                <span>Generating...</span>
+                <span className="ml-2 text-indigo-200 font-mono">
+                  {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')}
+                </span>
+              </div>
+            ) : 'Generate Image'}
           </div>
         </Button>
 
