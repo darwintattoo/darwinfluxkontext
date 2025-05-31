@@ -58,34 +58,18 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Create a sad, melancholic look with downturned mouth"
     ],
     face_poses: [
-      "Turn the head to show a three-quarter profile view",
-      "Change to looking directly at the camera with intense eye contact",
-      "Tilt the head slightly to the left with a gentle romantic angle",
-      "Look upward with an aspirational, hopeful gaze toward the sky",
-      "Turn to show the complete left side profile silhouette",
-      "Lower the chin for a more dramatic, brooding angle",
-      "Look over the shoulder toward the camera seductively",
-      "Tilt the head back with chin raised confidently",
-      "Turn the face downward with eyes looking up mysteriously",
-      "Show a slight head turn to the right with soft natural lighting",
-      "Position the head in a classical portrait pose",
-      "Create a dynamic angle with head tilted dramatically",
-      "Show the person looking off to the side pensively",
-      "Position with chin resting on hand thoughtfully",
-      "Turn to show complete right side profile with clean silhouette",
-      "Look down with humble, contemplative expression",
-      "Angle the face slightly upward with proud, regal bearing",
-      "Create a candid pose looking naturally to the left",
-      "Show three-quarter view from the back looking over shoulder",
-      "Position facing away but head turned back toward camera",
-      "Tilt head forward with mysterious shadow over eyes",
-      "Look up and to the side with dreamy, distant gaze",
-      "Create asymmetrical pose with head tilted at sharp angle",
-      "Show profile view with chin slightly raised in defiance",
-      "Position with head resting back against surface relaxed",
-      "Create portrait angle with face turned 45 degrees right",
-      "Show frontal view but eyes looking off to the side",
-      "Position head straight but body angled for dynamic effect"
+      { icon: "😐", text: "Front", prompt: "Front view looking directly at camera" },
+      { icon: "↖️", text: "Left turn", prompt: "Turn head slightly to the left" },
+      { icon: "↗️", text: "Right turn", prompt: "Turn head slightly to the right" },
+      { icon: "👤", text: "Profile", prompt: "Show complete side profile" },
+      { icon: "↩️", text: "3/4 view", prompt: "Three-quarter angle view" },
+      { icon: "⬆️", text: "Look up", prompt: "Look upward with hopeful gaze" },
+      { icon: "⬇️", text: "Look down", prompt: "Look down contemplatively" },
+      { icon: "🔄", text: "Over shoulder", prompt: "Look over shoulder toward camera" },
+      { icon: "🎭", text: "Dramatic", prompt: "Create dramatic tilted angle" },
+      { icon: "✋", text: "Chin on hand", prompt: "Chin resting on hand thoughtfully" },
+      { icon: "🌟", text: "Dreamy", prompt: "Look up and to side with dreamy gaze" },
+      { icon: "⚡", text: "Dynamic", prompt: "Dynamic asymmetrical pose" }
     ],
     camera_angles: [
       "Shot from above looking down at a bird's eye view angle",
@@ -492,15 +476,17 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
           {/* Selected Category Content */}
           {promptCategory === 'face_poses' && (
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-              {promptSuggestions.face_poses.map((suggestion, index) => (
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.face_poses.map((pose: any, index: number) => (
                 <button
                   key={index}
                   type="button"
-                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                  onClick={() => setPrompt(suggestion)}
+                  className="flex flex-col items-center p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                  onClick={() => setPrompt(pose.prompt)}
+                  title={pose.prompt}
                 >
-                  {suggestion}
+                  <span className="text-lg mb-1">{pose.icon}</span>
+                  <span className="text-center leading-tight">{pose.text}</span>
                 </button>
               ))}
             </div>
