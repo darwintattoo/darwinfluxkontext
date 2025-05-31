@@ -380,7 +380,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         <Button 
           type="submit" 
           disabled={generateMutation.isPending}
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 transition-all duration-200"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 transition-all duration-200"
         >
           <div className="flex items-center justify-center">
             <Wand2 className="mr-2 h-4 w-4" />
@@ -414,7 +414,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_poses' ? '' : 'face_poses')}
-              className="w-full flex items-center justify-between p-3 bg-red-600/20 hover:bg-red-600/30 rounded-lg text-sm font-medium text-red-300 border border-red-600/30"
+              className="w-full flex items-center justify-between p-3 bg-blue-600/20 hover:bg-blue-600/30 rounded-lg text-sm font-medium text-blue-300 border border-blue-600/30"
             >
               <span>🎭 Face Poses</span>
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_poses' ? 'rotate-180' : ''}`} />
