@@ -49,7 +49,7 @@ export default function ImageGenerator() {
           const base64Data = e.target?.result as string;
           
           const response = await apiRequest("POST", "/api/upload", {
-            image: base64Data,
+            imageData: base64Data,
           });
           
           if (response.ok) {
