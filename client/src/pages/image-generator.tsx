@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Wand2, Settings, Circle, Globe } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Wand2, Settings, Circle, Globe, Upload } from "lucide-react";
 import PromptForm from "@/components/prompt-form";
 import ImageGallery from "@/components/image-gallery";
 import ImageModal from "@/components/image-modal";
@@ -7,6 +7,8 @@ import SettingsModal from "@/components/settings-modal";
 import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +21,9 @@ export default function ImageGenerator() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
+  const [isDragOver, setIsDragOver] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const { toast } = useToast();
 
   const { data: images = [], isLoading, isFetching } = useQuery<GeneratedImage[]>({
     queryKey: ["/api/images"],
@@ -28,8 +32,97 @@ export default function ImageGenerator() {
 
   const hasApiKey = !!localStorage.getItem("replicate_api_token");
 
+  const handleFileUpload = useCallback(async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: language === 'es' ? 'Error' : 'Error',
+        description: language === 'es' ? 'Por favor selecciona un archivo de imagen válido' : 'Please select a valid image file',
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const base64Data = e.target?.result as string;
+          
+          const response = await apiRequest("POST", "/api/upload", {
+            image: base64Data,
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            setReferenceImageUrl(result.imageUrl);
+            toast({
+              title: language === 'es' ? 'Imagen cargada' : 'Image uploaded',
+              description: language === 'es' ? 'Ahora puedes usarla como referencia' : 'You can now use it as reference',
+            });
+          } else {
+            throw new Error("Failed to get image URL");
+          }
+        } catch (uploadError) {
+          console.error("Upload error:", uploadError);
+          toast({
+            title: language === 'es' ? 'Error' : 'Error',
+            description: language === 'es' ? 'Error al subir imagen' : 'Failed to upload image',
+            variant: "destructive",
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast({
+        title: language === 'es' ? 'Error' : 'Error',
+        description: language === 'es' ? 'Error al procesar imagen' : 'Failed to process image',
+        variant: "destructive",
+      });
+    }
+  }, [language, toast]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  }, [handleFileUpload]);
+
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-50">
+    <div 
+      className="min-h-screen bg-slate-900 text-slate-50 relative"
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {/* Drag and Drop Overlay */}
+      {isDragOver && (
+        <div className="fixed inset-0 bg-blue-900/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-slate-800/90 border-2 border-dashed border-blue-400 rounded-xl p-8 text-center">
+            <Upload className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+            <div className="text-xl font-semibold text-blue-400 mb-2">
+              {language === 'es' ? 'Suelta la imagen aquí' : 'Drop image here'}
+            </div>
+            <div className="text-slate-300">
+              {language === 'es' ? 'Para usar como imagen de referencia' : 'To use as reference image'}
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Header */}
       <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
