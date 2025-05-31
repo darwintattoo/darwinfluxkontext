@@ -3,53 +3,53 @@
 @tailwind utilities;
 
 :root {
-  --background: 222 84% 5%;
-  --foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  --popover: 222 84% 5%;
-  --popover-foreground: 210 40% 98%;
-  --card: 222 84% 5%;
-  --card-foreground: 210 40% 98%;
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --primary: 230 91% 54%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 262 83% 58%;
-  --secondary-foreground: 210 40% 98%;
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --ring: 230 91% 54%;
+  --background: 0 0% 5%; /* Negro profundo */
+  --foreground: 0 0% 98%; /* Blanco */
+  --muted: 0 0% 15%; /* Gris oscuro */
+  --muted-foreground: 0 0% 65%; /* Gris medio */
+  --popover: 0 0% 8%; /* Negro card */
+  --popover-foreground: 0 0% 98%; /* Blanco */
+  --card: 0 0% 8%; /* Negro card */
+  --card-foreground: 0 0% 98%; /* Blanco */
+  --border: 0 0% 20%; /* Gris border */
+  --input: 0 0% 15%; /* Gris input */
+  --primary: 0 84% 60%; /* Rojo principal */
+  --primary-foreground: 0 0% 98%; /* Blanco */
+  --secondary: 0 0% 25%; /* Gris secundario */
+  --secondary-foreground: 0 0% 98%; /* Blanco */
+  --accent: 0 84% 55%; /* Rojo acento */
+  --accent-foreground: 0 0% 98%; /* Blanco */
+  --destructive: 0 84% 60%; /* Rojo destructivo */
+  --destructive-foreground: 0 0% 98%; /* Blanco */
+  --ring: 0 84% 60%; /* Rojo ring */
   --radius: 0.5rem;
-  --success: 142 71% 45%;
-  --error: 0 84% 60%;
+  --success: 120 71% 45%; /* Verde éxito */
+  --error: 0 84% 60%; /* Rojo error */
 }
 
 .dark {
-  --background: 222 84% 5%;
-  --foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  --popover: 222 84% 5%;
-  --popover-foreground: 210 40% 98%;
-  --card: 222 84% 5%;
-  --card-foreground: 210 40% 98%;
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --primary: 230 91% 54%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 262 83% 58%;
-  --secondary-foreground: 210 40% 98%;
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --ring: 230 91% 54%;
+  --background: 0 0% 5%; /* Negro profundo */
+  --foreground: 0 0% 98%; /* Blanco */
+  --muted: 0 0% 15%; /* Gris oscuro */
+  --muted-foreground: 0 0% 65%; /* Gris medio */
+  --popover: 0 0% 8%; /* Negro card */
+  --popover-foreground: 0 0% 98%; /* Blanco */
+  --card: 0 0% 8%; /* Negro card */
+  --card-foreground: 0 0% 98%; /* Blanco */
+  --border: 0 0% 20%; /* Gris border */
+  --input: 0 0% 15%; /* Gris input */
+  --primary: 0 84% 60%; /* Rojo principal */
+  --primary-foreground: 0 0% 98%; /* Blanco */
+  --secondary: 0 0% 25%; /* Gris secundario */
+  --secondary-foreground: 0 0% 98%; /* Blanco */
+  --accent: 0 84% 55%; /* Rojo acento */
+  --accent-foreground: 0 0% 98%; /* Blanco */
+  --destructive: 0 84% 60%; /* Rojo destructivo */
+  --destructive-foreground: 0 0% 98%; /* Blanco */
+  --ring: 0 84% 60%; /* Rojo ring */
   --radius: 0.5rem;
-  --success: 142 71% 45%;
-  --error: 0 84% 60%;
+  --success: 120 71% 45%; /* Verde éxito */
+  --error: 0 84% 60%; /* Rojo error */
 }
 
 @layer base {
