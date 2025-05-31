@@ -190,20 +190,18 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
                 
                 {/* Before Image (Reference) - Overlay with clip */}
                 <div 
-                  className="absolute inset-0 z-10 pointer-events-none bg-transparent"
+                  className="absolute inset-0 z-10 pointer-events-none overflow-hidden"
                   style={{ 
-                    clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`,
-                    backgroundColor: 'transparent'
+                    clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`
                   }}
                 >
                   <img 
                     src={latestImage.inputImageUrl}
                     alt="Reference image"
-                    className="w-full h-auto object-cover object-left"
+                    className="w-full h-auto"
                     style={{ 
-                      filter: 'none',
-                      mixBlendMode: 'normal',
-                      backgroundColor: 'transparent'
+                      objectFit: 'contain',
+                      objectPosition: 'left top'
                     }}
                   />
                 </div>
@@ -221,17 +219,14 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
                   className="absolute inset-y-0 z-20 w-1 bg-white shadow-lg cursor-ew-resize"
                   style={{ left: `${sliderPosition}%` }}
                   onMouseDown={(e) => {
-                    const startX = e.clientX;
-                    const startPosition = sliderPosition;
+                    e.preventDefault();
                     const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                    if (!rect) return;
                     
-                    const handleMouseMove = (e: MouseEvent) => {
-                      if (rect) {
-                        const newPosition = Math.max(0, Math.min(100, 
-                          startPosition + ((e.clientX - startX) / rect.width) * 100
-                        ));
-                        setSliderPosition(newPosition);
-                      }
+                    const handleMouseMove = (moveEvent: MouseEvent) => {
+                      const x = moveEvent.clientX - rect.left;
+                      const newPosition = Math.max(0, Math.min(100, (x / rect.width) * 100));
+                      setSliderPosition(newPosition);
                     };
                     
                     const handleMouseUp = () => {
