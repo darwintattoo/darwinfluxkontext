@@ -346,7 +346,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
                 <img 
                   src={image.imageUrl}
                   alt={image.prompt}
-                  className="w-full h-48 object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-auto cursor-pointer transition-transform duration-300 group-hover:scale-105"
                   onClick={() => onImageSelect(image)}
                 />
                 
