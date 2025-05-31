@@ -414,7 +414,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_poses' ? '' : 'face_poses')}
-              className="w-full flex items-center justify-between p-3 bg-indigo-600/20 hover:bg-indigo-600/30 rounded-lg text-sm font-medium text-indigo-300 border border-indigo-600/30"
+              className="w-full flex items-center justify-between p-3 bg-red-600/20 hover:bg-red-600/30 rounded-lg text-sm font-medium text-red-300 border border-red-600/30"
             >
               <span>🎭 Face Poses</span>
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_poses' ? 'rotate-180' : ''}`} />
@@ -440,7 +440,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_expressions' ? '' : 'face_expressions')}
-              className="w-full flex items-center justify-between p-3 bg-amber-600/20 hover:bg-amber-600/30 rounded-lg text-sm font-medium text-amber-300 border border-amber-600/30"
+              className="w-full flex items-center justify-between p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg text-sm font-medium text-slate-300 border border-slate-600/30"
             >
               <span>😊 Face Expressions</span>
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_expressions' ? 'rotate-180' : ''}`} />
@@ -466,7 +466,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'camera_angles' ? '' : 'camera_angles')}
-              className="w-full flex items-center justify-between p-3 bg-cyan-600/20 hover:bg-cyan-600/30 rounded-lg text-sm font-medium text-cyan-300 border border-cyan-600/30"
+              className="w-full flex items-center justify-between p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg text-sm font-medium text-slate-300 border border-slate-600/30"
             >
               <span>📷 Camera Angles</span>
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'camera_angles' ? 'rotate-180' : ''}`} />
@@ -492,7 +492,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'style_changes' ? '' : 'style_changes')}
-              className="w-full flex items-center justify-between p-3 bg-purple-600/20 hover:bg-purple-600/30 rounded-lg text-sm font-medium text-purple-300 border border-purple-600/30"
+              className="w-full flex items-center justify-between p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg text-sm font-medium text-slate-300 border border-slate-600/30"
             >
               <span>🎨 Artistic Styles</span>
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'style_changes' ? 'rotate-180' : ''}`} />
@@ -518,7 +518,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'general' ? '' : 'general')}
-              className="w-full flex items-center justify-between p-3 bg-red-600/20 hover:bg-red-600/30 rounded-lg text-sm font-medium text-red-300 border border-red-600/30"
+              className="w-full flex items-center justify-between p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg text-sm font-medium text-slate-300 border border-slate-600/30"
             >
               <span>🖤 Tattoo Styles</span>
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'general' ? 'rotate-180' : ''}`} />
