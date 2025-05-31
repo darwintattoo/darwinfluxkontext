@@ -87,6 +87,24 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Show frontal view but eyes looking off to the side",
       "Position head straight but body angled for dynamic effect"
     ],
+    camera_angles: [
+      "Shot from above looking down at a bird's eye view angle",
+      "Low angle shot looking up from below for dramatic effect",
+      "Dutch angle tilt for dynamic, off-kilter composition",
+      "Wide shot showing full body from head to toe",
+      "Medium shot from waist up with natural framing",
+      "Close-up shot focusing on face and upper shoulders",
+      "Extreme close-up on eyes and facial features only",
+      "Over-the-shoulder perspective view from behind",
+      "Side angle shot in perfect profile silhouette",
+      "Three-quarter angle between front and side view",
+      "Straight-on frontal view directly facing camera",
+      "High angle looking down slightly for flattering perspective",
+      "Eye-level shot at natural human viewing height",
+      "Worm's eye view from ground level looking up",
+      "Aerial view from directly overhead looking down",
+      "Candid angle capturing natural, unposed moment"
+    ],
     style_changes: [
       "Transform to a vintage, sepia-toned photograph from the 1920s",
       "Convert to an oil painting in Renaissance style with rich colors",
@@ -430,6 +448,32 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             {promptCategory === 'face_expressions' && (
               <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
                 {promptSuggestions.face_expressions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    onClick={() => setPrompt(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Camera Angles */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setPromptCategory(promptCategory === 'camera_angles' ? '' : 'camera_angles')}
+              className="w-full flex items-center justify-between p-3 bg-cyan-600/20 hover:bg-cyan-600/30 rounded-lg text-sm font-medium text-cyan-300 border border-cyan-600/30"
+            >
+              <span>📷 Camera Angles</span>
+              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'camera_angles' ? 'rotate-180' : ''}`} />
+            </button>
+            {promptCategory === 'camera_angles' && (
+              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                {promptSuggestions.camera_angles.map((suggestion, index) => (
                   <button
                     key={index}
                     type="button"
