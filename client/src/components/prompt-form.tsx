@@ -31,7 +31,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       setPrompt("Change the expression to a warm, genuine smile");
     }
   }, [referenceImageUrl]);
-  const [promptCategory, setPromptCategory] = useState("general");
+  const [promptCategory, setPromptCategory] = useState("face_poses");
   
   const promptSuggestions = {
     general: [
