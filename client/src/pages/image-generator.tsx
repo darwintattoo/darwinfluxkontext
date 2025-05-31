@@ -26,7 +26,7 @@ export default function ImageGenerator() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <img 
-                src="@assets/1Asset 3zzz.png" 
+                src="/attached_assets/1Asset 3zzz.png" 
                 alt="TattooStencilPro Logo" 
                 className="h-8 w-auto"
               />

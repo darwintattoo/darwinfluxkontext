@@ -12,6 +12,12 @@ app.use('/images', express.static('public/images', {
   etag: false
 }));
 
+// Serve attached assets
+app.use('/attached_assets', express.static('attached_assets', {
+  maxAge: '1y',
+  etag: false
+}));
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
