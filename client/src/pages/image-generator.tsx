@@ -36,12 +36,6 @@ export default function ImageGenerator() {
             </div>
             
             <div className="flex items-center space-x-4">              
-              <button 
-                onClick={() => setShowSettings(true)}
-                className="text-slate-400 hover:text-slate-300 transition-colors p-2"
-              >
-                <Settings className="h-4 w-4" />
-              </button>
             </div>
           </div>
         </div>
