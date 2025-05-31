@@ -80,26 +80,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      console.log("Replicate output received:", typeof output);
+      console.log("Replicate output received:", output);
       
-      // El output es directamente los datos de la imagen (Buffer/Uint8Array)
-      // Según el ejemplo de Replicate, el output contiene los datos de imagen directamente
+      // FLUX Kontext Max devuelve una URL de imagen según la documentación
       let imageUrl: string;
       
-      if (output && (output instanceof Uint8Array || Buffer.isBuffer(output))) {
-        // Convertir los datos binarios a base64 data URL
-        const base64 = Buffer.from(output).toString('base64');
-        imageUrl = `data:image/png;base64,${base64}`;
-      } else if (typeof output === 'string' && output.startsWith('http')) {
-        // Si es una URL directa (fallback)
+      if (typeof output === 'string') {
         imageUrl = output;
       } else if (Array.isArray(output) && output.length > 0) {
-        // Si es un array con URLs
         imageUrl = output[0];
       } else {
-        console.error("Unexpected output format:", output);
+        console.error("Unexpected output format from FLUX Kontext Max:", output);
         return res.status(500).json({ 
-          error: "No image was generated - unexpected output format" 
+          error: "No image URL was generated - unexpected output format" 
         });
       }
       
