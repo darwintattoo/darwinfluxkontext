@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertImageSchema } from "@shared/schema";
 import { z } from "zod";
+import Replicate from "replicate";
 
 const generateImageSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
@@ -29,7 +30,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { prompt, inputImageUrl, width, height, aspectRatio } = generateImageSchema.parse(req.body);
       
-      const replicateToken = process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_TOKEN;
+      const replicateToken = process.env.REPLICATE_API_TOKEN;
       
       if (!replicateToken) {
         return res.status(400).json({ 
@@ -37,97 +38,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      const replicate = new Replicate({
+        auth: replicateToken,
+      });
+
       // Configuración de entrada para FLUX Kontext Max
       const input: any = {
         prompt: prompt,
-        aspect_ratio: aspectRatio,
-        num_outputs: 1,
-        guidance_scale: 3.5,
-        num_inference_steps: 28,
-        max_sequence_length: 512,
-        safety_tolerance: 2
       };
 
       // Si hay imagen de entrada, la incluimos
       if (inputImageUrl) {
         input.input_image = inputImageUrl;
+        if (aspectRatio && aspectRatio !== "match_input_image") {
+          input.aspect_ratio = aspectRatio;
+        }
       } else {
-        // Solo establecer dimensiones si no hay imagen de entrada
+        // Para generación desde texto, usar dimensiones específicas
         input.width = width;
         input.height = height;
       }
 
-      // Call Replicate API con el modelo correcto FLUX Kontext Max
-      const response = await fetch("https://api.replicate.com/v1/predictions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Token ${replicateToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          version: "dcd79a27c5834330dfdbff6e3bbcc0639e9b2f1b66ffb4e8fe969b4847b10dd8",
-          input: input
-        }),
+      // Usar el SDK de Replicate con el modelo correcto
+      const output = await replicate.run("black-forest-labs/flux-kontext-max", { input });
+      
+      // El output es la URL de la imagen generada
+      const imageUrl = Array.isArray(output) ? output[0] : output;
+      
+      if (!imageUrl) {
+        return res.status(500).json({ 
+          error: "No image was generated" 
+        });
+      }
+
+      // Save to storage
+      const savedImage = await storage.createGeneratedImage({
+        prompt,
+        imageUrl: imageUrl as string,
+        inputImageUrl,
+        width: inputImageUrl ? 1024 : width,
+        height: inputImageUrl ? 1024 : height,
+        aspectRatio,
+        cost: "0.05", // Approximate cost
       });
-
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error("Replicate API error:", errorData);
-        return res.status(response.status).json({ 
-          error: `Replicate API error: ${response.status} ${response.statusText}` 
-        });
-      }
-
-      const prediction = await response.json();
       
-      // Poll for completion
-      let completed = false;
-      let attempts = 0;
-      const maxAttempts = 60; // 5 minutes maximum
-      
-      while (!completed && attempts < maxAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds
-        
-        const statusResponse = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
-          headers: {
-            "Authorization": `Token ${replicateToken}`,
-          },
-        });
-
-        if (!statusResponse.ok) {
-          throw new Error(`Failed to check prediction status: ${statusResponse.statusText}`);
-        }
-
-        const status = await statusResponse.json();
-        
-        if (status.status === "succeeded") {
-          completed = true;
-          
-          // Save to storage
-          const savedImage = await storage.createGeneratedImage({
-            prompt,
-            imageUrl: status.output[0],
-            inputImageUrl,
-            width: inputImageUrl ? 1024 : width,
-            height: inputImageUrl ? 1024 : height,
-            aspectRatio,
-            cost: "0.05", // Approximate cost
-          });
-          
-          res.json(savedImage);
-          return;
-        } else if (status.status === "failed" || status.status === "canceled") {
-          return res.status(500).json({ 
-            error: `Image generation failed: ${status.error || 'Unknown error'}` 
-          });
-        }
-        
-        attempts++;
-      }
-      
-      if (!completed) {
-        res.status(408).json({ error: "Image generation timed out. Please try again." });
-      }
+      res.json(savedImage);
       
     } catch (error) {
       console.error("Error generating image:", error);
