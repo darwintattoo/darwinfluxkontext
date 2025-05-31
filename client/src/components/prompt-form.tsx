@@ -15,7 +15,7 @@ interface PromptFormProps {
 }
 
 export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
-  const [prompt, setPrompt] = useState("Make the text 3D, floating in space on a city street");
+  const [prompt, setPrompt] = useState("black and white, line art coloring drawing, keep outer + inner contours, no shading, closed lines, pure white background");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [imageSize, setImageSize] = useState("1024x1024");
   const [aspectRatio, setAspectRatio] = useState("match_input_image");
