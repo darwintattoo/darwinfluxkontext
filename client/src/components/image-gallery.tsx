@@ -312,20 +312,52 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
           </div>
 
           <div className="p-4 bg-slate-800/30">
-            <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
               <div className="flex items-center space-x-4">
                 <span>{formatDate(latestImage.createdAt)}</span>
                 <span>{latestImage.width}x{latestImage.height}</span>
                 <span>${latestImage.cost || "0.08"}</span>
               </div>
+            </div>
+            
+            {/* Action buttons row */}
+            <div className="flex items-center justify-between">
+              <div className="flex space-x-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-600 px-3 py-1.5 h-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDownload(latestImage);
+                  }}
+                >
+                  <Download className="h-3 w-3 mr-1" />
+                  Download
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-600 px-3 py-1.5 h-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShare(latestImage);
+                  }}
+                >
+                  <Share className="h-3 w-3 mr-1" />
+                  Share
+                </Button>
+              </div>
+              
               <Button
                 size="sm"
-                variant="ghost"
-                className="text-slate-400 hover:text-red-400 transition-colors h-auto p-1"
+                variant="outline"
+                className="bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30 hover:text-red-300 px-3 py-1.5 h-auto"
                 onClick={() => deleteMutation.mutate(latestImage.id)}
                 disabled={deleteMutation.isPending}
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-3 w-3 mr-1" />
+                Delete
               </Button>
             </div>
           </div>
@@ -392,9 +424,38 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
               
               <div className="p-3">
                 <p className="text-sm text-slate-300 truncate">{image.prompt}</p>
-                <div className="flex items-center justify-between text-xs text-slate-400 mt-2">
+                <div className="flex items-center justify-between text-xs text-slate-400 mt-2 mb-3">
                   <span>{formatDate(image.createdAt)}</span>
                   <span>{image.width}x{image.height}</span>
+                </div>
+                
+                {/* Action buttons for previous images */}
+                <div className="flex items-center justify-between">
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-600 px-2 py-1 h-auto text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShare(image);
+                      }}
+                    >
+                      <Share className="h-3 w-3 mr-1" />
+                      Share
+                    </Button>
+                  </div>
+                  
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30 hover:text-red-300 px-2 py-1 h-auto text-xs"
+                    onClick={() => deleteMutation.mutate(image.id)}
+                    disabled={deleteMutation.isPending}
+                  >
+                    <Trash2 className="h-3 w-3 mr-1" />
+                    Delete
+                  </Button>
                 </div>
               </div>
             </div>
