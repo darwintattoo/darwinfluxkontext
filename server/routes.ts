@@ -21,9 +21,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/image/:id", async (req, res) => {
     try {
       const imageId = parseInt(req.params.id);
+      console.log(`Image request for ID: ${imageId} from ${req.headers.host}`);
+      
       const image = await storage.getGeneratedImage(imageId);
       
       if (!image || !image.imageUrl) {
+        console.log(`Image not found for ID: ${imageId}`);
         return res.status(404).json({ error: "Image not found" });
       }
 
@@ -32,11 +35,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const base64Data = image.imageUrl.split(',')[1];
         const imageBuffer = Buffer.from(base64Data, 'base64');
         
+        console.log(`Serving binary image for ID: ${imageId}, size: ${imageBuffer.length} bytes`);
+        
         res.set({
           'Content-Type': 'image/png',
           'Content-Length': imageBuffer.length,
           'Cache-Control': 'public, max-age=31536000',
           'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET',
+          'Access-Control-Allow-Headers': 'Content-Type',
           'Cross-Origin-Resource-Policy': 'cross-origin'
         });
         
@@ -44,6 +51,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // If it's a regular URL, redirect
+      console.log(`Redirecting to URL for ID: ${imageId}`);
       res.redirect(image.imageUrl);
     } catch (error) {
       console.error("Error serving image:", error);
@@ -60,11 +68,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const isProduction = process.env.NODE_ENV === 'production' || req.headers.host?.includes('.replit.app');
       
       if (isProduction) {
-        // In production, try base64 but with smaller payloads by chunking
+        // In production, always use the binary endpoint
+        const baseUrl = req.protocol + '://' + req.get('host');
         const optimizedImages = images.map(image => ({
           ...image,
-          // Keep original imageUrl for now, but we could implement chunking later
-          imageUrl: image.imageUrl
+          imageUrl: image.imageUrl.startsWith('data:image/') ? `${baseUrl}/api/image/${image.id}` : image.imageUrl
         }));
         res.json(optimizedImages);
       } else {
