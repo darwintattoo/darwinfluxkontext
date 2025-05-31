@@ -31,7 +31,8 @@ export default function ImageGenerator() {
                 className="h-8 w-auto"
               />
               <div>
-                <div className="text-xs text-slate-500 mb-1">Created by Darwin Enriquez</div>
+                <div className="text-sm font-medium text-slate-200 mb-1">Modifica pose, expresión, estilo y más</div>
+                <div className="text-xs text-slate-500">Created by Darwin Enriquez</div>
               </div>
             </div>
             
