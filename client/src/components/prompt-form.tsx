@@ -33,10 +33,11 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   
   const promptSuggestions = {
     general: [
-      "Make the text 3D, floating in space on a city street",
-      "Convert the building to modern architecture", 
-      "Change the lighting to golden hour",
-      "Add snow falling in the scene"
+      "Convert to bold black and white tattoo stencil style",
+      "Transform into traditional American tattoo design", 
+      "Add tribal patterns and geometric elements",
+      "Create realistic black and gray shading style",
+      "Make it minimalist line art tattoo design"
     ],
     face_expressions: [
       "Change the expression to a warm, genuine smile with crinkled eyes",
@@ -356,11 +357,11 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-slate-700 border-slate-600">
-              <SelectItem value="general">General Edits</SelectItem>
+              <SelectItem value="general">Tattoo Styles</SelectItem>
               <SelectItem value="face_expressions">Face Expressions</SelectItem>
               <SelectItem value="face_poses">Face Poses</SelectItem>
-              <SelectItem value="style_changes">Style Changes</SelectItem>
-              <SelectItem value="animals">Animal Poses & Expressions</SelectItem>
+              <SelectItem value="style_changes">Artistic Styles</SelectItem>
+              <SelectItem value="animals">Animal Designs</SelectItem>
             </SelectContent>
           </Select>
         </div>

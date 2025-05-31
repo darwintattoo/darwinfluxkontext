@@ -25,12 +25,13 @@ export default function ImageGenerator() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-red-600 to-black rounded-lg flex items-center justify-center">
                 <Wand2 className="h-4 w-4 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-50">FLUX Kontext Max</h1>
-                <p className="text-xs text-slate-400">AI Image Generator</p>
+                <div className="text-xs text-slate-500 mb-1">Created by Usuario</div>
+                <h1 className="text-xl font-bold text-slate-50">TattooStencilPro</h1>
+                <p className="text-xs text-slate-400">AI-Powered Tattoo Design Generator</p>
               </div>
             </div>
             
