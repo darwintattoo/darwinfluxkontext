@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertImageSchema } from "@shared/schema";
@@ -18,6 +19,8 @@ const generateImageSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Serve static images from public directory
+  app.use('/images', express.static(join(process.cwd(), 'public', 'images')));
   // Serve individual images (converts base64 to binary for better performance)
   app.get("/api/image/:id", async (req, res) => {
     try {
@@ -151,31 +154,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const imageBuffer = Buffer.concat(chunks);
           console.log("Original image buffer size:", imageBuffer.length);
           
-          // Compress image significantly for deployment compatibility
+          // Save as static file to avoid base64 URL issues in deployment
           try {
-            const compressedBuffer = await sharp(imageBuffer)
+            const imageDir = join(process.cwd(), 'public', 'images');
+            if (!existsSync(imageDir)) {
+              mkdirSync(imageDir, { recursive: true });
+            }
+            
+            const fileName = `${nanoid()}.png`;
+            const filePath = join(imageDir, fileName);
+            
+            // Compress and save to file
+            await sharp(imageBuffer)
               .png({ 
-                quality: 75,
-                compressionLevel: 9,
-                progressive: true
+                quality: 85,
+                compressionLevel: 9
               })
-              .resize(800, 800, { 
+              .resize(1024, 1024, { 
                 fit: 'inside',
                 withoutEnlargement: true 
               })
-              .toBuffer();
+              .toFile(filePath);
             
-            console.log("Compressed image buffer size:", compressedBuffer.length);
-            console.log("Compression ratio:", Math.round((1 - compressedBuffer.length / imageBuffer.length) * 100) + "%");
+            // Use static file URL that works in deployment
+            imageUrl = `/images/${fileName}`;
+            console.log("Saved image as static file:", imageUrl);
+          } catch (fileError) {
+            console.error("Failed to save as static file:", fileError);
+            // Fallback to compressed base64
+            const compressedBuffer = await sharp(imageBuffer)
+              .png({ quality: 75, compressionLevel: 9 })
+              .resize(800, 800, { fit: 'inside', withoutEnlargement: true })
+              .toBuffer();
             
             const base64 = compressedBuffer.toString('base64');
             imageUrl = `data:image/png;base64,${base64}`;
-            console.log("Created compressed data URL, length:", imageUrl.length);
-          } catch (compressionError) {
-            console.error("Image compression failed, using original:", compressionError);
-            const base64 = imageBuffer.toString('base64');
-            imageUrl = `data:image/png;base64,${base64}`;
-            console.log("Created original data URL, length:", imageUrl.length);
+            console.log("Fallback to compressed base64, length:", imageUrl.length);
           }
         } catch (streamError) {
           console.error("Error reading async stream:", streamError);
