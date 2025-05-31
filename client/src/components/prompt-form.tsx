@@ -197,33 +197,40 @@ export default function PromptForm() {
           
           {showAdvanced && (
             <div className="space-y-4">
-              <div>
-                <Label className="text-slate-300 mb-2">Image Size</Label>
-                <Select value={imageSize} onValueChange={setImageSize}>
-                  <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-slate-50">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-700 border-slate-600">
-                    <SelectItem value="1024x1024">1024x1024 (Square)</SelectItem>
-                    <SelectItem value="1024x768">1024x768 (Landscape)</SelectItem>
-                    <SelectItem value="768x1024">768x1024 (Portrait)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {!inputImageUrl && (
+                <div>
+                  <Label className="text-slate-300 mb-2">Image Size</Label>
+                  <Select value={imageSize} onValueChange={setImageSize}>
+                    <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-slate-50">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-700 border-slate-600">
+                      <SelectItem value="1024x1024">1024x1024 (Square)</SelectItem>
+                      <SelectItem value="1024x768">1024x768 (Landscape)</SelectItem>
+                      <SelectItem value="768x1024">768x1024 (Portrait)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
-              <div>
-                <Label className="text-slate-300 mb-2">
-                  Quality <span className="text-slate-500">{quality[0]}</span>
-                </Label>
-                <Slider
-                  value={quality}
-                  onValueChange={setQuality}
-                  min={50}
-                  max={100}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
+              {inputImageUrl && (
+                <div>
+                  <Label className="text-slate-300 mb-2">Aspect Ratio</Label>
+                  <Select value={aspectRatio} onValueChange={setAspectRatio}>
+                    <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-slate-50">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-700 border-slate-600">
+                      <SelectItem value="match_input_image">Match Input Image</SelectItem>
+                      <SelectItem value="1:1">1:1 (Square)</SelectItem>
+                      <SelectItem value="16:9">16:9 (Landscape)</SelectItem>
+                      <SelectItem value="9:16">9:16 (Portrait)</SelectItem>
+                      <SelectItem value="4:3">4:3 (Classic)</SelectItem>
+                      <SelectItem value="3:2">3:2 (Photo)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -244,6 +251,12 @@ export default function PromptForm() {
         <div className="text-xs text-slate-400 text-center">
           <Info className="inline mr-1 h-3 w-3" />
           Estimated cost: <span className="text-slate-300">$0.05</span> per generation
+          {inputImageUrl && (
+            <div className="mt-1 text-amber-400">
+              <Info className="inline mr-1 h-3 w-3" />
+              Image editing mode - transforming reference image
+            </div>
+          )}
         </div>
       </form>
       

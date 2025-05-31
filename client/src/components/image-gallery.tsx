@@ -141,6 +141,13 @@ export default function ImageGallery({ images, isLoading, onImageSelect }: Image
               <div>
                 <h3 className="font-medium text-slate-200">Latest Generation</h3>
                 <p className="text-sm text-slate-400 mt-1">{latestImage.prompt}</p>
+                {latestImage.inputImageUrl && (
+                  <div className="flex items-center mt-2">
+                    <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-full">
+                      Image Edit
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="flex items-center space-x-2">
                 <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">

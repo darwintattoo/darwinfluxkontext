@@ -105,11 +105,18 @@ export default function ImageModal({ image, isOpen, onClose }: ImageModalProps) 
             />
             
             <div className="p-4 flex items-center justify-between bg-slate-800">
-              <div>
+              <div className="flex-1">
                 <p className="text-slate-200 font-medium">{image.prompt}</p>
                 <p className="text-slate-400 text-sm">
                   {image.width}x{image.height} • Generated {formatDate(image.createdAt)}
                 </p>
+                {image.inputImageUrl && (
+                  <div className="mt-2 flex items-center space-x-2">
+                    <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-full">
+                      Edited from reference image
+                    </span>
+                  </div>
+                )}
               </div>
               
               <div className="flex space-x-2">
