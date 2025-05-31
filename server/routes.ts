@@ -14,11 +14,48 @@ const generateImageSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Get all generated images
+  // Serve individual images (converts base64 to binary for better performance)
+  app.get("/api/image/:id", async (req, res) => {
+    try {
+      const imageId = parseInt(req.params.id);
+      const image = await storage.getGeneratedImage(imageId);
+      
+      if (!image || !image.imageUrl) {
+        return res.status(404).json({ error: "Image not found" });
+      }
+
+      // If it's a base64 data URL, convert to binary
+      if (image.imageUrl.startsWith('data:image/')) {
+        const base64Data = image.imageUrl.split(',')[1];
+        const imageBuffer = Buffer.from(base64Data, 'base64');
+        
+        res.set({
+          'Content-Type': 'image/png',
+          'Content-Length': imageBuffer.length,
+          'Cache-Control': 'public, max-age=31536000'
+        });
+        
+        return res.send(imageBuffer);
+      }
+      
+      // If it's a regular URL, redirect
+      res.redirect(image.imageUrl);
+    } catch (error) {
+      console.error("Error serving image:", error);
+      res.status(500).json({ error: "Failed to serve image" });
+    }
+  });
+
+  // Get all generated images (with optimized URLs for deployment)
   app.get("/api/images", async (req, res) => {
     try {
       const images = await storage.getGeneratedImages();
-      res.json(images);
+      // Convert base64 URLs to optimized endpoint URLs for better performance
+      const optimizedImages = images.map(image => ({
+        ...image,
+        imageUrl: image.imageUrl.startsWith('data:image/') ? `/api/image/${image.id}` : image.imageUrl
+      }));
+      res.json(optimizedImages);
     } catch (error) {
       console.error("Error fetching images:", error);
       res.status(500).json({ error: "Failed to fetch images" });
