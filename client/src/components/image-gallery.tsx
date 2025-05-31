@@ -245,60 +245,62 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
             )}
             
             {/* Image Actions Overlay */}
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <div className="flex space-x-2">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDownload(latestImage);
-                  }}
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleShare(latestImage);
-                  }}
-                >
-                  <Share className="h-4 w-4" />
-                </Button>
-                {onUseAsReference && (
+            {!compareEnabled && (
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="flex space-x-2">
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="bg-amber-500/30 backdrop-blur-sm text-white hover:bg-amber-500/50"
+                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onUseAsReference(latestImage.imageUrl);
-                      toast({
-                        title: "Image loaded as reference",
-                        description: "You can now edit this image with a new prompt",
-                      });
+                      handleDownload(latestImage);
                     }}
                   >
-                    <Edit className="h-4 w-4" />
+                    <Download className="h-4 w-4" />
                   </Button>
-                )}
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onImageSelect(latestImage);
-                  }}
-                >
-                  <Expand className="h-4 w-4" />
-                </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleShare(latestImage);
+                    }}
+                  >
+                    <Share className="h-4 w-4" />
+                  </Button>
+                  {onUseAsReference && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="bg-amber-500/30 backdrop-blur-sm text-white hover:bg-amber-500/50"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onUseAsReference(latestImage.imageUrl);
+                        toast({
+                          title: "Image loaded as reference",
+                          description: "You can now edit this image with a new prompt",
+                        });
+                      }}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onImageSelect(latestImage);
+                    }}
+                  >
+                    <Expand className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="p-4 bg-slate-800/30">
