@@ -285,7 +285,10 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center">
                 <Image className="h-8 w-8 text-slate-400 mx-auto mb-2" />
                 <p className="text-sm text-slate-400 mb-3">
-                  Upload an image to edit or transform
+                  {language === 'es' 
+                    ? 'Arrastra una imagen aquí o haz clic para subirla' 
+                    : 'Drag an image here or click to upload'
+                  }
                 </p>
                 <Input
                   type="file"
