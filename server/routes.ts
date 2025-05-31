@@ -2,6 +2,7 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { imageStorage } from "./imageStorage";
 import { insertImageSchema } from "@shared/schema";
 import { z } from "zod";
 import Replicate from "replicate";
@@ -82,6 +83,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching images:", error);
       res.status(500).json({ error: "Failed to fetch images" });
+    }
+  });
+
+  // Upload image file
+  app.post("/api/upload", async (req, res) => {
+    try {
+      const { imageData } = req.body;
+      
+      if (!imageData) {
+        return res.status(400).json({ error: "No image data provided" });
+      }
+
+      // Convert base64 to buffer
+      const base64Data = imageData.split(',')[1];
+      const imageBuffer = Buffer.from(base64Data, 'base64');
+      
+      // Save the image
+      const fileName = imageStorage.saveImage(imageBuffer);
+      const imageUrl = `${req.protocol}://${req.get('host')}/images/${fileName}`;
+      
+      res.json({ imageUrl });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      res.status(500).json({ error: "Failed to upload image" });
     }
   });
 

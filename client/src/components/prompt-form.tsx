@@ -196,17 +196,35 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       });
       return;
     }
-
-    const formData = new FormData();
-    formData.append('image', file);
     
     try {
-      // Convert to base64 URL for now (in production, you'd upload to a service)
+      // Convert file to base64
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         const result = e.target?.result as string;
-        setInputImageUrl(result);
-        setInputImageFile(file);
+        
+        try {
+          // Upload to server to get a proper URL
+          const response = await apiRequest("POST", "/api/upload", {
+            imageData: result
+          });
+          
+          const data = await response.json();
+          
+          if (data.imageUrl) {
+            setInputImageUrl(data.imageUrl);
+            setInputImageFile(file);
+          } else {
+            throw new Error("Failed to get image URL");
+          }
+        } catch (uploadError) {
+          console.error("Upload error:", uploadError);
+          toast({
+            title: "Error",
+            description: "Failed to upload image",
+            variant: "destructive",
+          });
+        }
       };
       reader.readAsDataURL(file);
     } catch (error) {
