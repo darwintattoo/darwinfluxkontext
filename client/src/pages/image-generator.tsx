@@ -35,14 +35,7 @@ export default function ImageGenerator() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Circle className={`w-2 h-2 rounded-full ${hasApiKey ? 'fill-green-500 text-green-500' : 'fill-red-500 text-red-500'} animate-pulse`} />
-                <span className="text-sm text-slate-400">
-                  {hasApiKey ? 'API Connected' : 'API Key Required'}
-                </span>
-              </div>
-              
+            <div className="flex items-center space-x-4">              
               <button 
                 onClick={() => setShowSettings(true)}
                 className="text-slate-400 hover:text-slate-300 transition-colors p-2"
