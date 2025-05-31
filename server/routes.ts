@@ -59,8 +59,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         input.height = height;
       }
 
-      // Usar el SDK de Replicate con el modelo correcto
-      const output = await replicate.run("black-forest-labs/flux-kontext-max", { input });
+      // Usar el SDK de Replicate con reintentos para manejar interrupciones
+      let output;
+      let retries = 3;
+      
+      for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+          console.log(`Generating image (attempt ${attempt}/${retries})...`);
+          output = await replicate.run("black-forest-labs/flux-kontext-max", { input });
+          break; // Éxito, salir del bucle
+        } catch (error: any) {
+          console.log(`Attempt ${attempt} failed:`, error.message);
+          
+          if (attempt === retries || !error.message?.includes("Prediction interrupted")) {
+            throw error; // Último intento o error diferente
+          }
+          
+          // Esperar antes del siguiente intento
+          await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+        }
+      }
       
       console.log("Replicate output:", output);
       
