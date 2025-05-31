@@ -420,12 +420,12 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_poses' ? 'rotate-180' : ''}`} />
             </button>
             {promptCategory === 'face_poses' && (
-              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
                 {promptSuggestions.face_poses.map((suggestion, index) => (
                   <button
                     key={index}
                     type="button"
-                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
                     onClick={() => setPrompt(suggestion)}
                   >
                     {suggestion}
@@ -446,12 +446,12 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_expressions' ? 'rotate-180' : ''}`} />
             </button>
             {promptCategory === 'face_expressions' && (
-              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
                 {promptSuggestions.face_expressions.map((suggestion, index) => (
                   <button
                     key={index}
                     type="button"
-                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
                     onClick={() => setPrompt(suggestion)}
                   >
                     {suggestion}
@@ -472,12 +472,12 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'camera_angles' ? 'rotate-180' : ''}`} />
             </button>
             {promptCategory === 'camera_angles' && (
-              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
                 {promptSuggestions.camera_angles.map((suggestion, index) => (
                   <button
                     key={index}
                     type="button"
-                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
                     onClick={() => setPrompt(suggestion)}
                   >
                     {suggestion}
@@ -498,12 +498,12 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'style_changes' ? 'rotate-180' : ''}`} />
             </button>
             {promptCategory === 'style_changes' && (
-              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
                 {promptSuggestions.style_changes.map((suggestion, index) => (
                   <button
                     key={index}
                     type="button"
-                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
                     onClick={() => setPrompt(suggestion)}
                   >
                     {suggestion}
@@ -524,12 +524,12 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'general' ? 'rotate-180' : ''}`} />
             </button>
             {promptCategory === 'general' && (
-              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+              <div className="mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
                 {promptSuggestions.general.map((suggestion, index) => (
                   <button
                     key={index}
                     type="button"
-                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
                     onClick={() => setPrompt(suggestion)}
                   >
                     {suggestion}
