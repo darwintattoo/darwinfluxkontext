@@ -29,7 +29,7 @@ export default function ImageGenerator() {
                 <Wand2 className="h-4 w-4 text-white" />
               </div>
               <div>
-                <div className="text-xs text-slate-500 mb-1">Created by Usuario</div>
+                <div className="text-xs text-slate-500 mb-1">Created by Darwin Enriquez</div>
                 <h1 className="text-xl font-bold text-slate-50">TattooStencilPro</h1>
                 <p className="text-xs font-semibold text-indigo-400">Powered by FLUX Kontext Max</p>
               </div>
