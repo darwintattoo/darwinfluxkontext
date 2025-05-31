@@ -95,15 +95,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No image data provided" });
       }
 
-      // Convert base64 to buffer
-      const base64Data = imageData.split(',')[1];
-      const imageBuffer = Buffer.from(base64Data, 'base64');
-      
-      // Save the image
-      const fileName = imageStorage.saveImage(imageBuffer);
-      const imageUrl = `${req.protocol}://${req.get('host')}/images/${fileName}`;
-      
-      res.json({ imageUrl });
+      // Return the base64 data URL directly for Replicate API
+      res.json({ imageUrl: imageData });
     } catch (error) {
       console.error("Error uploading image:", error);
       res.status(500).json({ error: "Failed to upload image" });
@@ -134,6 +127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Si hay imagen de entrada, la incluimos
       if (inputImageUrl) {
+        console.log("Input image URL:", inputImageUrl);
         input.input_image = inputImageUrl;
         if (aspectRatio && aspectRatio !== "match_input_image") {
           input.aspect_ratio = aspectRatio;
@@ -143,6 +137,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         input.width = width;
         input.height = height;
       }
+
+      console.log("Final input object:", JSON.stringify(input, null, 2));
 
       // Usar el SDK de Replicate con reintentos para manejar interrupciones
       let output;
