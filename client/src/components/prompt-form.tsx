@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PromptFormProps {
   referenceImageUrl?: string;
@@ -18,6 +19,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   const [prompt, setPrompt] = useState("Front view");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [imageSize, setImageSize] = useState("1024x1024");
+  const { language } = useLanguage();
   const [aspectRatio, setAspectRatio] = useState("match_input_image");
   const [inputImageUrl, setInputImageUrl] = useState(referenceImageUrl || "");
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
@@ -396,6 +398,13 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             ) : 'Generate Image'}
           </div>
         </Button>
+
+        {/* AI Model Attribution */}
+        <div className="text-center">
+          <div className="text-xs text-slate-400">
+            {language === 'es' ? 'Impulsado por FLUX Kontext Max AI' : 'Powered by FLUX Kontext Max AI'}
+          </div>
+        </div>
 
         {/* Image editing mode indicator */}
         {inputImageUrl && (
