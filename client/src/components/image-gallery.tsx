@@ -175,29 +175,31 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
           <div className="relative group">
             {compareEnabled && latestImage.inputImageUrl ? (
               <div className="relative overflow-hidden">
-                {/* Before Image (Reference) */}
+                {/* After Image (Generated) - Base layer */}
+                <img 
+                  src={latestImage.imageUrl}
+                  alt={latestImage.prompt}
+                  className="w-full h-auto cursor-pointer block"
+                  onClick={() => onImageSelect(latestImage)}
+                />
+                
+                {/* Before Image (Reference) - Overlay with clip */}
                 <div 
-                  className="absolute inset-0 z-10"
+                  className="absolute inset-0 z-10 pointer-events-none"
                   style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
                 >
                   <img 
                     src={latestImage.inputImageUrl}
                     alt="Reference image"
-                    className="w-full h-auto object-cover"
+                    className="w-full h-auto object-cover object-left"
                   />
-                  <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-sm">
-                    Before
-                  </div>
                 </div>
                 
-                {/* After Image (Generated) */}
-                <img 
-                  src={latestImage.imageUrl}
-                  alt={latestImage.prompt}
-                  className="w-full h-auto cursor-pointer"
-                  onClick={() => onImageSelect(latestImage)}
-                />
-                <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-1 rounded text-sm">
+                {/* Labels */}
+                <div className="absolute top-4 left-4 bg-black/80 text-white px-3 py-1 rounded text-sm font-medium z-20">
+                  Before
+                </div>
+                <div className="absolute top-4 right-4 bg-black/80 text-white px-3 py-1 rounded text-sm font-medium z-20">
                   After
                 </div>
                 
