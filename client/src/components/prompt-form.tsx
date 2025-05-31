@@ -386,37 +386,114 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         )}
       </form>
       
-      {/* Prompt Suggestions */}
+      {/* Quick Prompts */}
       <div className="mt-6 pt-6 border-t border-slate-700">
-        <h3 className="text-sm font-medium text-slate-300 mb-3">Prompt Suggestions</h3>
+        <h3 className="text-sm font-medium text-slate-300 mb-3">Quick Prompts</h3>
         
-        {/* Category Selector */}
-        <div className="mb-3">
-          <Select value={promptCategory} onValueChange={setPromptCategory}>
-            <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-slate-50 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-slate-700 border-slate-600">
-              <SelectItem value="general">Tattoo Styles</SelectItem>
-              <SelectItem value="face_expressions">Face Expressions</SelectItem>
-              <SelectItem value="face_poses">Face Poses</SelectItem>
-              <SelectItem value="style_changes">Artistic Styles</SelectItem>
-              <SelectItem value="animals">Animal Designs</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        {/* Suggestions */}
-        <div className="space-y-2 max-h-40 overflow-y-auto">
-          {promptSuggestions[promptCategory as keyof typeof promptSuggestions].map((suggestion, index) => (
+        <div className="space-y-3">
+          {/* Face Poses - Primary */}
+          <div>
             <button
-              key={index}
-              onClick={() => setPrompt(suggestion)}
-              className="w-full text-left px-3 py-2 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-xs text-slate-400 hover:text-slate-300 transition-colors"
+              type="button"
+              onClick={() => setPromptCategory(promptCategory === 'face_poses' ? '' : 'face_poses')}
+              className="w-full flex items-center justify-between p-3 bg-indigo-600/20 hover:bg-indigo-600/30 rounded-lg text-sm font-medium text-indigo-300 border border-indigo-600/30"
             >
-              {suggestion}
+              <span>🎭 Face Poses</span>
+              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_poses' ? 'rotate-180' : ''}`} />
             </button>
-          ))}
+            {promptCategory === 'face_poses' && (
+              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                {promptSuggestions.face_poses.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    onClick={() => setPrompt(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Face Expressions */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setPromptCategory(promptCategory === 'face_expressions' ? '' : 'face_expressions')}
+              className="w-full flex items-center justify-between p-3 bg-amber-600/20 hover:bg-amber-600/30 rounded-lg text-sm font-medium text-amber-300 border border-amber-600/30"
+            >
+              <span>😊 Face Expressions</span>
+              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'face_expressions' ? 'rotate-180' : ''}`} />
+            </button>
+            {promptCategory === 'face_expressions' && (
+              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                {promptSuggestions.face_expressions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    onClick={() => setPrompt(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Style Changes */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setPromptCategory(promptCategory === 'style_changes' ? '' : 'style_changes')}
+              className="w-full flex items-center justify-between p-3 bg-purple-600/20 hover:bg-purple-600/30 rounded-lg text-sm font-medium text-purple-300 border border-purple-600/30"
+            >
+              <span>🎨 Artistic Styles</span>
+              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'style_changes' ? 'rotate-180' : ''}`} />
+            </button>
+            {promptCategory === 'style_changes' && (
+              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                {promptSuggestions.style_changes.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    onClick={() => setPrompt(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Tattoo Styles */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setPromptCategory(promptCategory === 'general' ? '' : 'general')}
+              className="w-full flex items-center justify-between p-3 bg-red-600/20 hover:bg-red-600/30 rounded-lg text-sm font-medium text-red-300 border border-red-600/30"
+            >
+              <span>🖤 Tattoo Styles</span>
+              <ChevronDown className={`w-4 h-4 transform transition-transform ${promptCategory === 'general' ? 'rotate-180' : ''}`} />
+            </button>
+            {promptCategory === 'general' && (
+              <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                {promptSuggestions.general.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="w-full text-left p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                    onClick={() => setPrompt(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
