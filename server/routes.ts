@@ -89,30 +89,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
         imageUrl = output;
       } else if (Array.isArray(output) && output.length > 0) {
         imageUrl = output[0];
-      } else if (output && typeof output === 'object' && 'readable' in output) {
-        // Es un ReadableStream, necesitamos leerlo
-        const chunks: Uint8Array[] = [];
-        const reader = output.getReader();
+      } else if (output && typeof output[Symbol.asyncIterator] === 'function') {
+        // Es un stream iterable
+        console.log("Processing async iterable stream from Replicate...");
+        
+        const chunks: Buffer[] = [];
+        try {
+          for await (const chunk of output) {
+            chunks.push(Buffer.from(chunk));
+          }
+          
+          const imageBuffer = Buffer.concat(chunks);
+          console.log("Image buffer size:", imageBuffer.length);
+          
+          // Convertir a base64 data URL
+          const base64 = imageBuffer.toString('base64');
+          imageUrl = `data:image/png;base64,${base64}`;
+          console.log("Created data URL, length:", imageUrl.length);
+        } catch (streamError) {
+          console.error("Error reading async stream:", streamError);
+          throw new Error("Failed to read image stream");
+        }
+      } else if (output && 'getReader' in output) {
+        // Es un ReadableStream estándar
+        console.log("Processing ReadableStream from Replicate...");
+        
+        const chunks: Buffer[] = [];
+        const reader = (output as any).getReader();
         
         try {
           while (true) {
             const { done, value } = await reader.read();
             if (done) break;
-            chunks.push(value);
+            chunks.push(Buffer.from(value));
           }
           
-          // Concatenar todos los chunks
-          const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-          const imageBuffer = new Uint8Array(totalLength);
-          let offset = 0;
-          for (const chunk of chunks) {
-            imageBuffer.set(chunk, offset);
-            offset += chunk.length;
-          }
+          const imageBuffer = Buffer.concat(chunks);
+          console.log("Image buffer size:", imageBuffer.length);
           
           // Convertir a base64 data URL
-          const base64 = Buffer.from(imageBuffer).toString('base64');
+          const base64 = imageBuffer.toString('base64');
           imageUrl = `data:image/png;base64,${base64}`;
+          console.log("Created data URL, length:", imageUrl.length);
+        } catch (streamError) {
+          console.error("Error reading stream:", streamError);
+          throw new Error("Failed to read image stream");
         } finally {
           reader.releaseLock();
         }
