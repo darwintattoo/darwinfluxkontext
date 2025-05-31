@@ -266,7 +266,15 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
                       <SelectItem value="16:9">16:9 (Landscape)</SelectItem>
                       <SelectItem value="9:16">9:16 (Portrait)</SelectItem>
                       <SelectItem value="4:3">4:3 (Classic)</SelectItem>
+                      <SelectItem value="3:4">3:4 (Portrait)</SelectItem>
                       <SelectItem value="3:2">3:2 (Photo)</SelectItem>
+                      <SelectItem value="2:3">2:3 (Photo Portrait)</SelectItem>
+                      <SelectItem value="4:5">4:5 (Instagram)</SelectItem>
+                      <SelectItem value="5:4">5:4 (Instagram Landscape)</SelectItem>
+                      <SelectItem value="21:9">21:9 (Ultrawide)</SelectItem>
+                      <SelectItem value="9:21">9:21 (Ultrawide Portrait)</SelectItem>
+                      <SelectItem value="2:1">2:1 (Panoramic)</SelectItem>
+                      <SelectItem value="1:2">1:2 (Tall)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
