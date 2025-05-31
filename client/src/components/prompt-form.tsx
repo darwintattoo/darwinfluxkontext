@@ -380,7 +380,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         <Button 
           type="submit" 
           disabled={generateMutation.isPending}
-          className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium py-3 transition-all duration-200"
+          className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 transition-all duration-200"
         >
           <div className="flex items-center justify-center">
             <Wand2 className="mr-2 h-4 w-4" />
