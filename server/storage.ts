@@ -49,8 +49,14 @@ export class MemStorage implements IStorage {
   async createGeneratedImage(insertImage: InsertImage): Promise<GeneratedImage> {
     const id = this.currentImageId++;
     const image: GeneratedImage = { 
-      ...insertImage, 
-      id, 
+      id,
+      prompt: insertImage.prompt,
+      imageUrl: insertImage.imageUrl,
+      inputImageUrl: insertImage.inputImageUrl ?? null,
+      width: insertImage.width,
+      height: insertImage.height,
+      aspectRatio: insertImage.aspectRatio ?? "match_input_image",
+      cost: insertImage.cost ?? null,
       createdAt: new Date() 
     };
     this.images.set(id, image);

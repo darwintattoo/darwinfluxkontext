@@ -1,30 +1,40 @@
 import { useState } from "react";
-import { ChevronDown, Wand2, Info, Clock } from "lucide-react";
+import { ChevronDown, Wand2, Info, Upload, X, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 export default function PromptForm() {
-  const [prompt, setPrompt] = useState("A majestic mountain landscape at sunset with golden light reflecting on a pristine lake");
+  const [prompt, setPrompt] = useState("Make the text 3D, floating in space on a city street");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [imageSize, setImageSize] = useState("1024x1024");
-  const [quality, setQuality] = useState([80]);
+  const [aspectRatio, setAspectRatio] = useState("match_input_image");
+  const [inputImageUrl, setInputImageUrl] = useState("");
+  const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [recentPrompts] = useState([
-    "A serene forest path with dappled sunlight...",
-    "Modern cityscape at night with neon lights...",
-    "Abstract digital art with flowing colors..."
+    "Make the text 3D, floating in space on a city street",
+    "Convert the building to modern architecture",
+    "Change the lighting to golden hour",
+    "Add snow falling in the scene"
   ]);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const generateMutation = useMutation({
-    mutationFn: async (data: { prompt: string; width: number; height: number }) => {
+    mutationFn: async (data: { 
+      prompt: string; 
+      inputImageUrl?: string; 
+      width?: number; 
+      height?: number; 
+      aspectRatio?: string; 
+    }) => {
       const response = await apiRequest("POST", "/api/generate", data);
       return response.json();
     },
@@ -44,6 +54,37 @@ export default function PromptForm() {
     },
   });
 
+  const handleImageUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Error",
+        description: "Please select a valid image file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+      // Convert to base64 URL for now (in production, you'd upload to a service)
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setInputImageUrl(result);
+        setInputImageFile(file);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to process image",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -56,8 +97,15 @@ export default function PromptForm() {
       return;
     }
 
-    const [width, height] = imageSize.split('x').map(Number);
-    generateMutation.mutate({ prompt: prompt.trim(), width, height });
+    const [width, height] = inputImageUrl ? [1024, 1024] : imageSize.split('x').map(Number);
+    
+    generateMutation.mutate({ 
+      prompt: prompt.trim(), 
+      inputImageUrl: inputImageUrl || undefined,
+      width, 
+      height,
+      aspectRatio
+    });
   };
 
   return (
@@ -65,9 +113,65 @@ export default function PromptForm() {
       <h2 className="text-lg font-semibold mb-4 text-slate-200">Generate Image</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Input Image Upload */}
+        <div>
+          <Label className="text-slate-300 mb-2">
+            Reference Image (Optional)
+          </Label>
+          <div className="space-y-3">
+            {inputImageUrl ? (
+              <div className="relative">
+                <img 
+                  src={inputImageUrl} 
+                  alt="Input reference" 
+                  className="w-full h-32 object-cover rounded-lg border border-slate-600"
+                />
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  className="absolute top-2 right-2"
+                  onClick={() => {
+                    setInputImageUrl("");
+                    setInputImageFile(null);
+                  }}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            ) : (
+              <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center">
+                <Image className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+                <p className="text-sm text-slate-400 mb-3">
+                  Upload an image to edit or transform
+                </p>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleImageUpload(file);
+                  }}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="bg-slate-700 hover:bg-slate-600"
+                  onClick={() => document.getElementById('image-upload')?.click()}
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Choose Image
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div>
           <Label htmlFor="prompt" className="text-slate-300 mb-2">
-            Prompt
+            {inputImageUrl ? "What changes do you want to make?" : "Describe the image you want to generate"}
           </Label>
           <Textarea
             id="prompt"
@@ -75,7 +179,7 @@ export default function PromptForm() {
             onChange={(e) => setPrompt(e.target.value)}
             rows={4}
             className="w-full bg-slate-700 border-slate-600 text-slate-50 placeholder-slate-400 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
-            placeholder="Describe the image you want to generate..."
+            placeholder={inputImageUrl ? "Make the text 3D, floating in space on a city street" : "Describe the image you want to generate..."}
             required
           />
         </div>

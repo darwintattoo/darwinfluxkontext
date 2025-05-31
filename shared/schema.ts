@@ -12,8 +12,10 @@ export const generatedImages = pgTable("generated_images", {
   id: serial("id").primaryKey(),
   prompt: text("prompt").notNull(),
   imageUrl: text("image_url").notNull(),
+  inputImageUrl: text("input_image_url"), // URL de la imagen de referencia
   width: integer("width").notNull(),
   height: integer("height").notNull(),
+  aspectRatio: text("aspect_ratio").default("match_input_image"),
   cost: text("cost"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -26,8 +28,10 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertImageSchema = createInsertSchema(generatedImages).pick({
   prompt: true,
   imageUrl: true,
+  inputImageUrl: true,
   width: true,
   height: true,
+  aspectRatio: true,
   cost: true,
 });
 

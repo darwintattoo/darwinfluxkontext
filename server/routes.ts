@@ -6,8 +6,10 @@ import { z } from "zod";
 
 const generateImageSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
+  inputImageUrl: z.string().url().optional(),
   width: z.number().optional().default(1024),
   height: z.number().optional().default(1024),
+  aspectRatio: z.string().optional().default("match_input_image"),
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -25,7 +27,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Generate new image using Replicate API
   app.post("/api/generate", async (req, res) => {
     try {
-      const { prompt, width, height } = generateImageSchema.parse(req.body);
+      const { prompt, inputImageUrl, width, height, aspectRatio } = generateImageSchema.parse(req.body);
       
       const replicateToken = process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_TOKEN;
       
@@ -35,7 +37,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Call Replicate API
+      // Configuración de entrada para FLUX Kontext Max
+      const input: any = {
+        prompt: prompt,
+        aspect_ratio: aspectRatio,
+        num_outputs: 1,
+        guidance_scale: 3.5,
+        num_inference_steps: 28,
+        max_sequence_length: 512,
+        safety_tolerance: 2
+      };
+
+      // Si hay imagen de entrada, la incluimos
+      if (inputImageUrl) {
+        input.input_image = inputImageUrl;
+      } else {
+        // Solo establecer dimensiones si no hay imagen de entrada
+        input.width = width;
+        input.height = height;
+      }
+
+      // Call Replicate API con el modelo correcto FLUX Kontext Max
       const response = await fetch("https://api.replicate.com/v1/predictions", {
         method: "POST",
         headers: {
@@ -43,15 +65,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          version: "7f2d72b5f6174e7e8c8c2c0f5b6c5a0b5b5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
-          input: {
-            prompt: prompt,
-            width: width,
-            height: height,
-            num_outputs: 1,
-            guidance_scale: 7.5,
-            num_inference_steps: 20,
-          }
+          version: "dcd79a27c5834330dfdbff6e3bbcc0639e9b2f1b66ffb4e8fe969b4847b10dd8",
+          input: input
         }),
       });
 
@@ -92,8 +107,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const savedImage = await storage.createGeneratedImage({
             prompt,
             imageUrl: status.output[0],
-            width,
-            height,
+            inputImageUrl,
+            width: inputImageUrl ? 1024 : width,
+            height: inputImageUrl ? 1024 : height,
+            aspectRatio,
             cost: "0.05", // Approximate cost
           });
           
