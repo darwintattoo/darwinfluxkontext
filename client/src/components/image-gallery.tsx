@@ -174,24 +174,37 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
           
           <div className="relative group">
             {compareEnabled && latestImage.inputImageUrl ? (
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden bg-transparent">
                 {/* After Image (Generated) - Base layer */}
                 <img 
                   src={latestImage.imageUrl}
                   alt={latestImage.prompt}
                   className="w-full h-auto cursor-pointer block"
                   onClick={() => onImageSelect(latestImage)}
+                  style={{ 
+                    filter: 'none',
+                    mixBlendMode: 'normal',
+                    backgroundColor: 'transparent'
+                  }}
                 />
                 
                 {/* Before Image (Reference) - Overlay with clip */}
                 <div 
-                  className="absolute inset-0 z-10 pointer-events-none"
-                  style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+                  className="absolute inset-0 z-10 pointer-events-none bg-transparent"
+                  style={{ 
+                    clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`,
+                    backgroundColor: 'transparent'
+                  }}
                 >
                   <img 
                     src={latestImage.inputImageUrl}
                     alt="Reference image"
                     className="w-full h-auto object-cover object-left"
+                    style={{ 
+                      filter: 'none',
+                      mixBlendMode: 'normal',
+                      backgroundColor: 'transparent'
+                    }}
                   />
                 </div>
                 
