@@ -7,6 +7,7 @@ export const translations = {
   es: {
     title: 'Generador de Diseños de Tatuajes',
     subtitle: 'Transforma tus ideas en arte profesional',
+    poweredBy: 'Impulsado por FLUX Kontext Max AI',
     generateButton: 'Generar Imagen',
     uploading: 'Subiendo...',
     generating: 'Generando...',
@@ -54,6 +55,7 @@ export const translations = {
   en: {
     title: 'Tattoo Design Generator',
     subtitle: 'Transform your ideas into professional art',
+    poweredBy: 'Powered by FLUX Kontext Max AI',
     generateButton: 'Generate Image',
     uploading: 'Uploading...',
     generating: 'Generating...',
