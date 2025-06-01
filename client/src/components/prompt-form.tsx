@@ -549,57 +549,84 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
           )}
         </div>
 
-        {/* Generate Button */}
+        {/* Generate Button with Enhanced Timer */}
         <Button 
           type="submit" 
           disabled={generateMutation.isPending}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 transition-all duration-200"
+          className={`w-full font-medium transition-all duration-200 ${
+            generateMutation.isPending 
+              ? 'bg-blue-600 py-6' 
+              : 'bg-blue-600 hover:bg-blue-700 py-3'
+          }`}
         >
-          <div className="flex items-center justify-center">
-            {generateMutation.isPending ? (
-              <div className="flex items-center space-x-3">
-                {/* Circular Progress Indicator */}
-                <div className="relative">
-                  <svg className="w-6 h-6 transform -rotate-90" viewBox="0 0 36 36">
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      className="stroke-slate-400"
-                      strokeWidth="2"
-                    />
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      className="stroke-blue-400"
-                      strokeWidth="2"
-                      strokeDasharray={`${(generationTimer / 120) * 100} 100`}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-medium">
-                    {language === 'es' ? 'Generando...' : 'Generating...'}
-                  </div>
-                  <div className="text-xs text-blue-300 font-mono">
-                    {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')} • {Math.round((generationTimer / 120) * 100)}%
+          {generateMutation.isPending ? (
+            <div className="flex flex-col items-center space-y-3 w-full">
+              {/* Large Circular Progress with Timer */}
+              <div className="relative">
+                <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    fill="none"
+                    className="stroke-blue-300/30"
+                    strokeWidth="4"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    fill="none"
+                    className="stroke-white"
+                    strokeWidth="4"
+                    strokeDasharray={`${(generationTimer / 120) * 283} 283`}
+                    strokeLinecap="round"
+                    style={{
+                      transition: 'stroke-dasharray 0.5s ease-in-out'
+                    }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-white font-mono">
+                      {Math.floor(generationTimer / 60)}:{(generationTimer % 60).toString().padStart(2, '0')}
+                    </div>
+                    <div className="text-xs text-blue-200 font-medium">
+                      {Math.round((generationTimer / 120) * 100)}%
+                    </div>
                   </div>
                 </div>
               </div>
-            ) : (
-              <>
-                <Wand2 className="mr-2 h-4 w-4" />
+              
+              {/* Status Text */}
+              <div className="text-center">
+                <div className="text-lg font-semibold text-white mb-1">
+                  {language === 'es' ? 'Generando imagen...' : 'Generating image...'}
+                </div>
+                <div className="text-sm text-blue-200">
+                  {language === 'es' ? 'Creando tu diseño único' : 'Creating your unique design'}
+                </div>
+              </div>
+              
+              {/* Animated Progress Bar */}
+              <div className="w-full bg-blue-300/20 rounded-full h-2 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-white to-blue-200 rounded-full transition-all duration-500 ease-out"
+                  style={{ 
+                    width: `${Math.min((generationTimer / 120) * 100, 100)}%`,
+                    animation: 'pulse 2s ease-in-out infinite'
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center text-white">
+              <Wand2 className="mr-2 h-5 w-5" />
+              <span className="text-lg font-semibold">
                 {language === 'es' ? 'Generar Imagen' : 'Generate Image'}
-              </>
-            )}
-          </div>
+              </span>
+            </div>
+          )}
         </Button>
 
 
