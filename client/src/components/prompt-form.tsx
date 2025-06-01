@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown, Wand2, Info, Upload, X, Image, Languages, GripHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,6 +26,18 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   const [generationTimer, setGenerationTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   const [panelHeight, setPanelHeight] = useState(600); // Default height in pixels
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Check if device is desktop
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   // Update inputImageUrl when referenceImageUrl changes
   React.useEffect(() => {
@@ -378,8 +390,8 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
   return (
     <div 
-      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 sticky top-24 overflow-auto"
-      style={{ height: `${panelHeight}px` }}
+      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-4 sm:p-6 lg:sticky lg:top-24 overflow-auto"
+      style={{ height: isDesktop ? `${panelHeight}px` : 'auto' }}
     >
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-slate-200">Generate Image</h2>
@@ -557,11 +569,11 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         >
           <div className="flex items-center justify-center">
             {generateMutation.isPending ? (
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
                 {/* Compact Timer Display */}
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <svg className="w-8 h-8 transform -rotate-90" viewBox="0 0 36 36">
+                    <svg className="w-10 h-10 sm:w-8 sm:h-8 transform -rotate-90" viewBox="0 0 36 36">
                       <circle
                         cx="18"
                         cy="18"
@@ -586,17 +598,17 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
                     </svg>
                   </div>
                   <div className="text-white">
-                    <div className="text-lg font-bold font-mono">
+                    <div className="text-xl sm:text-lg font-bold font-mono">
                       {Math.floor(generationTimer / 60)}:{(generationTimer % 60).toString().padStart(2, '0')}
                     </div>
                   </div>
                 </div>
-                <div className="text-white">
+                <div className="text-white text-center sm:text-left">
                   <div className="text-base font-medium">
                     {language === 'es' ? 'Generando imagen...' : 'Generating image...'}
                   </div>
                   <div className="text-sm text-blue-200">
-                    {Math.round((generationTimer / 120) * 100)}% completado
+                    {Math.round((generationTimer / 120) * 100)}% {language === 'es' ? 'completado' : 'complete'}
                   </div>
                 </div>
               </div>
