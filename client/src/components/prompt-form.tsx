@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ChevronDown, Wand2, Info, Upload, X, Image, Languages, GripHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,18 +26,6 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   const [generationTimer, setGenerationTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   const [panelHeight, setPanelHeight] = useState(600); // Default height in pixels
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  // Check if device is desktop
-  useEffect(() => {
-    const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    
-    checkDesktop();
-    window.addEventListener('resize', checkDesktop);
-    return () => window.removeEventListener('resize', checkDesktop);
-  }, []);
 
   // Update inputImageUrl when referenceImageUrl changes
   React.useEffect(() => {
@@ -390,8 +378,8 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
   return (
     <div 
-      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-4 sm:p-6 lg:sticky lg:top-24 overflow-auto"
-      style={{ height: isDesktop ? `${panelHeight}px` : 'auto' }}
+      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 sticky top-24 overflow-auto"
+      style={{ height: `${panelHeight}px` }}
     >
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-slate-200">Generate Image</h2>
@@ -402,13 +390,13 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Input Image Upload */}
-        <div className="mb-4">
-          <Label className="text-slate-300 mb-3 block text-sm font-medium">
-            {language === 'es' ? 'Imagen de Referencia (Opcional)' : 'Reference Image (Optional)'}
+        <div>
+          <Label className="text-slate-300 mb-2">
+            Reference Image (Optional)
           </Label>
           <div className="space-y-3">
             {inputImageUrl ? (
-              <div className="relative bg-slate-700/30 rounded-lg p-2">
+              <div className="relative">
                 <img 
                   src={inputImageUrl} 
                   alt="Input reference" 
@@ -418,34 +406,22 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
                   type="button"
                   size="sm"
                   variant="destructive"
-                  className="absolute top-3 right-3 h-8 w-8 p-0"
+                  className="absolute top-2 right-2"
                   onClick={() => {
                     setInputImageUrl("");
                     setInputImageFile(null);
                   }}
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3 w-3" />
                 </Button>
-                <div className="mt-2 text-xs text-amber-400 text-center">
-                  {language === 'es' ? 'Imagen cargada como referencia' : 'Image loaded as reference'}
-                </div>
               </div>
             ) : (
-              <div 
-                className="border-2 border-dashed border-slate-600 hover:border-slate-500 rounded-lg p-6 text-center transition-colors cursor-pointer bg-slate-800/30 hover:bg-slate-800/50"
-                onClick={() => document.getElementById('image-upload')?.click()}
-              >
-                <Image className="h-12 w-12 text-slate-400 mx-auto mb-3" />
-                <p className="text-sm text-slate-300 mb-2 font-medium">
+              <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center">
+                <Image className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+                <p className="text-sm text-slate-400 mb-3">
                   {language === 'es' 
-                    ? 'Sube una imagen de referencia' 
-                    : 'Upload a reference image'
-                  }
-                </p>
-                <p className="text-xs text-slate-400 mb-4">
-                  {language === 'es' 
-                    ? 'Arrastra aquí o haz clic para seleccionar' 
-                    : 'Drag here or click to select'
+                    ? 'Arrastra una imagen aquí o haz clic para subirla' 
+                    : 'Drag an image here or click to upload'
                   }
                 </p>
                 <Input
@@ -461,14 +437,11 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
                 <Button
                   type="button"
                   variant="secondary"
-                  className="bg-blue-600 hover:bg-blue-700 text-white border-none"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    document.getElementById('image-upload')?.click();
-                  }}
+                  className="bg-slate-700 hover:bg-slate-600"
+                  onClick={() => document.getElementById('image-upload')?.click()}
                 >
                   <Upload className="mr-2 h-4 w-4" />
-                  {language === 'es' ? 'Elegir Imagen' : 'Choose Image'}
+                  Choose Image
                 </Button>
               </div>
             )}
@@ -584,46 +557,39 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         >
           <div className="flex items-center justify-center">
             {generateMutation.isPending ? (
-              <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                {/* Compact Timer Display */}
-                <div className="flex items-center space-x-3">
-                  <div className="relative">
-                    <svg className="w-10 h-10 sm:w-8 sm:h-8 transform -rotate-90" viewBox="0 0 36 36">
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        className="stroke-blue-200"
-                        strokeWidth="2"
-                      />
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        className="stroke-white"
-                        strokeWidth="3"
-                        strokeDasharray={`${(generationTimer / 120) * 100} 100`}
-                        strokeLinecap="round"
-                        style={{
-                          transition: 'stroke-dasharray 0.3s ease-in-out'
-                        }}
-                      />
-                    </svg>
-                  </div>
-                  <div className="text-white">
-                    <div className="text-xl sm:text-lg font-bold font-mono">
-                      {Math.floor(generationTimer / 60)}:{(generationTimer % 60).toString().padStart(2, '0')}
-                    </div>
+              <div className="flex items-center space-x-3">
+                {/* Circular Progress Indicator */}
+                <div className="relative">
+                  <svg className="w-6 h-6 transform -rotate-90" viewBox="0 0 36 36">
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="16"
+                      fill="none"
+                      className="stroke-slate-400"
+                      strokeWidth="2"
+                    />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="16"
+                      fill="none"
+                      className="stroke-blue-400"
+                      strokeWidth="2"
+                      strokeDasharray={`${(generationTimer / 120) * 100} 100`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
                   </div>
                 </div>
-                <div className="text-white text-center sm:text-left">
-                  <div className="text-base font-medium">
-                    {language === 'es' ? 'Generando imagen...' : 'Generating image...'}
+                <div className="text-center">
+                  <div className="text-sm font-medium">
+                    {language === 'es' ? 'Generando...' : 'Generating...'}
                   </div>
-                  <div className="text-sm text-blue-200">
-                    {Math.round((generationTimer / 120) * 100)}% {language === 'es' ? 'completado' : 'complete'}
+                  <div className="text-xs text-blue-300 font-mono">
+                    {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')} • {Math.round((generationTimer / 120) * 100)}%
                   </div>
                 </div>
               </div>

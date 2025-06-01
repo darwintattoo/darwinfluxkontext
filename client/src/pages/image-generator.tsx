@@ -1,8 +1,9 @@
 import { useState, useCallback } from "react";
-import { Wand2, Circle, Globe, Upload } from "lucide-react";
+import { Wand2, Settings, Circle, Globe, Upload } from "lucide-react";
 import PromptForm from "@/components/prompt-form";
 import ImageGallery from "@/components/image-gallery";
 import ImageModal from "@/components/image-modal";
+import SettingsModal from "@/components/settings-modal";
 import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
 import type { GeneratedImage } from "@shared/schema";
 
 export default function ImageGenerator() {
+  const [showSettings, setShowSettings] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
   const [isDragOver, setIsDragOver] = useState(false);
@@ -28,7 +30,7 @@ export default function ImageGenerator() {
     refetchInterval: 2000, // Auto-refresh every 2 seconds when generating
   });
 
-
+  const hasApiKey = !!localStorage.getItem("replicate_api_token");
 
   const handleFileUpload = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -162,21 +164,29 @@ export default function ImageGenerator() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-
+              {/* Settings Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSettings(true)}
+                className="text-slate-300 hover:text-slate-100"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Input Panel */}
-          <div className="order-2 lg:order-1 lg:col-span-1">
+          <div className="lg:col-span-1">
             <PromptForm referenceImageUrl={referenceImageUrl} />
           </div>
 
           {/* Gallery */}
-          <div className="order-1 lg:order-2 lg:col-span-2">
+          <div className="lg:col-span-2">
             <ImageGallery 
               images={images} 
               isLoading={isLoading}
@@ -194,7 +204,10 @@ export default function ImageGenerator() {
         onClose={() => setSelectedImage(null)}
       />
       
-
+      <SettingsModal 
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
     </div>
   );
 }
