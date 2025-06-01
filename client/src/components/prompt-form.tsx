@@ -248,8 +248,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Mirar hacia arriba con esperanza": "Look upward with hopeful gaze",
       "Mirar hacia abajo pensativo": "Look downward thoughtfully",
       "Ángulo holandés para composición dinámica": "Dutch angle tilt for dynamic, off-kilter composition",
-      "Toma desde arriba mirando hacia abajo": "Shot from above looking down",
-      "Vista de pájaro": "Bird's eye view angle"
+      "Toma desde arriba mirando hacia abajo": "Shot from above looking down"
     };
 
     // Check for exact phrase matches first
