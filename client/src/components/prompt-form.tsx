@@ -402,13 +402,13 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Input Image Upload */}
-        <div>
-          <Label className="text-slate-300 mb-2">
-            Reference Image (Optional)
+        <div className="mb-4">
+          <Label className="text-slate-300 mb-3 block text-sm font-medium">
+            {language === 'es' ? 'Imagen de Referencia (Opcional)' : 'Reference Image (Optional)'}
           </Label>
           <div className="space-y-3">
             {inputImageUrl ? (
-              <div className="relative">
+              <div className="relative bg-slate-700/30 rounded-lg p-2">
                 <img 
                   src={inputImageUrl} 
                   alt="Input reference" 
@@ -418,22 +418,34 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
                   type="button"
                   size="sm"
                   variant="destructive"
-                  className="absolute top-2 right-2"
+                  className="absolute top-3 right-3 h-8 w-8 p-0"
                   onClick={() => {
                     setInputImageUrl("");
                     setInputImageFile(null);
                   }}
                 >
-                  <X className="h-3 w-3" />
+                  <X className="h-4 w-4" />
                 </Button>
+                <div className="mt-2 text-xs text-amber-400 text-center">
+                  {language === 'es' ? 'Imagen cargada como referencia' : 'Image loaded as reference'}
+                </div>
               </div>
             ) : (
-              <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center">
-                <Image className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-                <p className="text-sm text-slate-400 mb-3">
+              <div 
+                className="border-2 border-dashed border-slate-600 hover:border-slate-500 rounded-lg p-6 text-center transition-colors cursor-pointer bg-slate-800/30 hover:bg-slate-800/50"
+                onClick={() => document.getElementById('image-upload')?.click()}
+              >
+                <Image className="h-12 w-12 text-slate-400 mx-auto mb-3" />
+                <p className="text-sm text-slate-300 mb-2 font-medium">
                   {language === 'es' 
-                    ? 'Arrastra una imagen aquí o haz clic para subirla' 
-                    : 'Drag an image here or click to upload'
+                    ? 'Sube una imagen de referencia' 
+                    : 'Upload a reference image'
+                  }
+                </p>
+                <p className="text-xs text-slate-400 mb-4">
+                  {language === 'es' 
+                    ? 'Arrastra aquí o haz clic para seleccionar' 
+                    : 'Drag here or click to select'
                   }
                 </p>
                 <Input
@@ -449,11 +461,14 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
                 <Button
                   type="button"
                   variant="secondary"
-                  className="bg-slate-700 hover:bg-slate-600"
-                  onClick={() => document.getElementById('image-upload')?.click()}
+                  className="bg-blue-600 hover:bg-blue-700 text-white border-none"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    document.getElementById('image-upload')?.click();
+                  }}
                 >
                   <Upload className="mr-2 h-4 w-4" />
-                  Choose Image
+                  {language === 'es' ? 'Elegir Imagen' : 'Choose Image'}
                 </Button>
               </div>
             )}
