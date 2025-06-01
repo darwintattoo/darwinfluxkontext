@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, Wand2, Info, Upload, X, Image, Languages } from "lucide-react";
+import { ChevronDown, Wand2, Info, Upload, X, Image, Languages, GripHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -25,6 +25,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [generationTimer, setGenerationTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+  const [panelHeight, setPanelHeight] = useState(600); // Default height in pixels
 
   // Update inputImageUrl when referenceImageUrl changes
   React.useEffect(() => {
@@ -376,7 +377,10 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 sticky top-24">
+    <div 
+      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 sticky top-24 overflow-auto"
+      style={{ height: `${panelHeight}px` }}
+    >
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-slate-200">Generate Image</h2>
         <div className="text-xs text-slate-400 mt-1">
@@ -764,6 +768,39 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               ))}
             </div>
           )}
+        </div>
+      </div>
+      
+      {/* Height Resizer */}
+      <div className="relative -mb-6 pt-2">
+        <div className="flex items-center justify-center">
+          <div 
+            className="flex items-center justify-center w-full h-4 cursor-row-resize hover:bg-slate-600/30 rounded-b-xl transition-colors group"
+            onMouseDown={(e) => {
+              const startY = e.clientY;
+              const startHeight = panelHeight;
+              
+              const handleMouseMove = (moveEvent: MouseEvent) => {
+                const deltaY = moveEvent.clientY - startY;
+                const newHeight = Math.max(300, Math.min(800, startHeight + deltaY));
+                setPanelHeight(newHeight);
+              };
+              
+              const handleMouseUp = () => {
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+                document.body.style.cursor = 'default';
+                document.body.style.userSelect = 'auto';
+              };
+              
+              document.addEventListener('mousemove', handleMouseMove);
+              document.addEventListener('mouseup', handleMouseUp);
+              document.body.style.cursor = 'row-resize';
+              document.body.style.userSelect = 'none';
+            }}
+          >
+            <GripHorizontal className="h-3 w-3 text-slate-500 group-hover:text-slate-300 transition-colors" />
+          </div>
         </div>
       </div>
     </div>
