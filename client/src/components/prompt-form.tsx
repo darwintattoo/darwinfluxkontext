@@ -367,6 +367,15 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
     const [width, height] = inputImageUrl ? [1024, 1024] : imageSize.split('x').map(Number);
     
+    console.log("About to generate with:", {
+      prompt: translatedPrompt,
+      inputImageUrl: inputImageUrl,
+      hasInputImage: !!inputImageUrl,
+      width,
+      height,
+      aspectRatio
+    });
+    
     generateMutation.mutate({ 
       prompt: translatedPrompt, 
       inputImageUrl: inputImageUrl || undefined,
