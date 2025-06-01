@@ -187,11 +187,6 @@ export default function ImageGenerator() {
 
           {/* Gallery */}
           <div className="lg:col-span-2">
-            {isFetching && !isLoading && (
-              <div className="mb-4 p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg text-blue-400 text-sm text-center">
-                {language === 'es' ? 'Actualizando galería...' : 'Updating gallery...'}
-              </div>
-            )}
             <ImageGallery 
               images={images} 
               isLoading={isLoading}
