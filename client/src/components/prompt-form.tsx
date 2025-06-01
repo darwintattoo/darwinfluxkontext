@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, Wand2, Info, Upload, X, Image } from "lucide-react";
+import { ChevronDown, Wand2, Info, Upload, X, Image, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -352,23 +352,13 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       return;
     }
 
-    // Translate prompt to English if it's in Spanish
-    const translatedPrompt = translateToEnglish(prompt.trim());
-    
-    // Show a notification if translation occurred
-    if (translatedPrompt !== prompt.trim()) {
-      toast({
-        title: language === 'es' ? 'Prompt traducido' : 'Prompt translated',
-        description: language === 'es' 
-          ? `Traducido a: "${translatedPrompt}"` 
-          : `Translated to: "${translatedPrompt}"`,
-      });
-    }
+    // Don't auto-translate anymore, user controls this with the translate button
+    const finalPrompt = prompt.trim();
 
     const [width, height] = inputImageUrl ? [1024, 1024] : imageSize.split('x').map(Number);
     
     console.log("About to generate with:", {
-      prompt: translatedPrompt,
+      prompt: finalPrompt,
       inputImageUrl: inputImageUrl,
       hasInputImage: !!inputImageUrl,
       width,
@@ -377,7 +367,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
     });
     
     generateMutation.mutate({ 
-      prompt: translatedPrompt, 
+      prompt: finalPrompt, 
       inputImageUrl: inputImageUrl || undefined,
       width, 
       height,
@@ -455,9 +445,36 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         </div>
 
         <div>
-          <Label htmlFor="prompt" className="text-slate-300 mb-2">
-            {inputImageUrl ? "What changes do you want to make?" : "Describe the image you want to generate"}
-          </Label>
+          <div className="flex items-center justify-between mb-2">
+            <Label htmlFor="prompt" className="text-slate-300">
+              {inputImageUrl ? "What changes do you want to make?" : "Describe the image you want to generate"}
+            </Label>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              className="h-6 px-2 text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-600"
+              onClick={() => {
+                const translated = translateToEnglish(prompt);
+                if (translated !== prompt) {
+                  setPrompt(translated);
+                  toast({
+                    title: language === 'es' ? 'Texto traducido' : 'Text translated',
+                    description: language === 'es' ? 'Prompt traducido al inglés' : 'Prompt translated to English',
+                  });
+                } else {
+                  toast({
+                    title: language === 'es' ? 'Sin cambios' : 'No changes',
+                    description: language === 'es' ? 'El texto ya está en inglés' : 'Text is already in English',
+                  });
+                }
+              }}
+              title={language === 'es' ? 'Traducir a inglés' : 'Translate to English'}
+            >
+              <Languages className="h-3 w-3 mr-1" />
+              {language === 'es' ? 'Traducir' : 'Translate'}
+            </Button>
+          </div>
           <Textarea
             id="prompt"
             value={prompt}
