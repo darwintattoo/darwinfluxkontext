@@ -225,6 +225,40 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
   // Function to detect if text is primarily in Spanish and translate to English
   const translateToEnglish = (text: string): string => {
+    // First check for exact phrase matches
+    const phraseTranslations: { [key: string]: string } = {
+      "Vista frontal": "Front view",
+      "Vista de perfil": "Profile view", 
+      "Vista lateral": "Side view",
+      "Vista de tres cuartos": "Three-quarter view",
+      "Vista desde arriba": "Top view",
+      "Vista desde abajo": "Bottom view",
+      "Ángulo holandés": "Dutch angle",
+      "Vista de pájaro": "Bird's eye view",
+      "Mirada hacia arriba": "Looking up",
+      "Mirada hacia abajo": "Looking down",
+      "Sonrisa cálida": "Warm smile",
+      "Expresión seria": "Serious expression",
+      "Ojos cerrados": "Eyes closed",
+      "Mirada pensativa": "Thoughtful gaze",
+      "Risa genuina": "Genuine laugh",
+      "Expresión melancólica": "Melancholic expression",
+      "Cambiar la expresión": "Change the expression",
+      "Inclinar la cabeza": "Tilt the head",
+      "Mirar hacia arriba con esperanza": "Look upward with hopeful gaze",
+      "Mirar hacia abajo pensativo": "Look downward thoughtfully",
+      "Ángulo holandés para composición dinámica": "Dutch angle tilt for dynamic, off-kilter composition",
+      "Toma desde arriba mirando hacia abajo": "Shot from above looking down",
+      "Vista de pájaro": "Bird's eye view angle"
+    };
+
+    // Check for exact phrase matches first
+    for (const [spanish, english] of Object.entries(phraseTranslations)) {
+      if (text.toLowerCase().includes(spanish.toLowerCase())) {
+        return text.replace(new RegExp(spanish, 'gi'), english);
+      }
+    }
+
     // Common Spanish words and patterns
     const spanishWords = [
       'el', 'la', 'los', 'las', 'de', 'del', 'en', 'con', 'por', 'para', 'un', 'una', 'y', 'o',
@@ -235,7 +269,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       'transformar', 'transforma', 'convertir', 'convierte', 'añadir', 'añade'
     ];
 
-    // Simple translation mappings for common tattoo/image terms
+    // Word-by-word translation mappings
     const translations: { [key: string]: string } = {
       // Basic words
       'agregar': 'add',
