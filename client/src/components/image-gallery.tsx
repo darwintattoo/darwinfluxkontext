@@ -366,14 +366,16 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
 
       {/* Previous Generations */}
       {previousImages.length > 0 && (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-4 sm:p-6">
+          <h3 className="font-medium text-slate-200 mb-4">Previous Generations</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
           {previousImages.map((image) => (
             <div key={image.id} className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 overflow-hidden group">
               <div className="relative">
                 <img 
                   src={image.imageUrl}
                   alt={image.prompt}
-                  className="w-full h-auto cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                  className="w-full aspect-square object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
                   onClick={() => onImageSelect(image)}
                 />
                 
@@ -460,6 +462,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
               </div>
             </div>
           ))}
+          </div>
         </div>
       )}
     </div>
