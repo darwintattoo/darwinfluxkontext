@@ -222,6 +222,124 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
     }
   };
 
+  // Function to detect if text is primarily in Spanish and translate to English
+  const translateToEnglish = (text: string): string => {
+    // Common Spanish words and patterns
+    const spanishWords = [
+      'el', 'la', 'los', 'las', 'de', 'del', 'en', 'con', 'por', 'para', 'un', 'una', 'y', 'o',
+      'que', 'se', 'es', 'son', 'está', 'están', 'tiene', 'tienen', 'hace', 'hacer',
+      'cara', 'rostro', 'sonrisa', 'ojos', 'cabello', 'pelo', 'negro', 'blanco', 'gris',
+      'tatuaje', 'diseño', 'estilo', 'tradicional', 'realista', 'tribal', 'minimalista',
+      'agregar', 'agrega', 'cambiar', 'cambia', 'mostrar', 'muestra', 'crear', 'crea',
+      'transformar', 'transforma', 'convertir', 'convierte', 'añadir', 'añade'
+    ];
+
+    // Simple translation mappings for common tattoo/image terms
+    const translations: { [key: string]: string } = {
+      // Basic words
+      'agregar': 'add',
+      'agrega': 'add',
+      'añadir': 'add',
+      'añade': 'add',
+      'cambiar': 'change',
+      'cambia': 'change',
+      'mostrar': 'show',
+      'muestra': 'show',
+      'crear': 'create',
+      'crea': 'create',
+      'transformar': 'transform',
+      'transforma': 'transform',
+      'convertir': 'convert',
+      'convierte': 'convert',
+      
+      // Body parts and features
+      'cara': 'face',
+      'rostro': 'face',
+      'ojos': 'eyes',
+      'ojo': 'eye',
+      'sonrisa': 'smile',
+      'cabello': 'hair',
+      'pelo': 'hair',
+      'expresión': 'expression',
+      'expresion': 'expression',
+      
+      // Colors
+      'negro': 'black',
+      'blanco': 'white',
+      'gris': 'gray',
+      'azul': 'blue',
+      'rojo': 'red',
+      'verde': 'green',
+      
+      // Tattoo styles
+      'tatuaje': 'tattoo',
+      'diseño': 'design',
+      'estilo': 'style',
+      'tradicional': 'traditional',
+      'realista': 'realistic',
+      'tribal': 'tribal',
+      'minimalista': 'minimalist',
+      
+      // Animals
+      'cuervo': 'raven',
+      'cuervos': 'ravens',
+      'águila': 'eagle',
+      'lobo': 'wolf',
+      'león': 'lion',
+      'serpiente': 'snake',
+      
+      // Positions/directions
+      'arriba': 'above',
+      'abajo': 'below',
+      'encima': 'on top',
+      'debajo': 'underneath',
+      'al lado': 'beside',
+      'alrededor': 'around',
+      
+      // Conjunctions and prepositions
+      'y': 'and',
+      'con': 'with',
+      'sin': 'without',
+      'en': 'in',
+      'sobre': 'on',
+      'bajo': 'under',
+      'entre': 'between',
+      'hacia': 'towards',
+      'desde': 'from',
+      'hasta': 'until',
+      'para': 'for',
+      'por': 'by',
+      'de': 'of',
+      'del': 'of the',
+      'un': 'a',
+      'una': 'a',
+      'el': 'the',
+      'la': 'the',
+      'los': 'the',
+      'las': 'the'
+    };
+
+    // Check if the text contains Spanish words
+    const words = text.toLowerCase().split(/\s+/);
+    const spanishWordCount = words.filter(word => spanishWords.includes(word)).length;
+    const isSpanish = spanishWordCount > words.length * 0.3; // If more than 30% are Spanish words
+
+    if (!isSpanish) {
+      return text; // Return original if not detected as Spanish
+    }
+
+    // Perform basic translation
+    let translatedText = text.toLowerCase();
+    
+    // Replace whole words only
+    Object.entries(translations).forEach(([spanish, english]) => {
+      const regex = new RegExp(`\\b${spanish}\\b`, 'gi');
+      translatedText = translatedText.replace(regex, english);
+    });
+
+    return translatedText;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -234,10 +352,23 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       return;
     }
 
+    // Translate prompt to English if it's in Spanish
+    const translatedPrompt = translateToEnglish(prompt.trim());
+    
+    // Show a notification if translation occurred
+    if (translatedPrompt !== prompt.trim()) {
+      toast({
+        title: language === 'es' ? 'Prompt traducido' : 'Prompt translated',
+        description: language === 'es' 
+          ? `Traducido a: "${translatedPrompt}"` 
+          : `Translated to: "${translatedPrompt}"`,
+      });
+    }
+
     const [width, height] = inputImageUrl ? [1024, 1024] : imageSize.split('x').map(Number);
     
     generateMutation.mutate({ 
-      prompt: prompt.trim(), 
+      prompt: translatedPrompt, 
       inputImageUrl: inputImageUrl || undefined,
       width, 
       height,
