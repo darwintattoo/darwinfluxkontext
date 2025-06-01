@@ -179,7 +179,26 @@ export default function ImageGenerator() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+        {/* Mobile Layout */}
+        <div className="block lg:hidden space-y-6">
+          {/* Form Section - Non-sticky on mobile */}
+          <div className="w-full">
+            <PromptForm referenceImageUrl={referenceImageUrl} />
+          </div>
+          
+          {/* Gallery Section */}
+          <div className="w-full">
+            <ImageGallery 
+              images={images} 
+              isLoading={isLoading}
+              onImageSelect={setSelectedImage}
+              onUseAsReference={setReferenceImageUrl}
+            />
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden lg:grid lg:grid-cols-3 gap-8">
           {/* Input Panel */}
           <div className="lg:col-span-1">
             <PromptForm referenceImageUrl={referenceImageUrl} />

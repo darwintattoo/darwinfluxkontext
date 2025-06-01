@@ -378,8 +378,8 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
   return (
     <div 
-      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 sticky top-24 overflow-auto"
-      style={{ height: `${panelHeight}px` }}
+      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 lg:sticky lg:top-24 overflow-auto"
+      style={{ height: window.innerWidth >= 1024 ? `${panelHeight}px` : 'auto' }}
     >
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-slate-200">Generate Image</h2>
@@ -771,8 +771,8 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         </div>
       </div>
       
-      {/* Height Resizer */}
-      <div className="relative -mb-6 pt-2">
+      {/* Height Resizer - Only on desktop */}
+      <div className="relative -mb-6 pt-2 hidden lg:block">
         <div className="flex items-center justify-center">
           <div 
             className="flex items-center justify-center w-full h-4 cursor-row-resize hover:bg-slate-600/30 rounded-b-xl transition-colors group"
