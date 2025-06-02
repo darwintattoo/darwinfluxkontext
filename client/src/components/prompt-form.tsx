@@ -661,23 +661,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
 
 
-        {/* Image editing mode indicator */}
-        {inputImageUrl && (
-          <div className="bg-amber-500/20 border border-amber-500/30 rounded-lg p-3 text-center">
-            <div className="flex items-center justify-center text-amber-400 mb-2">
-              <Info className="inline mr-1 h-4 w-4" />
-              <span className="text-sm font-medium">
-                {language === 'es' ? 'Modo de edición de imagen activo' : 'Image editing mode active'}
-              </span>
-            </div>
-            <div className="text-xs text-amber-300">
-              {language === 'es' 
-                ? 'Tu imagen de referencia se transformará según el prompt' 
-                : 'Your reference image will be transformed according to the prompt'
-              }
-            </div>
-          </div>
-        )}
+
       </form>
       
       {/* Quick Prompts */}
