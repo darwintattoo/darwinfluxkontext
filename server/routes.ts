@@ -37,12 +37,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     saveUninitialized: false,
     cookie: {
       secure: false, // Set to true in production with HTTPS
-      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      sameSite: 'lax'
     }
   }));
 
   // Middleware to check authentication
   const requireAuth = (req: any, res: any, next: any) => {
+    console.log('Auth check - Session:', req.session);
+    console.log('Auth check - UserId:', req.session?.userId);
     if (req.session?.userId) {
       return next();
     }
