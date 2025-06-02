@@ -24,9 +24,11 @@ export function useAuth() {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
+      localStorage.removeItem('auth_token');
       return apiRequest("POST", "/api/logout", {});
     },
     onSuccess: () => {
+      localStorage.removeItem('auth_token');
       queryClient.invalidateQueries();
       queryClient.setQueryData(["/api/auth/user"], { authenticated: false });
     },
