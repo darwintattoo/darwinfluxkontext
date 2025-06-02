@@ -42,6 +42,7 @@ export class DatabaseStorage implements IStorage {
           width: generatedImages.width,
           height: generatedImages.height,
           aspectRatio: generatedImages.aspectRatio,
+          cost: generatedImages.cost,
           createdAt: generatedImages.createdAt,
         })
         .from(generatedImages)

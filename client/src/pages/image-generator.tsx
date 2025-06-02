@@ -29,17 +29,13 @@ export default function ImageGenerator() {
 
   const { data: images = [], isLoading, isFetching, error } = useQuery<GeneratedImage[]>({
     queryKey: ["/api/images"],
-    refetchInterval: isGenerating ? 3000 : false, // Faster refresh when generating
-    staleTime: 60000, // Consider data fresh for 1 minute
-    gcTime: 300000, // Keep in cache for 5 minutes
-    retry: (failureCount, error) => {
-      // Don't retry on auth errors
-      if (error?.message?.includes('401') || error?.message?.includes('Unauthorized')) {
-        return false;
-      }
-      return failureCount < 2; // Retry max 2 times for other errors
-    },
-    retryDelay: 1000, // Wait 1 second between retries
+    refetchInterval: isGenerating ? 2000 : false, // Even faster refresh when generating
+    staleTime: 30000, // Consider data fresh for 30 seconds
+    gcTime: 600000, // Keep in cache for 10 minutes
+    retry: false, // Disable retries for faster response
+    networkMode: 'online', // Only fetch when online
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+    refetchOnMount: 'always', // Always refetch on mount for fresh data
   });
 
   const hasApiKey = !!localStorage.getItem("replicate_api_token");
