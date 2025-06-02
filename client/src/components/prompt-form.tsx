@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, Wand2, Info, Upload, X, Image, Languages, GripHorizontal } from "lucide-react";
+import { ChevronDown, Wand2, Info, Upload, X, Image, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -25,7 +25,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [generationTimer, setGenerationTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
-  const [panelHeight, setPanelHeight] = useState(600); // Default height in pixels
+
 
   // Update inputImageUrl when referenceImageUrl changes
   React.useEffect(() => {
@@ -433,8 +433,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
 
   return (
     <div 
-      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 lg:sticky lg:top-24 overflow-auto"
-      style={{ height: window.innerWidth >= 1024 ? `${panelHeight}px` : 'auto' }}
+      className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 lg:sticky lg:top-24"
     >
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-slate-200">Generate Image</h2>
