@@ -166,7 +166,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-200 mb-2 tracking-wide">
-                🎨 PROCESANDO NUEVA IMAGEN
+                PROCESANDO NUEVA IMAGEN
               </div>
               <div className="text-lg text-blue-300 font-medium bg-black/30 px-4 py-2 rounded-full">
                 La imagen aparecerá aquí cuando esté lista
