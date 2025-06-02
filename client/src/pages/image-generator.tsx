@@ -23,6 +23,7 @@ export default function ImageGenerator() {
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { toast } = useToast();
 
@@ -202,7 +203,11 @@ export default function ImageGenerator() {
         <div className="hidden lg:grid lg:grid-cols-3 gap-8">
           {/* Input Panel */}
           <div className="lg:col-span-1">
-            <PromptForm referenceImageUrl={referenceImageUrl} />
+            <PromptForm 
+              referenceImageUrl={referenceImageUrl} 
+              onGenerationStart={() => setIsGenerating(true)}
+              onGenerationEnd={() => setIsGenerating(false)}
+            />
           </div>
 
           {/* Gallery */}
@@ -212,6 +217,7 @@ export default function ImageGenerator() {
               isLoading={isLoading}
               onImageSelect={setSelectedImage}
               onUseAsReference={setReferenceImageUrl}
+              isGenerating={isGenerating}
             />
           </div>
         </div>

@@ -12,9 +12,10 @@ interface ImageGalleryProps {
   isLoading: boolean;
   onImageSelect: (image: GeneratedImage) => void;
   onUseAsReference?: (imageUrl: string) => void;
+  isGenerating?: boolean;
 }
 
-export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference }: ImageGalleryProps) {
+export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference, isGenerating }: ImageGalleryProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -134,6 +135,47 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
 
   return (
     <div className="space-y-6">
+      {/* Generation Loading State */}
+      {isGenerating && (
+        <div className="bg-gradient-to-r from-blue-600/20 to-blue-700/20 backdrop-blur-sm rounded-xl border border-blue-500/30 p-6">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="relative">
+              <svg className="w-10 h-10 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
+                <circle
+                  cx="18"
+                  cy="18"
+                  r="16"
+                  fill="none"
+                  className="stroke-blue-400/30"
+                  strokeWidth="3"
+                />
+                <circle
+                  cx="18"
+                  cy="18"
+                  r="16"
+                  fill="none"
+                  className="stroke-blue-400"
+                  strokeWidth="3"
+                  strokeDasharray="60 40"
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-4 h-4 bg-blue-400 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-semibold text-blue-300">
+                Procesando nueva imagen...
+              </div>
+              <div className="text-sm text-blue-400 mt-1">
+                La imagen aparecerá aquí cuando esté lista
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Latest Generation */}
       {latestImage && (
         <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 overflow-hidden">
