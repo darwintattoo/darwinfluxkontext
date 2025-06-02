@@ -3,13 +3,15 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { imageStorage } from "./imageStorage";
-import { insertImageSchema } from "@shared/schema";
+import { insertImageSchema, insertUserSchema } from "@shared/schema";
 import { z } from "zod";
 import Replicate from "replicate";
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { nanoid } from 'nanoid';
 import sharp from 'sharp';
+import session from 'express-session';
+import bcrypt from 'bcrypt';
 
 const generateImageSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
@@ -28,6 +30,88 @@ const generateImageSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Session configuration
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'tattoo-generator-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // Set to true in production with HTTPS
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    }
+  }));
+
+  // Middleware to check authentication
+  const requireAuth = (req: any, res: any, next: any) => {
+    if (req.session?.userId) {
+      return next();
+    }
+    return res.status(401).json({ error: 'Authentication required' });
+  };
+
+  // Auth routes
+  app.post('/api/login', async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        return res.status(400).json({ error: 'Username and password required' });
+      }
+
+      const user = await storage.getUserByUsername(username);
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      req.session.userId = user.id;
+      res.json({ success: true, user: { id: user.id, username: user.username } });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  app.post('/api/logout', (req: any, res) => {
+    req.session.destroy((err: any) => {
+      if (err) {
+        return res.status(500).json({ error: 'Could not log out' });
+      }
+      res.json({ success: true });
+    });
+  });
+
+  app.get('/api/auth/user', (req: any, res) => {
+    if (req.session?.userId) {
+      res.json({ authenticated: true, userId: req.session.userId });
+    } else {
+      res.json({ authenticated: false });
+    }
+  });
+
+  // Admin route to create test users (you can remove this in production)
+  app.post('/api/admin/create-user', async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        return res.status(400).json({ error: 'Username and password required' });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await storage.createUser({ username, password: hashedPassword });
+      
+      res.json({ success: true, user: { id: user.id, username: user.username } });
+    } catch (error) {
+      console.error('Create user error:', error);
+      res.status(500).json({ error: 'Error creating user' });
+    }
+  });
+
   // Serve static images from public directory
   app.use('/images', express.static(join(process.cwd(), 'public', 'images')));
   // Serve individual images (converts base64 to binary for better performance)
@@ -72,8 +156,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all generated images (optimized for deployment)
-  app.get("/api/images", async (req, res) => {
+  // Get all generated images (protected)
+  app.get("/api/images", requireAuth, async (req, res) => {
     try {
       const images = await storage.getGeneratedImages();
       
@@ -103,8 +187,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate new image using Replicate API
-  app.post("/api/generate", async (req, res) => {
+  // Generate new image using Replicate API (protected)
+  app.post("/api/generate", requireAuth, async (req, res) => {
     try {
       const { prompt, inputImageUrl, width, height, aspectRatio } = generateImageSchema.parse(req.body);
       
@@ -335,8 +419,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Delete an image
-  app.delete("/api/images/:id", async (req, res) => {
+  // Delete an image (protected)
+  app.delete("/api/images/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
