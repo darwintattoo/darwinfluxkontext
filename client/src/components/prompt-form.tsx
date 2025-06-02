@@ -737,6 +737,18 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               🎨 Artistic
             </button>
             
+            <button
+              type="button"
+              onClick={() => setPromptCategory(promptCategory === 'lighting' ? '' : 'lighting')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                promptCategory === 'lighting' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+              }`}
+            >
+              💡 Lighting
+            </button>
+            
 
           </div>
 
@@ -791,6 +803,21 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
           {promptCategory === 'style_changes' && (
             <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
               {promptSuggestions.style_changes.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {promptCategory === 'lighting' && (
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.lighting.map((suggestion, index) => (
                 <button
                   key={index}
                   type="button"
