@@ -30,7 +30,14 @@ const generateImageSchema = z.object({
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Serve static images from public directory
-  app.use('/images', express.static(join(process.cwd(), 'public', 'images')));
+  app.use('/images', express.static(join(process.cwd(), 'public', 'images'), {
+    maxAge: '1y',
+    etag: false,
+    setHeaders: (res, path, stat) => {
+      res.set('Access-Control-Allow-Origin', '*');
+      res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    }
+  }));
   // Serve individual images (converts base64 to binary for better performance)
   app.get("/api/image/:id", async (req, res) => {
     try {
