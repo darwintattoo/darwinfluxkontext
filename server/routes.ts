@@ -6,7 +6,7 @@ import { imageStorage } from "./imageStorage";
 import { insertImageSchema } from "@shared/schema";
 import { z } from "zod";
 import Replicate from "replicate";
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { nanoid } from 'nanoid';
 import sharp from 'sharp';
@@ -128,7 +128,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Si hay imagen de entrada, la incluimos
       if (inputImageUrl) {
         console.log("Input image URL:", inputImageUrl);
-        input.input_image = inputImageUrl;
+        
+        // Si la URL es local (empieza con /images/), convertir a base64
+        if (inputImageUrl.startsWith('/images/')) {
+          try {
+            const imagePath = join(process.cwd(), 'public', inputImageUrl);
+            if (existsSync(imagePath)) {
+              const imageBuffer = readFileSync(imagePath);
+              const base64Image = `data:image/png;base64,${imageBuffer.toString('base64')}`;
+              input.input_image = base64Image;
+              console.log("Converted local image to base64");
+            } else {
+              console.error("Local image file not found:", imagePath);
+              return res.status(400).json({ error: "Reference image not found" });
+            }
+          } catch (error) {
+            console.error("Error reading local image:", error);
+            return res.status(400).json({ error: "Failed to process reference image" });
+          }
+        } else {
+          // Si ya es una URL externa o base64, usarla directamente
+          input.input_image = inputImageUrl;
+        }
+        
         if (aspectRatio && aspectRatio !== "match_input_image") {
           input.aspect_ratio = aspectRatio;
         }
@@ -175,13 +197,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         imageUrl = output;
       } else if (Array.isArray(output) && output.length > 0) {
         imageUrl = output[0];
-      } else if (output && typeof output[Symbol.asyncIterator] === 'function') {
+      } else if (output && typeof (output as any)[Symbol.asyncIterator] === 'function') {
         // Es un stream iterable
         console.log("Processing async iterable stream from Replicate...");
         
         const chunks: Buffer[] = [];
         try {
-          for await (const chunk of output) {
+          for await (const chunk of output as any) {
             chunks.push(Buffer.from(chunk));
           }
           
