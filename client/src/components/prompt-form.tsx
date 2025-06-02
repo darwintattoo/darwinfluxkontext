@@ -607,6 +607,26 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
           
           {showAdvanced && (
             <div className="space-y-4">
+              {/* AI Model Selection */}
+              <div>
+                <Label className="text-slate-300 mb-2">AI Model</Label>
+                <Select value={model} onValueChange={(value: "max" | "pro") => setModel(value)}>
+                  <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-slate-50">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-700 border-slate-600">
+                    <SelectItem value="max">FLUX Kontext Max (Default - More Reliable)</SelectItem>
+                    <SelectItem value="pro">FLUX Kontext Pro (Faster Processing)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-slate-400 mt-1">
+                  {model === "max" 
+                    ? (language === 'es' ? 'Modelo por defecto con mejor calidad' : 'Default model with better quality')
+                    : (language === 'es' ? 'Modelo más rápido para procesamiento' : 'Faster model for processing')
+                  }
+                </p>
+              </div>
+
               {!inputImageUrl && (
                 <div>
                   <Label className="text-slate-300 mb-2">Image Size</Label>
