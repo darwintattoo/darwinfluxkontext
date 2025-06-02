@@ -106,7 +106,8 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Transform to impressionist painting with soft colors",
       "Apply minimalist line art style",
       "Convert to vintage engraving illustration style",
-      "Transform to digital vector art with clean shapes"
+      "Transform to digital vector art with clean shapes",
+      "A hyper-realistic Engraving 3D monochrome illustration"
     ],
     animals: [
       "Make the cat sit upright with perfect posture and alert ears",
