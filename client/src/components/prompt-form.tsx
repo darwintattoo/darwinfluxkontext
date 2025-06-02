@@ -110,6 +110,22 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "A hyper-realistic Engraving 3D monochrome illustration",
       "Hyper-realistic 3D wood-engraving illustration"
     ],
+    lighting: [
+      "Apply Rembrandt lighting with key light 45° high right, dramatic shadows",
+      "Soft butterfly lighting from directly above, gentle shadows under nose",
+      "Hard split lighting from side, half face in shadow",
+      "Blue rim light from behind left creating outline glow",
+      "Golden hour warm lighting with soft natural glow",
+      "Studio lighting with multiple sources for even illumination",
+      "Dramatic low-key lighting with deep shadows",
+      "High-key bright lighting with minimal shadows",
+      "Natural window light from left side, soft and diffused",
+      "Hard directional light creating strong contrast",
+      "Backlighting with silhouette effect against bright background",
+      "Color gel lighting with blue and orange tones",
+      "Soft ring light for beauty portrait lighting",
+      "Three-point lighting setup with key, fill, and rim lights"
+    ],
     animals: [
       "Make the cat sit upright with perfect posture and alert ears",
       "Change the dog's expression to playful with tongue hanging out happily",
@@ -720,6 +736,18 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               🎨 Artistic
             </button>
             
+            <button
+              type="button"
+              onClick={() => setPromptCategory(promptCategory === 'lighting' ? '' : 'lighting')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                promptCategory === 'lighting' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+              }`}
+            >
+              💡 Lighting
+            </button>
+            
 
           </div>
 
@@ -774,6 +802,21 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
           {promptCategory === 'style_changes' && (
             <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
               {promptSuggestions.style_changes.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {promptCategory === 'lighting' && (
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.lighting.map((suggestion, index) => (
                 <button
                   key={index}
                   type="button"
