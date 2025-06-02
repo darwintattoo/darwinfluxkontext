@@ -32,28 +32,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getGeneratedImages(): Promise<GeneratedImage[]> {
-    try {
-      const images = await db
-        .select({
-          id: generatedImages.id,
-          prompt: generatedImages.prompt,
-          imageUrl: generatedImages.imageUrl,
-          inputImageUrl: generatedImages.inputImageUrl,
-          width: generatedImages.width,
-          height: generatedImages.height,
-          aspectRatio: generatedImages.aspectRatio,
-          cost: generatedImages.cost,
-          createdAt: generatedImages.createdAt,
-        })
-        .from(generatedImages)
-        .orderBy(desc(generatedImages.createdAt))
-        .limit(15); // Reduced to 15 for faster loading
-      
-      return images;
-    } catch (error: any) {
-      console.error("Database error in getGeneratedImages:", error);
-      throw new Error(`Database query failed: ${error.message}`);
-    }
+    const images = await db
+      .select()
+      .from(generatedImages)
+      .orderBy(desc(generatedImages.createdAt))
+      .limit(20); // Limit to last 20 images for better performance
+    return images;
   }
 
   async createGeneratedImage(insertImage: InsertImage): Promise<GeneratedImage> {

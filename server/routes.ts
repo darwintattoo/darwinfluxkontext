@@ -3,16 +3,13 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { imageStorage } from "./imageStorage";
-import { insertImageSchema, insertUserSchema } from "@shared/schema";
+import { insertImageSchema } from "@shared/schema";
 import { z } from "zod";
 import Replicate from "replicate";
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { nanoid } from 'nanoid';
 import sharp from 'sharp';
-import session from 'express-session';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 const generateImageSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
@@ -31,162 +28,6 @@ const generateImageSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Enable gzip compression for better performance
-  app.use(express.json({ limit: '10mb' }));
-  
-  // CORS configuration for production
-  const isProduction = process.env.NODE_ENV === 'production';
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    if (req.method === 'OPTIONS') {
-      res.sendStatus(200);
-    } else {
-      next();
-    }
-  });
-
-  // Session configuration
-  app.use(session({
-    secret: process.env.SESSION_SECRET || 'tattoo-generator-secret-key-change-in-production',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: isProduction, // HTTPS only in production
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-      sameSite: isProduction ? 'none' : 'lax' // Allow cross-site cookies in production
-    }
-  }));
-
-  // JWT Secret
-  const JWT_SECRET = process.env.JWT_SECRET || 'tattoo-generator-jwt-secret-key';
-
-  // Middleware to check JWT authentication
-  const requireAuth = (req: any, res: any, next: any) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
-    
-    if (!token) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
-
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET) as any;
-      req.user = decoded;
-      next();
-    } catch (error) {
-      return res.status(401).json({ error: 'Invalid token' });
-    }
-  };
-
-  // Auth routes
-  app.post('/api/login', async (req, res) => {
-    try {
-      const { username, password } = req.body;
-      
-      if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password required' });
-      }
-
-      const user = await storage.getUserByUsername(username);
-      if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-
-      const isValidPassword = await bcrypt.compare(password, user.password);
-      if (!isValidPassword) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-
-      // Create JWT token
-      const token = jwt.sign(
-        { userId: user.id, username: user.username },
-        JWT_SECRET,
-        { expiresIn: '7d' }
-      );
-
-      req.session.userId = user.id;
-      res.json({ 
-        success: true, 
-        user: { id: user.id, username: user.username },
-        token: token
-      });
-    } catch (error) {
-      console.error('Login error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-  app.post('/api/logout', (req: any, res) => {
-    req.session.destroy((err: any) => {
-      if (err) {
-        return res.status(500).json({ error: 'Could not log out' });
-      }
-      res.json({ success: true });
-    });
-  });
-
-  app.get('/api/auth/user', (req: any, res) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
-    
-    if (!token) {
-      return res.json({ authenticated: false });
-    }
-
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET) as any;
-      res.json({ 
-        authenticated: true, 
-        userId: decoded.userId,
-        username: decoded.username 
-      });
-    } catch (error) {
-      res.json({ authenticated: false });
-    }
-  });
-
-  // Create initial admin user (unprotected for setup)
-  app.post('/api/setup/admin', async (req, res) => {
-    try {
-      // Check if admin already exists
-      const existingAdmin = await storage.getUserByUsername('admin');
-      if (existingAdmin) {
-        return res.json({ success: true, message: 'Admin already exists' });
-      }
-
-      const hashedPassword = await bcrypt.hash('admin123', 10);
-      const user = await storage.createUser({ username: 'admin', password: hashedPassword });
-      
-      res.json({ success: true, user: { id: user.id, username: user.username } });
-    } catch (error) {
-      console.error('Create admin error:', error);
-      res.status(500).json({ error: 'Error creating admin' });
-    }
-  });
-
-  // Admin route to create test users (protected)
-  app.post('/api/admin/create-user', requireAuth, async (req, res) => {
-    try {
-      const { username, password } = req.body;
-      
-      if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password required' });
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const user = await storage.createUser({ username, password: hashedPassword });
-      
-      res.json({ success: true, user: { id: user.id, username: user.username } });
-    } catch (error) {
-      console.error('Create user error:', error);
-      res.status(500).json({ error: 'Error creating user' });
-    }
-  });
-
   // Serve static images from public directory
   app.use('/images', express.static(join(process.cwd(), 'public', 'images')));
   // Serve individual images (converts base64 to binary for better performance)
@@ -231,33 +72,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all generated images (protected)
-  app.get("/api/images", requireAuth, async (req, res) => {
+  // Get all generated images (optimized for deployment)
+  app.get("/api/images", async (req, res) => {
     try {
-      const startTime = Date.now();
       const images = await storage.getGeneratedImages();
-      const queryTime = Date.now() - startTime;
       
-      console.log(`✓ Images fetched: ${images.length} in ${queryTime}ms`);
-      
-      // Optimize response headers for fast loading
-      res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
-      res.setHeader('Content-Type', 'application/json');
-      res.setHeader('X-Response-Time', `${queryTime}ms`);
-      
-      // Send compressed response
+      // Always return original base64 URLs - let the client handle optimization
+      // The issue is that in deployment, the API endpoints don't resolve correctly
       res.json(images);
-    } catch (error: any) {
-      console.error("❌ Error fetching images:", error.message);
-      
-      // Handle specific error types
-      if (error.message?.includes('database')) {
-        res.status(503).json({ error: "Database temporarily unavailable", retry: true });
-      } else if (error.message?.includes('timeout')) {
-        res.status(504).json({ error: "Request timeout", retry: true });
-      } else {
-        res.status(500).json({ error: "Failed to fetch images", retry: false });
-      }
+    } catch (error) {
+      console.error("Error fetching images:", error);
+      res.status(500).json({ error: "Failed to fetch images" });
     }
   });
 
@@ -270,21 +95,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No image data provided" });
       }
 
-      // Validate base64 image data
-      if (!imageData.startsWith('data:image/')) {
-        return res.status(400).json({ error: "Invalid image data format" });
-      }
-
-      // Check file size (approximate - base64 is ~33% larger than original)
-      const sizeInBytes = (imageData.length * 3) / 4;
-      const maxSize = 5 * 1024 * 1024; // 5MB limit for faster processing
-      
-      if (sizeInBytes > maxSize) {
-        return res.status(400).json({ error: "Image too large. Maximum 5MB allowed." });
-      }
-
-      console.log(`Image uploaded successfully. Size: ${(sizeInBytes / 1024 / 1024).toFixed(2)}MB`);
-      
       // Return the base64 data URL directly for Replicate API
       res.json({ imageUrl: imageData });
     } catch (error) {
@@ -293,8 +103,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate new image using Replicate API (protected)
-  app.post("/api/generate", requireAuth, async (req, res) => {
+  // Generate new image using Replicate API
+  app.post("/api/generate", async (req, res) => {
     try {
       const { prompt, inputImageUrl, width, height, aspectRatio } = generateImageSchema.parse(req.body);
       
@@ -525,8 +335,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Delete an image (protected)
-  app.delete("/api/images/:id", requireAuth, async (req, res) => {
+  // Delete an image
+  app.delete("/api/images/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       

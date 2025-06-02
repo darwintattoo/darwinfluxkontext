@@ -182,13 +182,9 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
         title: "Success",
         description: "Image generated successfully!",
       });
-      
-      // Trigger gallery refresh after generation
-      setTimeout(async () => {
-        queryClient.invalidateQueries({ queryKey: ["/api/images"] });
-        queryClient.refetchQueries({ queryKey: ["/api/images"] });
-      }, 300);
-      
+      // Force immediate refresh of images
+      queryClient.invalidateQueries({ queryKey: ["/api/images"] });
+      queryClient.refetchQueries({ queryKey: ["/api/images"] });
       setGenerationTimer(0);
       onGenerationEnd?.();
     },
@@ -447,45 +443,11 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
       className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 lg:sticky lg:top-24"
     >
       <div className="mb-4">
-        <h2 className="text-lg font-semibold text-slate-200">
-          {language === 'es' ? 'Generar Imagen' : 'Generate Image'}
-        </h2>
-        <p className="text-sm text-slate-400">
-          {language === 'es' ? 'Powered by FLUX Kontext Max AI' : 'Powered by FLUX Kontext Max AI'}
-        </p>
-      </div>
-
-      {/* Quick Prompts - Always visible after image upload for easy iPad access */}
-      {inputImageUrl && (
-        <div className="mb-6 bg-slate-700/30 rounded-xl p-4 border border-slate-600/50">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="w-4 h-4 text-amber-400" />
-            <h3 className="text-sm font-medium text-slate-200">
-              {language === 'es' ? 'Opciones Rápidas' : 'Quick Options'}
-            </h3>
-          </div>
-          
-          {/* Quick prompt buttons - optimized for touch on iPad */}
-          <div className="grid grid-cols-1 gap-2">
-            {promptSuggestions.face_expressions.slice(0, 4).map((suggestion, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                className="text-left justify-start h-auto py-4 px-4 bg-slate-600/30 border-slate-500/50 hover:bg-slate-500/50 text-slate-200 hover:text-white text-sm leading-relaxed transition-colors min-h-[48px]"
-                onClick={() => {
-                  setPrompt(suggestion);
-                  setTimeout(() => {
-                    document.querySelector('textarea')?.focus();
-                  }, 100);
-                }}
-              >
-                {suggestion}
-              </Button>
-            ))}
-          </div>
+        <h2 className="text-lg font-semibold text-slate-200">Generate Image</h2>
+        <div className="text-xs text-slate-400 mt-1">
+          {language === 'es' ? 'Impulsado por FLUX Kontext Max AI' : 'Powered by FLUX Kontext Max AI'}
         </div>
-      )}
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Input Image Upload */}
