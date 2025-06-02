@@ -263,6 +263,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const imageId = nanoid();
             imageUrl = `/api/image/${imageId}`;
           }
+
+          // Guardar en base de datos inmediatamente después de procesar
+          const savedImage = await storage.createGeneratedImage({
+            prompt,
+            imageUrl: imageUrl as string,
+            imageData: optimizedImageBase64,
+            thumbnailData: thumbnailBase64,
+            inputImageUrl,
+            width: inputImageUrl ? 1024 : width,
+            height: inputImageUrl ? 1024 : height,
+            aspectRatio,
+            cost: "0.05",
+          });
+          
+          return res.json(savedImage);
         } catch (streamError) {
           console.error("Error reading async stream:", streamError);
           throw new Error("Failed to read image stream");
@@ -308,20 +323,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Save to storage con datos de imagen
-      const savedImage = await storage.createGeneratedImage({
-        prompt,
-        imageUrl: imageUrl as string,
-        imageData: optimizedImageBase64 || "",
-        thumbnailData: thumbnailBase64 || "",
-        inputImageUrl,
-        width: inputImageUrl ? 1024 : width,
-        height: inputImageUrl ? 1024 : height,
-        aspectRatio,
-        cost: "0.05", // Approximate cost
-      });
-      
-      res.json(savedImage);
+      // Para casos donde no se procesa stream (URL directa)
+      if (typeof output === 'string' || Array.isArray(output)) {
+        const savedImage = await storage.createGeneratedImage({
+          prompt,
+          imageUrl: imageUrl as string,
+          imageData: "",
+          thumbnailData: "",
+          inputImageUrl,
+          width: inputImageUrl ? 1024 : width,
+          height: inputImageUrl ? 1024 : height,
+          aspectRatio,
+          cost: "0.05",
+        });
+        
+        res.json(savedImage);
+      }
       
     } catch (error) {
       console.error("Error generating image:", error);
