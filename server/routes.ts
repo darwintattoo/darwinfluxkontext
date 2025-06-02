@@ -152,6 +152,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         } catch (error: any) {
           console.log(`Attempt ${attempt} failed:`, error.message);
           
+          // Si es error de contenido sensible, no reintentar
+          if (error.message?.includes("flagged as sensitive")) {
+            throw new Error("Content was flagged as sensitive. Please try with a different prompt or image.");
+          }
+          
           if (attempt === retries || !error.message?.includes("Prediction interrupted")) {
             throw error; // Último intento o error diferente
           }
