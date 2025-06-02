@@ -45,12 +45,12 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
   }, []);
 
   return (
-    <div className={`relative ${className}`} ref={imgRef} onClick={onClick}>
+    <div className={`relative min-h-[400px] ${className}`} ref={imgRef} onClick={onClick}>
       {/* Placeholder/Thumbnail */}
       <img 
         src={isInView ? thumbnailUrl : ''}
         alt={alt}
-        className={`w-full h-auto transition-opacity duration-300 ${
+        className={`w-full h-auto min-h-[400px] object-cover transition-opacity duration-300 ${
           isLoaded ? 'opacity-0 absolute inset-0' : 'opacity-100'
         }`}
         loading="lazy"
@@ -62,7 +62,7 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
         <img 
           src={src}
           alt={alt}
-          className={`w-full h-auto transition-opacity duration-500 ${
+          className={`w-full h-auto min-h-[400px] object-cover transition-opacity duration-500 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={() => setIsLoaded(true)}
@@ -73,8 +73,8 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
       
       {/* Loading indicator */}
       {isInView && !isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-800/50">
-          <div className="animate-spin w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full" />
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-800/50 min-h-[400px]">
+          <div className="animate-spin w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full" />
         </div>
       )}
     </div>
