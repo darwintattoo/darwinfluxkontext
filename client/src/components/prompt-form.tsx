@@ -158,6 +158,9 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
       height?: number; 
       aspectRatio?: string; 
     }) => {
+      // Start generation
+      onGenerationStart?.();
+      
       // Start timer
       setGenerationTimer(0);
       const interval = setInterval(() => {
@@ -183,6 +186,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
       queryClient.invalidateQueries({ queryKey: ["/api/images"] });
       queryClient.refetchQueries({ queryKey: ["/api/images"] });
       setGenerationTimer(0);
+      onGenerationEnd?.();
     },
     onError: (error: any) => {
       toast({
@@ -195,6 +199,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
         clearInterval(timerInterval);
         setTimerInterval(null);
       }
+      onGenerationEnd?.();
     },
   });
 
