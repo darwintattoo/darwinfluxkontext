@@ -27,7 +27,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [generationTimer, setGenerationTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
-  const [model, setModel] = useState<"max" | "pro">("max");
+  const [model, setModel] = useState<"max" | "pro">("pro");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
 
