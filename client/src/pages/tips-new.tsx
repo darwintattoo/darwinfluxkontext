@@ -22,14 +22,21 @@ export default function Tips() {
           </Link>
         </div>
 
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            {language === 'es' ? 'Consejos y Técnicas' : 'Tips & Techniques'}
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            {language === 'es' ? 'Guía de Prompts' : 'Prompt Guide'}
           </h1>
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             {language === 'es' 
-              ? 'Aprende técnicas profesionales para obtener los mejores resultados en la edición de imágenes con IA'
-              : 'Learn professional techniques to get the best results from AI image editing'
+              ? 'Aprende a crear prompts efectivos para obtener los mejores resultados con tu generador de imágenes. Estos consejos te ayudarán a transformar tus ideas en imágenes impresionantes.'
+              : 'Learn to create effective prompts to get the best results from your image generator. These tips will help you transform your ideas into stunning images.'
+            }
+          </p>
+          <p className="text-lg text-blue-300 mt-4 font-medium">
+            {language === 'es' 
+              ? '💡 Consejo: Los prompts en inglés producen mejores resultados'
+              : '💡 Tip: English prompts produce better results'
             }
           </p>
         </div>
