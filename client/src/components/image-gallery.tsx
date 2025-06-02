@@ -1,9 +1,9 @@
-import { Download, Share, Expand, Trash2, Loader2, Edit, ToggleLeft, ToggleRight } from "lucide-react";
 import { useState } from "react";
+import { Download, Share, Edit, Expand, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
 import type { GeneratedImage } from "@shared/schema";
 
 interface ImageGalleryProps {
@@ -16,8 +16,6 @@ interface ImageGalleryProps {
 export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference }: ImageGalleryProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [compareEnabled, setCompareEnabled] = useState(false);
-  const [sliderPosition, setSliderPosition] = useState(50);
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -45,23 +43,22 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
       const response = await fetch(image.imageUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `generated-image-${image.id}.jpg`;
-      document.body.appendChild(a);
-      a.click();
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `generated-image-${image.id}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
       
       toast({
-        title: "Success",
-        description: "Image download started",
+        title: "Download started",
+        description: "Your image is being downloaded",
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to download image",
+        title: "Download failed",
+        description: "Failed to download the image",
         variant: "destructive",
       });
     }
@@ -76,20 +73,20 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
           url: image.imageUrl,
         });
       } catch (error) {
-        // User cancelled sharing
+        // User cancelled sharing or sharing failed
       }
     } else {
       // Fallback: copy URL to clipboard
       try {
         await navigator.clipboard.writeText(image.imageUrl);
         toast({
-          title: "Success",
+          title: "Link copied",
           description: "Image URL copied to clipboard",
         });
       } catch (error) {
         toast({
-          title: "Error",
-          description: "Failed to copy URL",
+          title: "Share failed",
+          description: "Failed to copy link to clipboard",
           variant: "destructive",
         });
       }
@@ -97,25 +94,21 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
   };
 
   const formatDate = (date: Date) => {
-    const now = new Date();
-    const diffMs = now.getTime() - new Date(date).getTime();
-    const diffMinutes = Math.floor(diffMs / 60000);
-    
-    if (diffMinutes < 1) return 'Just now';
-    if (diffMinutes < 60) return `${diffMinutes} min ago`;
-    const diffHours = Math.floor(diffMinutes / 60);
-    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-    const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(date));
   };
 
-  if (isLoading) {
+  if (isLoading && images.length === 0) {
     return (
-      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8 text-center">
-        <div className="flex flex-col items-center">
-          <Loader2 className="w-8 h-8 animate-spin text-indigo-500 mb-4" />
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8">
+        <div className="flex flex-col items-center justify-center text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mb-4" />
           <h3 className="text-lg font-medium text-slate-200 mb-2">Loading images...</h3>
-          <p className="text-slate-400">Please wait while we fetch your generated images</p>
+          <p className="text-slate-400">Please wait while we fetch your generated images.</p>
         </div>
       </div>
     );
@@ -123,17 +116,20 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
 
   if (images.length === 0) {
     return (
-      <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700 border-dashed p-12 text-center">
-        <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Expand className="h-8 w-8 text-slate-400" />
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8">
+        <div className="flex flex-col items-center justify-center text-center">
+          <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mb-4">
+            <Edit className="h-8 w-8 text-slate-400" />
+          </div>
+          <h3 className="text-lg font-medium text-slate-200 mb-2">No images yet</h3>
+          <p className="text-slate-400">Generate your first image to see it here.</p>
         </div>
-        <h3 className="text-lg font-medium text-slate-300 mb-2">No images generated yet</h3>
-        <p className="text-slate-400">Enter a prompt and click "Generate Image" to get started</p>
       </div>
     );
   }
 
-  const [latestImage, ...previousImages] = images;
+  const latestImage = images[0];
+  const previousImages = images.slice(1);
 
   return (
     <div className="space-y-6">
@@ -154,17 +150,6 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
                 )}
               </div>
               <div className="flex items-center space-x-2">
-                {latestImage.inputImageUrl && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setCompareEnabled(!compareEnabled)}
-                    className="text-slate-400 hover:text-slate-300"
-                  >
-                    {compareEnabled ? <ToggleRight className="h-4 w-4" /> : <ToggleLeft className="h-4 w-4" />}
-                    Compare
-                  </Button>
-                )}
                 <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">
                   Complete
                 </span>
@@ -173,144 +158,70 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
           </div>
           
           <div className="relative group">
-            {compareEnabled && latestImage.inputImageUrl ? (
-              <div className="relative overflow-hidden bg-transparent">
-                {/* After Image (Generated) - Base layer */}
-                <img 
-                  src={latestImage.imageUrl}
-                  alt={latestImage.prompt}
-                  className="w-full h-auto cursor-pointer block"
-                  onClick={() => onImageSelect(latestImage)}
-                  style={{ 
-                    filter: 'none',
-                    mixBlendMode: 'normal',
-                    backgroundColor: 'transparent'
-                  }}
-                />
-                
-                {/* Before Image (Reference) - Overlay with clip */}
-                <div 
-                  className="absolute inset-0 z-10 pointer-events-none overflow-hidden"
-                  style={{ 
-                    clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`
-                  }}
-                >
-                  <img 
-                    src={latestImage.inputImageUrl}
-                    alt="Reference image"
-                    className="w-full h-auto"
-                    style={{ 
-                      objectFit: 'contain',
-                      objectPosition: 'left top'
-                    }}
-                  />
-                </div>
-                
-                {/* Labels */}
-                <div className="absolute top-4 left-4 bg-black/80 text-white px-3 py-1 rounded text-sm font-medium z-20">
-                  Before
-                </div>
-                <div className="absolute top-4 right-4 bg-black/80 text-white px-3 py-1 rounded text-sm font-medium z-20">
-                  After
-                </div>
-                
-                {/* Slider */}
-                <div 
-                  className="absolute inset-y-0 z-20 w-1 bg-white shadow-lg cursor-ew-resize"
-                  style={{ left: `${sliderPosition}%` }}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    const rect = e.currentTarget.parentElement?.getBoundingClientRect();
-                    if (!rect) return;
-                    
-                    const handleMouseMove = (moveEvent: MouseEvent) => {
-                      const x = moveEvent.clientX - rect.left;
-                      const newPosition = Math.max(0, Math.min(100, (x / rect.width) * 100));
-                      setSliderPosition(newPosition);
-                    };
-                    
-                    const handleMouseUp = () => {
-                      document.removeEventListener('mousemove', handleMouseMove);
-                      document.removeEventListener('mouseup', handleMouseUp);
-                    };
-                    
-                    document.addEventListener('mousemove', handleMouseMove);
-                    document.addEventListener('mouseup', handleMouseUp);
-                  }}
-                >
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center">
-                    <div className="w-3 h-3 border-2 border-gray-400 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <img 
-                src={latestImage.imageUrl}
-                alt={latestImage.prompt}
-                className="w-full h-auto cursor-pointer transition-transform duration-300 group-hover:scale-105"
-                onClick={() => onImageSelect(latestImage)}
-              />
-            )}
+            <img 
+              src={latestImage.imageUrl}
+              alt={latestImage.prompt}
+              className="w-full h-auto cursor-pointer transition-transform duration-300 group-hover:scale-105"
+              onClick={() => onImageSelect(latestImage)}
+            />
             
             {/* Image Actions Overlay */}
-            {!compareEnabled && (
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <div className="flex space-x-2">
+            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <div className="flex space-x-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDownload(latestImage);
+                  }}
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShare(latestImage);
+                  }}
+                >
+                  <Share className="h-4 w-4" />
+                </Button>
+                {onUseAsReference && (
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                    className="bg-amber-500/30 backdrop-blur-sm text-white hover:bg-amber-500/50"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDownload(latestImage);
+                      onUseAsReference(latestImage.imageUrl);
+                      toast({
+                        title: "Image loaded as reference",
+                        description: "You can now edit this image with a new prompt",
+                      });
                     }}
                   >
-                    <Download className="h-4 w-4" />
+                    <Edit className="h-4 w-4" />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleShare(latestImage);
-                    }}
-                  >
-                    <Share className="h-4 w-4" />
-                  </Button>
-                  {onUseAsReference && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="bg-amber-500/30 backdrop-blur-sm text-white hover:bg-amber-500/50"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onUseAsReference(latestImage.imageUrl);
-                        toast({
-                          title: "Image loaded as reference",
-                          description: "You can now edit this image with a new prompt",
-                        });
-                      }}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onImageSelect(latestImage);
-                    }}
-                  >
-                    <Expand className="h-4 w-4" />
-                  </Button>
-                </div>
+                )}
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onImageSelect(latestImage);
+                  }}
+                >
+                  <Expand className="h-4 w-4" />
+                </Button>
               </div>
-            )}
+            </div>
           </div>
-
+          
           <div className="p-4 bg-slate-800/30">
             <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
               <div className="flex items-center space-x-4">
@@ -347,13 +258,34 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
                   <Share className="h-3 w-3 mr-1" />
                   Share
                 </Button>
+                {onUseAsReference && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="bg-amber-500/20 border-amber-500/30 text-amber-400 hover:bg-amber-500/30 px-3 py-1.5 h-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUseAsReference(latestImage.imageUrl);
+                      toast({
+                        title: "Image loaded as reference",
+                        description: "You can now edit this image with a new prompt",
+                      });
+                    }}
+                  >
+                    <Edit className="h-3 w-3 mr-1" />
+                    Use as Reference
+                  </Button>
+                )}
               </div>
               
               <Button
                 size="sm"
                 variant="outline"
-                className="bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30 hover:text-red-300 px-3 py-1.5 h-auto"
-                onClick={() => deleteMutation.mutate(latestImage.id)}
+                className="bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30 px-3 py-1.5 h-auto"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteMutation.mutate(latestImage.id);
+                }}
                 disabled={deleteMutation.isPending}
               >
                 <Trash2 className="h-3 w-3 mr-1" />
@@ -427,34 +359,54 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
                 <div className="flex items-center justify-between text-xs text-slate-400 mt-2 mb-3">
                   <span>{formatDate(image.createdAt)}</span>
                   <span>{image.width}x{image.height}</span>
+                  <span>${image.cost || "0.08"}</span>
                 </div>
                 
-                {/* Action buttons for previous images */}
                 <div className="flex items-center justify-between">
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-1">
                     <Button
                       size="sm"
                       variant="outline"
                       className="bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-600 px-2 py-1 h-auto text-xs"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleShare(image);
+                        handleDownload(image);
                       }}
                     >
-                      <Share className="h-3 w-3 mr-1" />
-                      Share
+                      <Download className="h-3 w-3 mr-1" />
+                      Download
                     </Button>
+                    {onUseAsReference && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-amber-500/20 border-amber-500/30 text-amber-400 hover:bg-amber-500/30 px-2 py-1 h-auto text-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onUseAsReference(image.imageUrl);
+                          toast({
+                            title: "Image loaded as reference",
+                            description: "You can now edit this image with a new prompt",
+                          });
+                        }}
+                      >
+                        <Edit className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                    )}
                   </div>
                   
                   <Button
                     size="sm"
                     variant="outline"
-                    className="bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30 hover:text-red-300 px-2 py-1 h-auto text-xs"
-                    onClick={() => deleteMutation.mutate(image.id)}
+                    className="bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30 px-2 py-1 h-auto text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteMutation.mutate(image.id);
+                    }}
                     disabled={deleteMutation.isPending}
                   >
-                    <Trash2 className="h-3 w-3 mr-1" />
-                    Delete
+                    <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
