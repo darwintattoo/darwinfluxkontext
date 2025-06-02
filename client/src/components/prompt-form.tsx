@@ -93,16 +93,20 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Candid angle capturing natural, unposed moment"
     ],
     style_changes: [
-      "Transform to a vintage, sepia-toned photograph from the 1920s",
-      "Convert to an oil painting in Renaissance style with rich colors",
-      "Apply cyberpunk neon lighting effects with blue and pink tones",
-      "Change to black and white film noir style with dramatic shadows",
-      "Transform into an impressionist painting with visible brushstrokes",
-      "Add art deco styling and geometric patterns in gold",
-      "Convert to a detailed pencil sketch or charcoal drawing",
-      "Apply pop art style with bright, contrasting colors",
-      "Transform to hyperrealistic digital art style",
-      "Add baroque painting style with dramatic chiaroscuro lighting"
+      "Convert to a detailed pencil sketch with fine shading",
+      "Transform to hyperrealistic digital art with perfect details",
+      "Apply Art Nouveau style with flowing organic lines and patterns",
+      "Convert to charcoal drawing with dramatic contrast",
+      "Transform to watercolor painting with soft flowing colors",
+      "Apply Art Deco style with geometric patterns and golden accents",
+      "Convert to oil painting with visible brushstrokes",
+      "Transform to ink drawing with crosshatching technique",
+      "Apply manga/anime art style with clean lines",
+      "Convert to realistic portrait photography style",
+      "Transform to impressionist painting with soft colors",
+      "Apply minimalist line art style",
+      "Convert to vintage engraving illustration style",
+      "Transform to digital vector art with clean shapes"
     ],
     animals: [
       "Make the cat sit upright with perfect posture and alert ears",
