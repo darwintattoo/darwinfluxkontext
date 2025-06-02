@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import OptimizedImage from "@/components/optimized-image";
 import type { GeneratedImage } from "@shared/schema";
 
 interface ImageGalleryProps {
@@ -158,10 +159,10 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
           </div>
           
           <div className="relative group">
-            <img 
+            <OptimizedImage 
               src={latestImage.imageUrl}
               alt={latestImage.prompt}
-              className="w-full h-auto cursor-pointer transition-transform duration-300 group-hover:scale-105"
+              className="cursor-pointer transition-transform duration-300 group-hover:scale-105"
               onClick={() => onImageSelect(latestImage)}
             />
             
@@ -301,10 +302,10 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
           {previousImages.map((image) => (
             <div key={image.id} className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 overflow-hidden group">
               <div className="relative">
-                <img 
+                <OptimizedImage 
                   src={image.imageUrl}
                   alt={image.prompt}
-                  className="w-full h-auto cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                  className="cursor-pointer transition-transform duration-300 group-hover:scale-105"
                   onClick={() => onImageSelect(image)}
                 />
                 

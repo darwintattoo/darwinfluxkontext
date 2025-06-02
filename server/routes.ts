@@ -218,9 +218,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
             
             const fileName = `${nanoid()}.png`;
+            const thumbnailFileName = `thumb_${fileName}`;
             const filePath = join(imageDir, fileName);
+            const thumbnailPath = join(imageDir, thumbnailFileName);
             
-            // Compress and save to file
+            // Generate thumbnail for faster loading
+            await sharp(imageBuffer)
+              .png({ 
+                quality: 60,
+                compressionLevel: 9
+              })
+              .resize(400, 400, { 
+                fit: 'inside',
+                withoutEnlargement: true 
+              })
+              .toFile(thumbnailPath);
+            
+            // Save full resolution image
             await sharp(imageBuffer)
               .png({ 
                 quality: 85,
@@ -234,7 +248,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
             // Use static file URL that works in deployment
             imageUrl = `/images/${fileName}`;
-            console.log("Saved image as static file:", imageUrl);
+            console.log("Saved image and thumbnail as static files:", imageUrl);
           } catch (fileError) {
             console.error("Failed to save as static file:", fileError);
             // Fallback to compressed base64
