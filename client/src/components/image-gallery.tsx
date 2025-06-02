@@ -18,6 +18,7 @@ interface ImageGalleryProps {
 export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference, isGenerating }: ImageGalleryProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [brokenImages, setBrokenImages] = useState<Set<number>>(new Set());
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -130,8 +131,14 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
     );
   }
 
-  const latestImage = images[0];
-  const previousImages = images.slice(1);
+  // Filter out broken images
+  const validImages = images.filter(image => !brokenImages.has(image.id));
+  const latestImage = validImages[0];
+  const previousImages = validImages.slice(1);
+
+  const handleImageError = (imageId: number) => {
+    setBrokenImages(prev => new Set(prev).add(imageId));
+  };
 
   return (
     <div className="space-y-6">
@@ -211,6 +218,8 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
               alt={latestImage.prompt}
               className="cursor-pointer transition-transform duration-300 group-hover:scale-105"
               onClick={() => onImageSelect(latestImage)}
+              imageId={latestImage.id}
+              onImageError={handleImageError}
             />
             
             {/* Image Actions Overlay */}

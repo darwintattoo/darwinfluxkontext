@@ -5,9 +5,11 @@ interface OptimizedImageProps {
   alt: string;
   className?: string;
   onClick?: () => void;
+  imageId?: number;
+  onImageError?: (imageId: number) => void;
 }
 
-export default function OptimizedImage({ src, alt, className = "", onClick }: OptimizedImageProps) {
+export default function OptimizedImage({ src, alt, className = "", onClick, imageId, onImageError }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -65,11 +67,11 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
   const handleImageError = useCallback(() => {
     setHasError(true);
     setIsLoaded(false);
-    // Hide the broken image completely
-    if (imgRef.current) {
-      imgRef.current.style.display = 'none';
+    // Notify parent component about the error
+    if (imageId && onImageError) {
+      onImageError(imageId);
     }
-  }, []);
+  }, [imageId, onImageError]);
 
   if (hasError) {
     return null; // Hide broken images completely
