@@ -5,7 +5,7 @@ import PromptForm from "@/components/prompt-form";
 import ImageGallery from "@/components/image-gallery";
 import ImageModal from "@/components/image-modal";
 import SettingsModal from "@/components/settings-modal";
-import { useFastGallery } from "@/hooks/useFastGallery";
+import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
