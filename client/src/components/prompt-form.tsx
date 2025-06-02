@@ -527,6 +527,9 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             placeholder={inputImageUrl ? "Make the text 3D, floating in space on a city street" : "Describe the image you want to generate..."}
             required
           />
+          <p className="text-xs text-slate-400 mt-1">
+            💡 {language === 'es' ? 'Recomendamos escribir en inglés para mejores resultados' : 'We recommend writing in English for better results'}
+          </p>
         </div>
 
         {/* Advanced Parameters */}
