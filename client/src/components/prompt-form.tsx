@@ -711,17 +711,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               🎨 Artistic
             </button>
             
-            <button
-              type="button"
-              onClick={() => setPromptCategory(promptCategory === 'general' ? '' : 'general')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                promptCategory === 'general' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
-              }`}
-            >
-              🖤 Tattoo
-            </button>
+
           </div>
 
           {/* Selected Category Content */}
