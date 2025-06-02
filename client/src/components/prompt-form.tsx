@@ -126,6 +126,23 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Make the monkey swing playfully from branch to branch",
       "Show the snake coiled elegantly with head raised alertly",
       "Position the owl with head turned almost completely around"
+    ],
+    lighting: [
+      "Add soft natural sunlight streaming through windows",
+      "Apply dramatic studio lighting with strong shadows",
+      "Create golden hour warm lighting at sunset",
+      "Add cool blue moonlight illumination at night",
+      "Apply harsh overhead fluorescent lighting",
+      "Create warm candlelight with flickering shadows",
+      "Add bright daylight with clear sky illumination",
+      "Apply neon lighting with vibrant color casts",
+      "Create soft diffused lighting through clouds",
+      "Add rim lighting to create glowing edges",
+      "Apply backlighting for silhouette effect",
+      "Create cinematic three-point lighting setup",
+      "Add fire light with orange warm glow",
+      "Apply cold LED lighting with blue tint",
+      "Create underwater lighting with caustic patterns"
     ]
   };
 
