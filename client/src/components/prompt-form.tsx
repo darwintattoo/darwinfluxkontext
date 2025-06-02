@@ -617,25 +617,25 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
         <Button 
           type="submit" 
           disabled={generateMutation.isPending}
-          className={`w-full font-medium py-4 transition-all duration-300 ${
+          className={`w-full font-bold py-6 transition-all duration-300 transform ${
             generateMutation.isPending 
-              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/30' 
-              : 'bg-blue-600 hover:bg-blue-700 text-white'
+              ? 'bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white shadow-2xl shadow-red-500/50 scale-105 animate-pulse border-4 border-orange-300' 
+              : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-105'
           }`}
         >
           <div className="flex items-center justify-center">
             {generateMutation.isPending ? (
-              <div className="flex items-center space-x-4">
-                {/* Enhanced Progress Indicator */}
+              <div className="flex flex-col items-center space-y-3">
+                {/* Large Spinning Progress Indicator */}
                 <div className="relative">
-                  <svg className="w-8 h-8 transform -rotate-90" viewBox="0 0 36 36">
+                  <svg className="w-12 h-12 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
                     <circle
                       cx="18"
                       cy="18"
                       r="16"
                       fill="none"
-                      className="stroke-blue-300/30"
-                      strokeWidth="3"
+                      className="stroke-orange-200/40"
+                      strokeWidth="4"
                     />
                     <circle
                       cx="18"
@@ -643,31 +643,28 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                       r="16"
                       fill="none"
                       className="stroke-white"
-                      strokeWidth="3"
-                      strokeDasharray={`${(generationTimer / 120) * 100} 100`}
+                      strokeWidth="4"
+                      strokeDasharray="60 40"
                       strokeLinecap="round"
-                      style={{
-                        transition: 'stroke-dasharray 0.3s ease-in-out',
-                      }}
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                    <div className="w-5 h-5 bg-white rounded-full animate-bounce"></div>
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-base font-semibold text-white">
-                    {language === 'es' ? 'Generando imagen...' : 'Generating image...'}
+                  <div className="text-xl font-bold text-white tracking-wide">
+                    🎨 {language === 'es' ? 'GENERANDO IMAGEN' : 'GENERATING IMAGE'}
                   </div>
-                  <div className="text-sm text-blue-100 font-mono mt-1">
+                  <div className="text-base text-orange-100 font-mono mt-2 bg-black/20 px-3 py-1 rounded-full">
                     {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')} • {Math.round((generationTimer / 120) * 100)}%
                   </div>
                 </div>
               </div>
             ) : (
               <>
-                <Wand2 className="mr-2 h-5 w-5" />
-                {language === 'es' ? 'Generar Imagen' : 'Generate Image'}
+                <Wand2 className="mr-3 h-6 w-6" />
+                <span className="text-lg">{language === 'es' ? 'Generar Imagen' : 'Generate Image'}</span>
               </>
             )}
           </div>

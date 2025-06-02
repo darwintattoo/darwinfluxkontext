@@ -137,40 +137,45 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
     <div className="space-y-6">
       {/* Generation Loading State */}
       {isGenerating && (
-        <div className="bg-gradient-to-r from-blue-600/20 to-blue-700/20 backdrop-blur-sm rounded-xl border border-blue-500/30 p-6">
-          <div className="flex items-center justify-center space-x-4">
+        <div className="bg-gradient-to-br from-orange-500/30 via-red-500/30 to-pink-500/30 backdrop-blur-sm rounded-2xl border-4 border-orange-400/50 p-8 shadow-2xl shadow-orange-500/30 animate-pulse">
+          <div className="flex flex-col items-center justify-center space-y-6">
             <div className="relative">
-              <svg className="w-10 h-10 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
+              <svg className="w-20 h-20 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
                 <circle
                   cx="18"
                   cy="18"
                   r="16"
                   fill="none"
-                  className="stroke-blue-400/30"
-                  strokeWidth="3"
+                  className="stroke-orange-300/40"
+                  strokeWidth="4"
                 />
                 <circle
                   cx="18"
                   cy="18"
                   r="16"
                   fill="none"
-                  className="stroke-blue-400"
-                  strokeWidth="3"
-                  strokeDasharray="60 40"
+                  className="stroke-orange-400"
+                  strokeWidth="4"
+                  strokeDasharray="70 30"
                   strokeLinecap="round"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-4 h-4 bg-blue-400 rounded-full animate-pulse"></div>
+                <div className="w-8 h-8 bg-orange-400 rounded-full animate-bounce"></div>
               </div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-semibold text-blue-300">
-                Procesando nueva imagen...
+              <div className="text-2xl font-bold text-orange-200 mb-2 tracking-wide">
+                🎨 PROCESANDO NUEVA IMAGEN
               </div>
-              <div className="text-sm text-blue-400 mt-1">
+              <div className="text-lg text-orange-300 font-medium bg-black/30 px-4 py-2 rounded-full">
                 La imagen aparecerá aquí cuando esté lista
               </div>
+            </div>
+            <div className="flex space-x-2">
+              <div className="w-3 h-3 bg-orange-400 rounded-full animate-bounce"></div>
+              <div className="w-3 h-3 bg-red-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+              <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
             </div>
           </div>
         </div>
