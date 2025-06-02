@@ -234,14 +234,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all generated images (protected)
   app.get("/api/images", requireAuth, async (req, res) => {
     try {
+      console.log("Fetching images for user:", req.user);
       const images = await storage.getGeneratedImages();
+      console.log(`Found ${images.length} images`);
       
       // Set cache headers for better performance
       res.setHeader('Cache-Control', 'public, max-age=300'); // 5 minutes cache
       res.json(images);
     } catch (error) {
       console.error("Error fetching images:", error);
-      res.status(500).json({ error: "Failed to fetch images" });
+      console.error("Error details:", error.message);
+      console.error("Error stack:", error.stack);
+      res.status(500).json({ error: "Failed to fetch images", details: error.message });
     }
   });
 
