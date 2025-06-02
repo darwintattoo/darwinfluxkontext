@@ -136,7 +136,7 @@ export default function ImageGenerator() {
                 className="h-8 w-auto"
               />
               <div>
-                <div className="text-sm font-medium text-slate-200 mb-1">{t('subtitle')}</div>
+                <div className="text-sm font-medium text-slate-200 mb-1 hidden sm:block">{t('subtitle')}</div>
                 <div className="text-xs text-slate-300 hidden sm:block">Created by Darwin Enriquez</div>
               </div>
             </div>
