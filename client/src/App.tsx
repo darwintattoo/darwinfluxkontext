@@ -5,12 +5,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import ImageGenerator from "@/pages/image-generator";
+import Tips from "@/pages/tips";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={ImageGenerator} />
+      <Route path="/tips" component={Tips} />
       <Route component={NotFound} />
     </Switch>
   );

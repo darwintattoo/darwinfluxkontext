@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { Wand2, Settings, Circle, Globe, Upload } from "lucide-react";
+import { Wand2, Settings, Circle, Globe, Upload, BookOpen } from "lucide-react";
+import { Link } from "wouter";
 import PromptForm from "@/components/prompt-form";
 import ImageGallery from "@/components/image-gallery";
 import ImageModal from "@/components/image-modal";
@@ -140,6 +141,14 @@ export default function ImageGenerator() {
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* Tips Button */}
+              <Link href="/tips">
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-slate-100">
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  {language === 'es' ? 'Consejos' : 'Tips'}
+                </Button>
+              </Link>
+
               {/* Language Selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
