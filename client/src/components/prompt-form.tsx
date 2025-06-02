@@ -625,7 +625,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
         >
           <div className="flex items-center justify-center">
             {generateMutation.isPending ? (
-              <div className="flex flex-col items-center space-y-3">
+              <div className="flex flex-col items-center justify-center space-y-4 w-full">
                 {/* Large Spinning Progress Indicator */}
                 <div className="relative">
                   <svg className="w-12 h-12 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
@@ -652,11 +652,11 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                     <div className="w-5 h-5 bg-white rounded-full animate-bounce"></div>
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-xl font-bold text-white tracking-wide">
+                <div className="text-center w-full">
+                  <div className="text-xl font-bold text-white tracking-wide mb-3">
                     {language === 'es' ? 'GENERANDO IMAGEN' : 'GENERATING IMAGE'}
                   </div>
-                  <div className="text-base text-blue-100 font-mono mt-2 bg-black/20 px-3 py-1 rounded-full">
+                  <div className="text-sm text-blue-100 font-mono bg-black/20 px-4 py-2 rounded-full inline-block">
                     {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')} • {Math.round((generationTimer / 120) * 100)}%
                   </div>
                 </div>
