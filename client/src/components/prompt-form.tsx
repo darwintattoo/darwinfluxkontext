@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ChevronDown, Wand2, Info, Upload, X, Image, Languages, User, Smile, Camera, Palette, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,6 +27,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [generationTimer, setGenerationTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
 
   // Update inputImageUrl when referenceImageUrl changes
@@ -489,21 +490,25 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                     : 'Drag an image here or click to upload'
                   }
                 </p>
-                <Input
+                <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    if (file) handleImageUpload(file);
+                    if (file) {
+                      handleImageUpload(file);
+                      // Reset the input so the same file can be selected again if needed
+                      e.target.value = '';
+                    }
                   }}
                   className="hidden"
-                  id="image-upload"
                 />
                 <Button
                   type="button"
                   variant="secondary"
                   className="bg-slate-700 hover:bg-slate-600"
-                  onClick={() => document.getElementById('image-upload')?.click()}
+                  onClick={() => fileInputRef.current?.click()}
                 >
                   <Upload className="mr-2 h-4 w-4" />
                   Choose Image
