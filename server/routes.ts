@@ -120,57 +120,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         auth: replicateToken,
       });
 
-      // Función para detectar qué preservar según el prompt
-      const getPreservationClauses = (prompt: string, hasInputImage: boolean) => {
-        if (!hasInputImage) return ""; // No hay imagen original que preservar
-        
-        const lowerPrompt = prompt.toLowerCase();
-        let clauses: string[] = [];
-        
-        // Detectar si NO quiere cambiar expresión/pose
-        const changesExpression = lowerPrompt.includes('expression') || 
-                                 lowerPrompt.includes('smile') || 
-                                 lowerPrompt.includes('frown') || 
-                                 lowerPrompt.includes('look') ||
-                                 lowerPrompt.includes('pose') ||
-                                 lowerPrompt.includes('turn') ||
-                                 lowerPrompt.includes('facing');
-        
-        // Detectar si NO quiere cambiar ropa/outfit
-        const changesWardrobe = lowerPrompt.includes('clothing') || 
-                               lowerPrompt.includes('wardrobe') || 
-                               lowerPrompt.includes('outfit') || 
-                               lowerPrompt.includes('dress') ||
-                               lowerPrompt.includes('shirt') ||
-                               lowerPrompt.includes('color');
-        
-        // Detectar si NO quiere cambiar el fondo
-        const changesBackground = lowerPrompt.includes('background') || 
-                                 lowerPrompt.includes('setting') || 
-                                 lowerPrompt.includes('environment') ||
-                                 lowerPrompt.includes('scene');
-        
-        // Solo preservar lo que NO se quiere cambiar
-        if (!changesExpression) {
-          clauses.push("Preserve the original pose and facial expression");
-        }
-        
-        if (!changesWardrobe) {
-          clauses.push("Do not alter wardrobe colors");
-        }
-        
-        if (!changesBackground) {
-          clauses.push("Keep background unchanged except for lighting");
-        }
-        
-        return clauses.length > 0 ? ". " + clauses.join(". ") + "." : "";
-      };
-
       // Configuración de entrada para FLUX Kontext Max
-      const enhancedPrompt = prompt + getPreservationClauses(prompt, !!inputImageUrl);
-      
       const input: any = {
-        prompt: enhancedPrompt,
+        prompt: prompt,
       };
 
       // Si hay imagen de entrada, la incluimos
