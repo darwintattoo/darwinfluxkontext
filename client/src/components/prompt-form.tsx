@@ -617,25 +617,25 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
         <Button 
           type="submit" 
           disabled={generateMutation.isPending}
-          className={`w-full font-bold py-6 transition-all duration-300 transform ${
+          className={`w-full font-semibold py-4 transition-all duration-200 ${
             generateMutation.isPending 
-              ? 'bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 text-white shadow-2xl shadow-blue-500/50 scale-105 animate-pulse border-4 border-blue-300' 
-              : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-105'
+              ? 'bg-blue-600 text-white opacity-90' 
+              : 'bg-blue-600 hover:bg-blue-700 text-white'
           }`}
         >
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center space-x-3">
             {generateMutation.isPending ? (
-              <div className="flex flex-col items-center justify-center space-y-4 w-full">
-                {/* Large Spinning Progress Indicator */}
+              <>
+                {/* Elegant Progress Indicator */}
                 <div className="relative">
-                  <svg className="w-12 h-12 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
+                  <svg className="w-5 h-5 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
                     <circle
                       cx="18"
                       cy="18"
                       r="16"
                       fill="none"
                       className="stroke-blue-200/40"
-                      strokeWidth="4"
+                      strokeWidth="3"
                     />
                     <circle
                       cx="18"
@@ -643,28 +643,25 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                       r="16"
                       fill="none"
                       className="stroke-white"
-                      strokeWidth="4"
+                      strokeWidth="3"
                       strokeDasharray="60 40"
                       strokeLinecap="round"
                     />
                   </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-5 h-5 bg-white rounded-full animate-bounce"></div>
-                  </div>
                 </div>
-                <div className="text-center w-full">
-                  <div className="text-xl font-bold text-white tracking-wide mb-3">
-                    {language === 'es' ? 'GENERANDO IMAGEN' : 'GENERATING IMAGE'}
-                  </div>
-                  <div className="text-sm text-blue-100 font-mono bg-black/20 px-4 py-2 rounded-full inline-block">
+                <div className="flex flex-col">
+                  <span className="text-base font-semibold">
+                    {language === 'es' ? 'Generando imagen' : 'Generating image'}
+                  </span>
+                  <span className="text-xs text-blue-100 font-mono">
                     {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')} • {Math.round((generationTimer / 120) * 100)}%
-                  </div>
+                  </span>
                 </div>
-              </div>
+              </>
             ) : (
               <>
-                <Wand2 className="mr-3 h-6 w-6" />
-                <span className="text-lg">{language === 'es' ? 'Generar Imagen' : 'Generate Image'}</span>
+                <Wand2 className="mr-1 h-5 w-5" />
+                <span className="text-base">{language === 'es' ? 'Generar Imagen' : 'Generate Image'}</span>
               </>
             )}
           </div>
