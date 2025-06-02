@@ -12,8 +12,16 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
   const [isInView, setIsInView] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Use original image directly - no thumbnails
-  const thumbnailUrl = src;
+  // Generate thumbnail URL
+  const getThumbnailUrl = (originalUrl: string) => {
+    if (originalUrl.includes('/images/')) {
+      const filename = originalUrl.split('/images/')[1];
+      return `/images/thumb_${filename}`;
+    }
+    return originalUrl;
+  };
+
+  const thumbnailUrl = getThumbnailUrl(src);
 
   // Intersection Observer for lazy loading
   useEffect(() => {

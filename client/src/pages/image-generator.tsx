@@ -129,14 +129,14 @@ export default function ImageGenerator() {
       <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex flex-col items-start space-y-1">
+            <div className="flex items-center space-x-4">
               <img 
                 src="/attached_assets/1Asset 3zzz.png" 
                 alt="TattooStencilPro Logo" 
                 className="h-8 w-auto"
               />
               <div>
-                <div className="text-sm font-medium text-slate-200 mb-1 hidden sm:block">{t('subtitle')}</div>
+                <div className="text-sm font-medium text-slate-200 mb-1">{t('subtitle')}</div>
                 <div className="text-xs text-slate-300">Created by Darwin Enriquez</div>
               </div>
             </div>

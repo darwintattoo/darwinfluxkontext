@@ -29,7 +29,8 @@ const generateImageSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Static images are served in server/index.ts - no need to duplicate here
+  // Serve static images from public directory
+  app.use('/images', express.static(join(process.cwd(), 'public', 'images')));
   // Serve individual images (converts base64 to binary for better performance)
   app.get("/api/image/:id", async (req, res) => {
     try {
