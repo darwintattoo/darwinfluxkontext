@@ -27,6 +27,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [generationTimer, setGenerationTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+  const [model, setModel] = useState<"max" | "pro">("max");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
 
@@ -158,6 +159,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
       width?: number; 
       height?: number; 
       aspectRatio?: string; 
+      model?: "max" | "pro";
     }) => {
       // Start generation
       onGenerationStart?.();
@@ -435,7 +437,8 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
       inputImageUrl: inputImageUrl || undefined,
       width, 
       height,
-      aspectRatio
+      aspectRatio,
+      model
     });
   };
 
@@ -446,7 +449,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-slate-200">Generate Image</h2>
         <div className="text-xs text-slate-400 mt-1">
-          {language === 'es' ? 'Impulsado por FLUX Kontext Max AI' : 'Powered by FLUX Kontext Max AI'}
+          {language === 'es' ? `Impulsado por FLUX Kontext ${model.toUpperCase()} AI` : `Powered by FLUX Kontext ${model.toUpperCase()} AI`}
         </div>
       </div>
       

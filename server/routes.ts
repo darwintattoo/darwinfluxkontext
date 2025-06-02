@@ -25,6 +25,7 @@ const generateImageSchema = z.object({
   width: z.number().optional().default(1024),
   height: z.number().optional().default(1024),
   aspectRatio: z.string().optional().default("match_input_image"),
+  model: z.enum(["max", "pro"]).optional().default("max"),
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -106,7 +107,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Generate new image using Replicate API
   app.post("/api/generate", async (req, res) => {
     try {
-      const { prompt, inputImageUrl, width, height, aspectRatio } = generateImageSchema.parse(req.body);
+      const { prompt, inputImageUrl, width, height, aspectRatio, model } = generateImageSchema.parse(req.body);
       
       const replicateToken = process.env.REPLICATE_API_TOKEN;
       
@@ -162,14 +163,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log("Final input object:", JSON.stringify(input, null, 2));
 
+      // Seleccionar el modelo basado en el parámetro
+      const modelName = model === "pro" 
+        ? "black-forest-labs/flux-kontext-pro" 
+        : "black-forest-labs/flux-kontext-max";
+      
+      console.log(`Using model: ${modelName}`);
+
       // Usar el SDK de Replicate con reintentos para manejar interrupciones
       let output;
       let retries = 3;
       
       for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-          console.log(`Generating image (attempt ${attempt}/${retries})...`);
-          output = await replicate.run("black-forest-labs/flux-kontext-max", { input });
+          console.log(`Generating image (attempt ${attempt}/${retries}) with ${modelName}...`);
+          output = await replicate.run(modelName, { input });
           break; // Éxito, salir del bucle
         } catch (error: any) {
           console.log(`Attempt ${attempt} failed:`, error.message);
