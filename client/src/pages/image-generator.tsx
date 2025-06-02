@@ -27,19 +27,30 @@ export default function ImageGenerator() {
   const { language, setLanguage, t } = useLanguage();
   const { toast } = useToast();
 
-  const { images, isLoading, isFetching, addImageToCache, refreshGallery } = useFastGallery();
+  const { data: images = [], isLoading } = useQuery<GeneratedImage[]>({
+    queryKey: ["/api/images"],
+  });
 
   const hasApiKey = !!localStorage.getItem("replicate_api_token");
 
   const compressImage = useCallback((file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
+      // For small files, return quickly with minimal processing
+      if (file.size <= 2 * 1024 * 1024) { // 2MB or less
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsDataURL(file);
+        return;
+      }
+      
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const img = new Image();
       
       img.onload = () => {
-        // Calculate optimal size (max 1024px on longest side)
-        const maxSize = 1024;
+        // More aggressive compression for faster upload
+        const maxSize = 800;
         let { width, height } = img;
         
         if (width > height) {
@@ -57,9 +68,9 @@ export default function ImageGenerator() {
         canvas.width = width;
         canvas.height = height;
         
-        // Draw and compress
+        // Draw and compress with lower quality for speed
         ctx?.drawImage(img, 0, 0, width, height);
-        const compressedData = canvas.toDataURL('image/jpeg', 0.8);
+        const compressedData = canvas.toDataURL('image/jpeg', 0.6);
         resolve(compressedData);
       };
       
