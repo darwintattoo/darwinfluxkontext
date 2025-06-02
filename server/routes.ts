@@ -12,6 +12,7 @@ import { nanoid } from 'nanoid';
 import sharp from 'sharp';
 import session from 'express-session';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const generateImageSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
@@ -57,14 +58,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }));
 
-  // Middleware to check authentication
+  // JWT Secret
+  const JWT_SECRET = process.env.JWT_SECRET || 'tattoo-generator-jwt-secret-key';
+
+  // Middleware to check JWT authentication
   const requireAuth = (req: any, res: any, next: any) => {
-    console.log('Auth check - Session:', req.session);
-    console.log('Auth check - UserId:', req.session?.userId);
-    if (req.session?.userId) {
-      return next();
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Authentication required' });
     }
-    return res.status(401).json({ error: 'Authentication required' });
+
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET) as any;
+      req.user = decoded;
+      next();
+    } catch (error) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
   };
 
   // Auth routes
@@ -86,10 +98,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
+      // Create JWT token
+      const token = jwt.sign(
+        { userId: user.id, username: user.username },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
       req.session.userId = user.id;
-      console.log('Session after login:', req.session);
-      console.log('Session ID:', req.sessionID);
-      res.json({ success: true, user: { id: user.id, username: user.username } });
+      res.json({ 
+        success: true, 
+        user: { id: user.id, username: user.username },
+        token: token
+      });
     } catch (error) {
       console.error('Login error:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -106,9 +127,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get('/api/auth/user', (req: any, res) => {
-    if (req.session?.userId) {
-      res.json({ authenticated: true, userId: req.session.userId });
-    } else {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) {
+      return res.json({ authenticated: false });
+    }
+
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET) as any;
+      res.json({ 
+        authenticated: true, 
+        userId: decoded.userId,
+        username: decoded.username 
+      });
+    } catch (error) {
       res.json({ authenticated: false });
     }
   });

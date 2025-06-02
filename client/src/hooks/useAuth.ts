@@ -11,9 +11,13 @@ export function useAuth() {
 
   const loginMutation = useMutation({
     mutationFn: async ({ username, password }: { username: string; password: string }) => {
-      return apiRequest("POST", "/api/login", { username, password });
+      const response = await apiRequest("POST", "/api/login", { username, password });
+      return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data.token) {
+        localStorage.setItem('auth_token', data.token);
+      }
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
   });
