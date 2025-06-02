@@ -458,13 +458,13 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
           <div className="space-y-3">
             {inputImageUrl ? (
               <div className="relative">
-                <div className="w-full max-h-48 overflow-hidden rounded-lg border border-slate-600">
+                <div className="w-full max-h-80 overflow-hidden rounded-lg border border-slate-600">
                   <img 
                     src={inputImageUrl} 
                     alt="Input reference" 
                     className="w-full h-auto object-contain"
                     loading="eager"
-                    style={{ maxHeight: '192px' }}
+                    style={{ maxHeight: '320px' }}
                   />
                 </div>
                 <Button
