@@ -173,15 +173,7 @@ export default function ImageGenerator() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Settings Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowSettings(true)}
-                className="text-slate-300 hover:text-slate-100"
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
+
             </div>
           </div>
         </div>
