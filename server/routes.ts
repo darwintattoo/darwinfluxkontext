@@ -30,16 +30,30 @@ const generateImageSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // CORS configuration for production
+  const isProduction = process.env.NODE_ENV === 'production';
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(200);
+    } else {
+      next();
+    }
+  });
+
   // Session configuration
   app.use(session({
     secret: process.env.SESSION_SECRET || 'tattoo-generator-secret-key-change-in-production',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // Set to true in production with HTTPS
+      secure: isProduction, // HTTPS only in production
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-      sameSite: 'lax'
+      sameSite: isProduction ? 'none' : 'lax' // Allow cross-site cookies in production
     }
   }));
 
@@ -73,6 +87,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       req.session.userId = user.id;
+      console.log('Session after login:', req.session);
+      console.log('Session ID:', req.sessionID);
       res.json({ success: true, user: { id: user.id, username: user.username } });
     } catch (error) {
       console.error('Login error:', error);
@@ -94,6 +110,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ authenticated: true, userId: req.session.userId });
     } else {
       res.json({ authenticated: false });
+    }
+  });
+
+  // Create initial admin user (unprotected for setup)
+  app.post('/api/setup/admin', async (req, res) => {
+    try {
+      // Check if admin already exists
+      const existingAdmin = await storage.getUserByUsername('admin');
+      if (existingAdmin) {
+        return res.json({ success: true, message: 'Admin already exists' });
+      }
+
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const user = await storage.createUser({ username: 'admin', password: hashedPassword });
+      
+      res.json({ success: true, user: { id: user.id, username: user.username } });
+    } catch (error) {
+      console.error('Create admin error:', error);
+      res.status(500).json({ error: 'Error creating admin' });
     }
   });
 

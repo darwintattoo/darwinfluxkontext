@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Wand2, Settings, Circle, Globe, Upload, BookOpen } from "lucide-react";
+import { Wand2, Settings, Circle, Globe, Upload, BookOpen, TestTube } from "lucide-react";
 import { Link } from "wouter";
 import PromptForm from "@/components/prompt-form";
 import ImageGallery from "@/components/image-gallery";
