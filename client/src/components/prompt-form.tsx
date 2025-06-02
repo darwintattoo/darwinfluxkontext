@@ -549,9 +549,37 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
             placeholder={inputImageUrl ? "Make the text 3D, floating in space on a city street" : "Describe the image you want to generate..."}
             required
           />
-          <p className="text-xs text-slate-400 mt-1">
-            💡 {language === 'es' ? 'Recomendamos escribir en inglés para mejores resultados' : 'We recommend writing in English for better results'}
-          </p>
+          <div className="space-y-1 mt-2">
+            <p className="text-xs text-slate-400">
+              {language === 'es' ? 'Recomendamos escribir en inglés para mejores resultados' : 'We recommend writing in English for better results'}
+            </p>
+            {inputImageUrl && (
+              <div className="bg-blue-900/30 border border-blue-700/50 rounded-lg p-3">
+                <p className="text-xs text-blue-200 font-medium mb-1">
+                  {language === 'es' ? '💡 Consejo profesional:' : '💡 Pro tip:'}
+                </p>
+                <p className="text-xs text-blue-300 leading-relaxed">
+                  {language === 'es' 
+                    ? 'Si el resultado cambia elementos que no querías modificar, agrega al final de tu prompt: "keep the same composition and elements"'
+                    : 'If the result changes elements you didn\'t want to modify, add to the end of your prompt: "keep the same composition and elements"'
+                  }
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const currentPrompt = prompt.trim();
+                    const addText = "keep the same composition and elements";
+                    if (!currentPrompt.toLowerCase().includes(addText.toLowerCase())) {
+                      setPrompt(currentPrompt + (currentPrompt ? ', ' : '') + addText);
+                    }
+                  }}
+                  className="mt-2 text-xs text-blue-400 hover:text-blue-300 underline transition-colors"
+                >
+                  {language === 'es' ? 'Agregar automáticamente' : 'Add automatically'}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Advanced Parameters */}
