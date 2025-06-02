@@ -128,21 +128,21 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Position the owl with head turned almost completely around"
     ],
     lighting: [
-      "Add soft natural sunlight streaming through windows",
-      "Apply dramatic studio lighting with strong shadows",
-      "Create golden hour warm lighting at sunset",
-      "Add cool blue moonlight illumination at night",
-      "Apply harsh overhead fluorescent lighting",
-      "Create warm candlelight with flickering shadows",
-      "Add bright daylight with clear sky illumination",
-      "Apply neon lighting with vibrant color casts",
-      "Create soft diffused lighting through clouds",
-      "Add rim lighting to create glowing edges",
-      "Apply backlighting for silhouette effect",
-      "Create cinematic three-point lighting setup",
-      "Add fire light with orange warm glow",
-      "Apply cold LED lighting with blue tint",
-      "Create underwater lighting with caustic patterns"
+      "Apply professional studio lighting with key light and fill light",
+      "Create dramatic studio lighting with strong directional shadows",
+      "Add soft box studio lighting for even diffused illumination",
+      "Apply ring light studio setup for beauty lighting",
+      "Create hard studio lighting with sharp defined shadows",
+      "Add butterfly studio lighting from above the subject",
+      "Apply Rembrandt studio lighting with triangle under eye",
+      "Create split studio lighting dividing face in half",
+      "Add loop studio lighting with small nose shadow",
+      "Apply broad studio lighting illuminating near side of face",
+      "Create short studio lighting illuminating far side of face",
+      "Add rim studio lighting to separate subject from background",
+      "Apply high-key studio lighting with minimal shadows",
+      "Create low-key studio lighting with dramatic shadows",
+      "Add colored gel studio lighting with vibrant hues"
     ]
   };
 
