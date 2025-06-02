@@ -234,18 +234,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all generated images (protected)
   app.get("/api/images", requireAuth, async (req, res) => {
     try {
-      console.log("Fetching images for user:", req.user);
+      const startTime = Date.now();
       const images = await storage.getGeneratedImages();
-      console.log(`Found ${images.length} images`);
+      const queryTime = Date.now() - startTime;
       
-      // Set cache headers for better performance
-      res.setHeader('Cache-Control', 'public, max-age=300'); // 5 minutes cache
+      console.log(`✓ Images fetched: ${images.length} in ${queryTime}ms`);
+      
+      // Optimize response headers for fast loading
+      res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('X-Response-Time', `${queryTime}ms`);
+      
+      // Send compressed response
       res.json(images);
-    } catch (error) {
-      console.error("Error fetching images:", error);
-      console.error("Error details:", error.message);
-      console.error("Error stack:", error.stack);
-      res.status(500).json({ error: "Failed to fetch images", details: error.message });
+    } catch (error: any) {
+      console.error("❌ Error fetching images:", error.message);
+      
+      // Handle specific error types
+      if (error.message?.includes('database')) {
+        res.status(503).json({ error: "Database temporarily unavailable", retry: true });
+      } else if (error.message?.includes('timeout')) {
+        res.status(504).json({ error: "Request timeout", retry: true });
+      } else {
+        res.status(500).json({ error: "Failed to fetch images", retry: false });
+      }
     }
   });
 
