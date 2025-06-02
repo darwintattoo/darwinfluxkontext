@@ -7,19 +7,44 @@ import { Link } from "wouter";
 import { tipsData } from "@/tips-data";
 
 export default function Tips() {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-black">
       <div className="container mx-auto px-4 py-8">
-        {/* Back Navigation */}
-        <div className="mb-8">
+        {/* Back Navigation and Language Selector */}
+        <div className="mb-8 flex justify-between items-center">
           <Link href="/">
             <Button variant="ghost" className="text-slate-300 hover:text-slate-100">
               <ArrowLeft className="h-4 w-4 mr-2" />
               {language === 'es' ? 'Volver al Generador' : 'Back to Generator'}
             </Button>
           </Link>
+          
+          <div className="flex gap-2">
+            <Button
+              variant={language === 'es' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setLanguage('es')}
+              className={language === 'es' 
+                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                : 'border-slate-600 text-slate-300 hover:bg-slate-700'
+              }
+            >
+              ES
+            </Button>
+            <Button
+              variant={language === 'en' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setLanguage('en')}
+              className={language === 'en' 
+                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                : 'border-slate-600 text-slate-300 hover:bg-slate-700'
+              }
+            >
+              EN
+            </Button>
+          </div>
         </div>
 
         <div className="text-center mb-12">
