@@ -36,6 +36,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
     if (referenceImageUrl) {
       setInputImageUrl(referenceImageUrl);
       setPrompt("Change the expression to a warm, genuine smile");
+      setAspectRatio("match_input_image"); // Mantener las proporciones de la imagen subida
     }
   }, [referenceImageUrl]);
   const [promptCategory, setPromptCategory] = useState("face_poses");
@@ -233,6 +234,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
           if (data.imageUrl) {
             setInputImageUrl(data.imageUrl);
             setInputImageFile(file);
+            setAspectRatio("match_input_image"); // Mantener las proporciones de la imagen subida
           } else {
             throw new Error("Failed to get image URL");
           }
