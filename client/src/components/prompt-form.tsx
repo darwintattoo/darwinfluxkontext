@@ -738,7 +738,10 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                       type="button"
                       className="flex flex-col items-center p-2 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors"
                       onClick={() => {
-                        setPrompt(pose.prompt);
+                        const newPrompt = inputImageUrl 
+                          ? `${pose.prompt}, keep the same composition and elements`
+                          : pose.prompt;
+                        setPrompt(newPrompt);
                         setPromptCategory('');
                       }}
                       title={pose.prompt}
@@ -785,7 +788,10 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                       type="button"
                       className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors whitespace-nowrap"
                       onClick={() => {
-                        setPrompt(suggestion);
+                        const newPrompt = inputImageUrl 
+                          ? `${suggestion}, keep the same composition and elements`
+                          : suggestion;
+                        setPrompt(newPrompt);
                         setPromptCategory('');
                       }}
                     >
@@ -830,7 +836,10 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                       type="button"
                       className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors whitespace-nowrap"
                       onClick={() => {
-                        setPrompt(suggestion);
+                        const newPrompt = inputImageUrl 
+                          ? `${suggestion}, keep the same composition and elements`
+                          : suggestion;
+                        setPrompt(newPrompt);
                         setPromptCategory('');
                       }}
                     >
@@ -875,7 +884,10 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                       type="button"
                       className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors whitespace-nowrap"
                       onClick={() => {
-                        setPrompt(suggestion);
+                        const newPrompt = inputImageUrl 
+                          ? `${suggestion}, keep the same composition and elements`
+                          : suggestion;
+                        setPrompt(newPrompt);
                         setPromptCategory('');
                       }}
                     >
@@ -920,7 +932,10 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                       type="button"
                       className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors whitespace-nowrap"
                       onClick={() => {
-                        setPrompt(suggestion);
+                        const newPrompt = inputImageUrl 
+                          ? `${suggestion}, keep the same composition and elements`
+                          : suggestion;
+                        setPrompt(newPrompt);
                         setPromptCategory('');
                       }}
                     >
