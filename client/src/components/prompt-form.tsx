@@ -681,192 +681,151 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       </form>
       
       {/* Quick Prompts */}
-      <div className="mt-6 pt-6 border-t border-slate-700/50">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-slate-200">Quick Prompts</h3>
-          <div className="text-xs text-slate-400">
-            {language === 'es' ? 'Selecciona una categoría' : 'Select a category'}
-          </div>
-        </div>
+      <div className="mt-6 pt-6 border-t border-slate-700">
+        <h3 className="text-sm font-medium text-slate-300 mb-3">Quick Prompts</h3>
         
         <div className="space-y-4">
-          {/* Category Grid */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Category Buttons - Horizontal */}
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_poses' ? '' : 'face_poses')}
-              className={`group p-4 rounded-xl text-left transition-all duration-200 ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'face_poses' 
-                  ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25' 
-                  : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/50 hover:border-slate-600'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              <div className="text-2xl mb-2">🎭</div>
-              <div className="font-medium text-sm">Face Poses</div>
-              <div className="text-xs opacity-75 mt-1">
-                {language === 'es' ? 'Ángulos y posturas' : 'Angles & positions'}
-              </div>
+              🎭 Face Poses
             </button>
             
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_expressions' ? '' : 'face_expressions')}
-              className={`group p-4 rounded-xl text-left transition-all duration-200 ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'face_expressions' 
-                  ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25' 
-                  : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/50 hover:border-slate-600'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              <div className="text-2xl mb-2">😊</div>
-              <div className="font-medium text-sm">Expressions</div>
-              <div className="text-xs opacity-75 mt-1">
-                {language === 'es' ? 'Emociones faciales' : 'Facial emotions'}
-              </div>
+              😊 Expressions
             </button>
             
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'camera_angles' ? '' : 'camera_angles')}
-              className={`group p-4 rounded-xl text-left transition-all duration-200 ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'camera_angles' 
-                  ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25' 
-                  : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/50 hover:border-slate-600'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              <div className="text-2xl mb-2">📷</div>
-              <div className="font-medium text-sm">Angles</div>
-              <div className="text-xs opacity-75 mt-1">
-                {language === 'es' ? 'Ángulos de cámara' : 'Camera angles'}
-              </div>
+              📷 Angles
             </button>
             
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'style_changes' ? '' : 'style_changes')}
-              className={`group p-4 rounded-xl text-left transition-all duration-200 ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'style_changes' 
-                  ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25' 
-                  : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/50 hover:border-slate-600'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              <div className="text-2xl mb-2">🎨</div>
-              <div className="font-medium text-sm">Artistic</div>
-              <div className="text-xs opacity-75 mt-1">
-                {language === 'es' ? 'Estilos artísticos' : 'Art styles'}
-              </div>
+              🎨 Artistic
             </button>
             
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'lighting' ? '' : 'lighting')}
-              className={`group p-4 rounded-xl text-left transition-all duration-200 ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'lighting' 
-                  ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25' 
-                  : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/50 hover:border-slate-600'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              <div className="text-2xl mb-2">💡</div>
-              <div className="font-medium text-sm">Lighting</div>
-              <div className="text-xs opacity-75 mt-1">
-                {language === 'es' ? 'Iluminación' : 'Light effects'}
-              </div>
+              💡 Lighting
             </button>
 
           </div>
 
           {/* Selected Category Content */}
           {promptCategory === 'face_poses' && (
-            <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-48 overflow-y-auto">
-                {promptSuggestions.face_poses.map((pose: any, index: number) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="group flex flex-col items-center p-3 bg-slate-700/40 hover:bg-slate-600/60 rounded-lg text-xs text-slate-300 hover:text-slate-100 transition-all duration-200 hover:shadow-md hover:scale-105"
-                    onClick={() => setPrompt(pose.prompt)}
-                    title={pose.prompt}
-                  >
-                    <span className="text-xl mb-2 group-hover:scale-110 transition-transform">{pose.icon}</span>
-                    <span className="text-center leading-tight font-medium">{pose.text}</span>
-                  </button>
-                ))}
-              </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.face_poses.map((pose: any, index: number) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="flex flex-col items-center p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                  onClick={() => setPrompt(pose.prompt)}
+                  title={pose.prompt}
+                >
+                  <span className="text-lg mb-1">{pose.icon}</span>
+                  <span className="text-center leading-tight">{pose.text}</span>
+                </button>
+              ))}
             </div>
           )}
 
           {promptCategory === 'face_expressions' && (
-            <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-                {promptSuggestions.face_expressions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="group text-left p-3 bg-slate-700/40 hover:bg-slate-600/60 rounded-lg text-xs text-slate-300 hover:text-slate-100 transition-all duration-200 hover:shadow-md"
-                    onClick={() => setPrompt(suggestion)}
-                  >
-                    <div className="font-medium leading-relaxed">
-                      {suggestion}
-                    </div>
-                  </button>
-                ))}
-              </div>
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.face_expressions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
             </div>
           )}
 
           {promptCategory === 'camera_angles' && (
-            <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-                {promptSuggestions.camera_angles.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="group text-left p-3 bg-slate-700/40 hover:bg-slate-600/60 rounded-lg text-xs text-slate-300 hover:text-slate-100 transition-all duration-200 hover:shadow-md"
-                    onClick={() => setPrompt(suggestion)}
-                  >
-                    <div className="font-medium leading-relaxed">
-                      {suggestion}
-                    </div>
-                  </button>
-                ))}
-              </div>
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.camera_angles.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
             </div>
           )}
 
           {promptCategory === 'style_changes' && (
-            <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-                {promptSuggestions.style_changes.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="group text-left p-3 bg-slate-700/40 hover:bg-slate-600/60 rounded-lg text-xs text-slate-300 hover:text-slate-100 transition-all duration-200 hover:shadow-md"
-                    onClick={() => setPrompt(suggestion)}
-                  >
-                    <div className="font-medium leading-relaxed">
-                      {suggestion}
-                    </div>
-                  </button>
-                ))}
-              </div>
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.style_changes.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </button>
+              ))}
             </div>
           )}
 
           {promptCategory === 'lighting' && (
-            <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-48 overflow-y-auto">
-                {promptSuggestions.lighting.map((light: any, index: number) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="group flex flex-col items-center p-3 bg-slate-700/40 hover:bg-slate-600/60 rounded-lg text-xs text-slate-300 hover:text-slate-100 transition-all duration-200 hover:shadow-md hover:scale-105"
-                    onClick={() => setPrompt(light.prompt)}
-                    title={light.prompt}
-                  >
-                    <span className="text-xl mb-2 group-hover:scale-110 transition-transform">{light.icon}</span>
-                    <span className="text-center leading-tight font-medium">{light.text}</span>
-                  </button>
-                ))}
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.lighting.map((light: any, index: number) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="flex flex-col items-center p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
+                  onClick={() => setPrompt(light.prompt)}
+                  title={light.prompt}
+                >
+                  <span className="text-lg mb-1">{light.icon}</span>
+                  <span className="text-center leading-tight">{light.text}</span>
+                </button>
+              ))}
             </div>
           )}
 
