@@ -65,19 +65,14 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
   const handleImageError = useCallback(() => {
     setHasError(true);
     setIsLoaded(false);
+    // Hide the broken image completely
+    if (imgRef.current) {
+      imgRef.current.style.display = 'none';
+    }
   }, []);
 
   if (hasError) {
-    return (
-      <div className={`relative bg-slate-800 ${className}`} ref={imgRef} onClick={onClick}>
-        <div className="absolute inset-0 flex items-center justify-center text-slate-400">
-          <div className="text-center">
-            <div className="text-2xl mb-2">⚠️</div>
-            <div className="text-sm">Failed to load image</div>
-          </div>
-        </div>
-      </div>
-    );
+    return null; // Hide broken images completely
   }
 
   return (
