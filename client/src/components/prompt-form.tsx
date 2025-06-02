@@ -846,38 +846,7 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
         </div>
       </div>
       
-      {/* Height Resizer - Only on desktop */}
-      <div className="relative -mb-6 pt-2 hidden lg:block">
-        <div className="flex items-center justify-center">
-          <div 
-            className="flex items-center justify-center w-full h-4 cursor-row-resize hover:bg-slate-600/30 rounded-b-xl transition-colors group"
-            onMouseDown={(e) => {
-              const startY = e.clientY;
-              const startHeight = panelHeight;
-              
-              const handleMouseMove = (moveEvent: MouseEvent) => {
-                const deltaY = moveEvent.clientY - startY;
-                const newHeight = Math.max(300, Math.min(800, startHeight + deltaY));
-                setPanelHeight(newHeight);
-              };
-              
-              const handleMouseUp = () => {
-                document.removeEventListener('mousemove', handleMouseMove);
-                document.removeEventListener('mouseup', handleMouseUp);
-                document.body.style.cursor = 'default';
-                document.body.style.userSelect = 'auto';
-              };
-              
-              document.addEventListener('mousemove', handleMouseMove);
-              document.addEventListener('mouseup', handleMouseUp);
-              document.body.style.cursor = 'row-resize';
-              document.body.style.userSelect = 'none';
-            }}
-          >
-            <GripHorizontal className="h-3 w-3 text-slate-500 group-hover:text-slate-300 transition-colors" />
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 }
