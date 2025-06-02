@@ -188,7 +188,7 @@ export default function Tips() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-black">
       <div className="container mx-auto px-4 py-8">
         {/* Back Navigation */}
         <div className="mb-8">
@@ -219,7 +219,7 @@ export default function Tips() {
                 <div className="flex items-center gap-3 mb-2">
                   <div className="flex items-center gap-2">
                     {tip.icon}
-                    <Badge variant="secondary" className="bg-purple-500/20 text-purple-300">
+                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
                       {tip.category}
                     </Badge>
                   </div>
@@ -237,7 +237,7 @@ export default function Tips() {
                   <ul className="space-y-2">
                     {tip.content.map((item, index) => (
                       <li key={index} className="flex items-start gap-2 text-slate-300">
-                        <span className="text-purple-400 mt-1">•</span>
+                        <span className="text-blue-400 mt-1">•</span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -262,7 +262,7 @@ export default function Tips() {
         </div>
 
         <div className="mt-16 text-center">
-          <Card className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30">
+          <Card className="bg-gradient-to-r from-blue-500/20 to-slate-600/20 border-blue-500/30">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold text-white mb-4">
                 {language === 'es' ? '¿Necesitas Más Ayuda?' : 'Need More Help?'}
