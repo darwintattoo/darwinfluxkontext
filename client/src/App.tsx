@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import ImageGenerator from "@/pages/image-generator";
 import Tips from "@/pages/tips";
 import Login from "@/pages/login";
+import Admin from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -29,6 +30,7 @@ function Router() {
     <Switch>
       <Route path="/" component={ImageGenerator} />
       <Route path="/tips" component={Tips} />
+      <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>
   );

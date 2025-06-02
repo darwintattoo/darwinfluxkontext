@@ -93,8 +93,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin route to create test users (you can remove this in production)
-  app.post('/api/admin/create-user', async (req, res) => {
+  // Admin route to create test users (protected)
+  app.post('/api/admin/create-user', requireAuth, async (req, res) => {
     try {
       const { username, password } = req.body;
       
