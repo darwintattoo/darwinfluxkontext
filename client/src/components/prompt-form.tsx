@@ -818,17 +818,15 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
           )}
 
           {promptCategory === 'lighting' && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-32 overflow-y-auto">
-              {promptSuggestions.lighting.map((light: any, index: number) => (
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+              {promptSuggestions.lighting.map((suggestion, index) => (
                 <button
                   key={index}
                   type="button"
-                  className="flex flex-col items-center p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
-                  onClick={() => setPrompt(light.prompt)}
-                  title={light.prompt}
+                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
+                  onClick={() => setPrompt(suggestion)}
                 >
-                  <span className="text-lg mb-1">{light.icon}</span>
-                  <span className="text-center leading-tight">{light.text}</span>
+                  {suggestion}
                 </button>
               ))}
             </div>
