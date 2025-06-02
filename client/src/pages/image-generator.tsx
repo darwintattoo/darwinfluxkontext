@@ -142,6 +142,14 @@ export default function ImageGenerator() {
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* Admin Button */}
+              <Link href="/admin">
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-slate-100">
+                  <Settings className="h-4 w-4 mr-2" />
+                  {language === 'es' ? 'Admin' : 'Admin'}
+                </Button>
+              </Link>
+
               {/* Tips Button */}
               <Link href="/tips">
                 <Button variant="ghost" size="sm" className="text-slate-300 hover:text-slate-100">
