@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [, setLocation] = useLocation();
   const { login, isLoginPending, loginError } = useAuth();
   const { toast } = useToast();
   const { language } = useLanguage();
@@ -27,6 +29,10 @@ export default function Login() {
     }
 
     login({ username: username.trim(), password }, {
+      onSuccess: () => {
+        // Always redirect to home page after successful login
+        setLocation("/");
+      },
       onError: (error: any) => {
         toast({
           title: language === 'es' ? 'Error de autenticación' : 'Authentication Error',
