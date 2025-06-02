@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, Wand2, Info, Upload, X, Image, Languages } from "lucide-react";
+import { ChevronDown, Wand2, Info, Upload, X, Image, Languages, User, Smile, Camera, Palette, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -690,61 +690,66 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_poses' ? '' : 'face_poses')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'face_poses' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              🎭 Face Poses
+              <User className="h-4 w-4 mr-2" />
+              Face Poses
             </button>
             
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_expressions' ? '' : 'face_expressions')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'face_expressions' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              😊 Expressions
+              <Smile className="h-4 w-4 mr-2" />
+              Expressions
             </button>
             
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'camera_angles' ? '' : 'camera_angles')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'camera_angles' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              📷 Angles
+              <Camera className="h-4 w-4 mr-2" />
+              Angles
             </button>
             
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'style_changes' ? '' : 'style_changes')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'style_changes' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              🎨 Artistic
+              <Palette className="h-4 w-4 mr-2" />
+              Artistic
             </button>
             
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'lighting' ? '' : 'lighting')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 promptCategory === 'lighting' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
               }`}
             >
-              💡 Lighting
+              <Lightbulb className="h-4 w-4 mr-2" />
+              Lighting
             </button>
 
           </div>
