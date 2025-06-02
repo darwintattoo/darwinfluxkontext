@@ -218,20 +218,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const imageBuffer = Buffer.concat(chunks);
           console.log("Original image buffer size:", imageBuffer.length);
           
-          // Save as static file to avoid base64 URL issues in deployment
+          // Optimizar y almacenar imagen directamente en base de datos para deployment
+          let optimizedImageBase64: string;
+          let thumbnailBase64: string;
+          
           try {
-            const imageDir = join(process.cwd(), 'public', 'images');
-            if (!existsSync(imageDir)) {
-              mkdirSync(imageDir, { recursive: true });
-            }
+            // Optimizar imagen principal (máximo 1024x1024 para reducir tamaño)
+            const optimizedBuffer = await sharp(imageBuffer)
+              .png({
+                quality: 85,
+                compressionLevel: 9
+              })
+              .resize(1024, 1024, { 
+                fit: 'inside',
+                withoutEnlargement: true 
+              })
+              .toBuffer();
             
-            const fileName = `${nanoid()}.png`;
-            const thumbnailFileName = `thumb_${fileName}`;
-            const filePath = join(imageDir, fileName);
-            const thumbnailPath = join(imageDir, thumbnailFileName);
+            optimizedImageBase64 = optimizedBuffer.toString('base64');
             
-            // Generate thumbnail for faster loading
-            await sharp(imageBuffer)
+            // Generar thumbnail optimizado
+            const thumbnailBuffer = await sharp(imageBuffer)
               .png({ 
                 quality: 60,
                 compressionLevel: 9
@@ -240,34 +247,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 fit: 'inside',
                 withoutEnlargement: true 
               })
-              .toFile(thumbnailPath);
-            
-            // Save full resolution image
-            await sharp(imageBuffer)
-              .png({ 
-                quality: 85,
-                compressionLevel: 9
-              })
-              .resize(1024, 1024, { 
-                fit: 'inside',
-                withoutEnlargement: true 
-              })
-              .toFile(filePath);
-            
-            // Use static file URL that works in deployment
-            imageUrl = `/images/${fileName}`;
-            console.log("Saved image and thumbnail as static files:", imageUrl);
-          } catch (fileError) {
-            console.error("Failed to save as static file:", fileError);
-            // Fallback to compressed base64
-            const compressedBuffer = await sharp(imageBuffer)
-              .png({ quality: 75, compressionLevel: 9 })
-              .resize(800, 800, { fit: 'inside', withoutEnlargement: true })
               .toBuffer();
             
-            const base64 = compressedBuffer.toString('base64');
-            imageUrl = `data:image/png;base64,${base64}`;
-            console.log("Fallback to compressed base64, length:", imageUrl.length);
+            thumbnailBase64 = thumbnailBuffer.toString('base64');
+            
+            // Crear URL única para servir desde base de datos
+            const imageId = nanoid();
+            imageUrl = `/api/image/${imageId}`;
+            
+            console.log("Image optimized for database storage");
+          } catch (optimizeError) {
+            console.error("Image optimization failed:", optimizeError);
+            optimizedImageBase64 = imageBuffer.toString('base64');
+            thumbnailBase64 = optimizedImageBase64;
+            const imageId = nanoid();
+            imageUrl = `/api/image/${imageId}`;
           }
         } catch (streamError) {
           console.error("Error reading async stream:", streamError);
@@ -340,6 +334,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         error: error instanceof Error ? error.message : "Failed to generate image" 
       });
+    }
+  });
+
+  // Servir imágenes desde la base de datos
+  app.get("/api/image/:id", async (req, res) => {
+    try {
+      const imageId = req.params.id;
+      const image = await storage.getGeneratedImageByUrl(`/api/image/${imageId}`);
+      
+      if (!image || !image.imageData) {
+        return res.status(404).json({ error: "Image not found" });
+      }
+      
+      // Convertir base64 a buffer y servir como imagen
+      const imageBuffer = Buffer.from(image.imageData, 'base64');
+      
+      res.set({
+        'Content-Type': 'image/png',
+        'Content-Length': imageBuffer.length,
+        'Cache-Control': 'public, max-age=86400' // Cache por 24 horas
+      });
+      
+      res.send(imageBuffer);
+    } catch (error) {
+      console.error("Error serving image:", error);
+      res.status(500).json({ error: "Failed to serve image" });
     }
   });
 

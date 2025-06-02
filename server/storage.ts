@@ -9,6 +9,7 @@ export interface IStorage {
   getGeneratedImages(): Promise<GeneratedImage[]>;
   createGeneratedImage(image: InsertImage): Promise<GeneratedImage>;
   getGeneratedImage(id: number): Promise<GeneratedImage | undefined>;
+  getGeneratedImageByUrl(url: string): Promise<GeneratedImage | undefined>;
   deleteGeneratedImage(id: number): Promise<boolean>;
 }
 
