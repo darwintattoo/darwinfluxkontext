@@ -227,6 +227,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
               <div className="flex items-center space-x-4">
                 <span>{formatDate(latestImage.createdAt)}</span>
                 <span>{latestImage.width}x{latestImage.height}</span>
+                <span>${latestImage.cost || "0.08"}</span>
               </div>
             </div>
             
@@ -358,6 +359,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
                 <div className="flex items-center justify-between text-xs text-slate-400 mt-2 mb-3">
                   <span>{formatDate(image.createdAt)}</span>
                   <span>{image.width}x{image.height}</span>
+                  <span>${image.cost || "0.08"}</span>
                 </div>
                 
                 <div className="flex items-center justify-between">

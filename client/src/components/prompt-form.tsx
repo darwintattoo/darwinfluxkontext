@@ -126,23 +126,6 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Make the monkey swing playfully from branch to branch",
       "Show the snake coiled elegantly with head raised alertly",
       "Position the owl with head turned almost completely around"
-    ],
-    lighting: [
-      "Apply professional studio lighting with key light and fill light",
-      "Create dramatic studio lighting with strong directional shadows",
-      "Add soft box studio lighting for even diffused illumination",
-      "Apply ring light studio setup for beauty lighting",
-      "Create hard studio lighting with sharp defined shadows",
-      "Add butterfly studio lighting from above the subject",
-      "Apply Rembrandt studio lighting with triangle under eye",
-      "Create split studio lighting dividing face in half",
-      "Add loop studio lighting with small nose shadow",
-      "Apply broad studio lighting illuminating near side of face",
-      "Create short studio lighting illuminating far side of face",
-      "Add rim studio lighting to separate subject from background",
-      "Apply high-key studio lighting with minimal shadows",
-      "Create low-key studio lighting with dramatic shadows",
-      "Add colored gel studio lighting with vibrant hues"
     ]
   };
 
@@ -737,18 +720,6 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
               🎨 Artistic
             </button>
             
-            <button
-              type="button"
-              onClick={() => setPromptCategory(promptCategory === 'lighting' ? '' : 'lighting')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                promptCategory === 'lighting' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
-              }`}
-            >
-              💡 Lighting
-            </button>
-            
 
           </div>
 
@@ -803,21 +774,6 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
           {promptCategory === 'style_changes' && (
             <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
               {promptSuggestions.style_changes.map((suggestion, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                  onClick={() => setPrompt(suggestion)}
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {promptCategory === 'lighting' && (
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-              {promptSuggestions.lighting.map((suggestion, index) => (
                 <button
                   key={index}
                   type="button"

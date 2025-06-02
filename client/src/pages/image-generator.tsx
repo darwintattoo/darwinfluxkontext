@@ -1,8 +1,9 @@
 import { useState, useCallback } from "react";
-import { Wand2, Circle, Globe, Upload } from "lucide-react";
+import { Wand2, Settings, Circle, Globe, Upload } from "lucide-react";
 import PromptForm from "@/components/prompt-form";
 import ImageGallery from "@/components/image-gallery";
 import ImageModal from "@/components/image-modal";
+import SettingsModal from "@/components/settings-modal";
 import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
 import type { GeneratedImage } from "@shared/schema";
 
 export default function ImageGenerator() {
+  const [showSettings, setShowSettings] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
   const [isDragOver, setIsDragOver] = useState(false);
@@ -162,7 +164,15 @@ export default function ImageGenerator() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-
+              {/* Settings Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSettings(true)}
+                className="text-slate-300 hover:text-slate-100"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>
@@ -213,7 +223,10 @@ export default function ImageGenerator() {
         onClose={() => setSelectedImage(null)}
       />
       
-
+      <SettingsModal 
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
     </div>
   );
 }
