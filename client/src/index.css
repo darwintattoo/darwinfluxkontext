@@ -52,6 +52,62 @@
   --error: 0 84% 60%; /* Rojo error */
 }
 
+/* iPad and mobile optimizations */
+@media screen and (max-width: 1024px) {
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  input, textarea, select, button {
+    -webkit-user-select: auto;
+    user-select: auto;
+  }
+
+  /* Improve touch targets */
+  button, .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better scrolling on mobile */
+  .scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+  }
+
+  /* Prevent zoom on input focus */
+  input[type="text"], 
+  input[type="email"], 
+  input[type="password"], 
+  textarea, 
+  select {
+    font-size: 16px !important;
+    transform-origin: left top;
+  }
+}
+
+/* iPad specific optimizations */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    max-width: 95% !important;
+    padding: 0 2rem;
+  }
+  
+  /* Better grid layout for iPad */
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  /* Larger touch targets for iPad */
+  .card {
+    padding: 1.5rem;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
