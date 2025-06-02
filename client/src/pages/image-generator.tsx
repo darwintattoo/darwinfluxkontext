@@ -5,7 +5,7 @@ import PromptForm from "@/components/prompt-form";
 import ImageGallery from "@/components/image-gallery";
 import ImageModal from "@/components/image-modal";
 import SettingsModal from "@/components/settings-modal";
-import { useQuery } from "@tanstack/react-query";
+import { useFastGallery } from "@/hooks/useFastGallery";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -27,16 +27,7 @@ export default function ImageGenerator() {
   const { language, setLanguage, t } = useLanguage();
   const { toast } = useToast();
 
-  const { data: images = [], isLoading, isFetching, error } = useQuery<GeneratedImage[]>({
-    queryKey: ["/api/images"],
-    refetchInterval: isGenerating ? 2000 : false, // Even faster refresh when generating
-    staleTime: 30000, // Consider data fresh for 30 seconds
-    gcTime: 600000, // Keep in cache for 10 minutes
-    retry: false, // Disable retries for faster response
-    networkMode: 'online', // Only fetch when online
-    refetchOnWindowFocus: false, // Don't refetch on window focus
-    refetchOnMount: 'always', // Always refetch on mount for fresh data
-  });
+  const { images, isLoading, isFetching, addImageToCache, refreshGallery } = useFastGallery();
 
   const hasApiKey = !!localStorage.getItem("replicate_api_token");
 

@@ -183,15 +183,11 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
         description: "Image generated successfully!",
       });
       
-      // Force immediate refresh of images with delay to ensure server processing
+      // Trigger gallery refresh after generation
       setTimeout(async () => {
-        await queryClient.invalidateQueries({ queryKey: ["/api/images"] });
-        await queryClient.refetchQueries({ queryKey: ["/api/images"] });
-        
-        // Clear all cache for this endpoint to force fresh data
-        queryClient.removeQueries({ queryKey: ["/api/images"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/images"] });
         queryClient.refetchQueries({ queryKey: ["/api/images"] });
-      }, 500);
+      }, 300);
       
       setGenerationTimer(0);
       onGenerationEnd?.();
