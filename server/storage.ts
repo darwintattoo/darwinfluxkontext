@@ -62,6 +62,11 @@ export class DatabaseStorage implements IStorage {
     return image || undefined;
   }
 
+  async getGeneratedImageByUrl(url: string): Promise<GeneratedImage | undefined> {
+    const [image] = await db.select().from(generatedImages).where(eq(generatedImages.imageUrl, url));
+    return image || undefined;
+  }
+
   async deleteGeneratedImage(id: number): Promise<boolean> {
     const result = await db.delete(generatedImages).where(eq(generatedImages.id, id));
     return result.rowCount !== null && result.rowCount > 0;

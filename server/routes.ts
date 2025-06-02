@@ -200,6 +200,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Manejar diferentes formatos de output de FLUX Kontext Max
       let imageUrl: string;
+      let optimizedImageBase64: string = "";
+      let thumbnailBase64: string = "";
       
       if (typeof output === 'string') {
         imageUrl = output;
@@ -219,8 +221,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.log("Original image buffer size:", imageBuffer.length);
           
           // Optimizar y almacenar imagen directamente en base de datos para deployment
-          let optimizedImageBase64: string;
-          let thumbnailBase64: string;
           
           try {
             // Optimizar imagen principal (máximo 1024x1024 para reducir tamaño)
@@ -308,10 +308,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Save to storage
+      // Save to storage con datos de imagen
       const savedImage = await storage.createGeneratedImage({
         prompt,
         imageUrl: imageUrl as string,
+        imageData: optimizedImageBase64 || "",
+        thumbnailData: thumbnailBase64 || "",
         inputImageUrl,
         width: inputImageUrl ? 1024 : width,
         height: inputImageUrl ? 1024 : height,
