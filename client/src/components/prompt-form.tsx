@@ -676,153 +676,235 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
       <div className="mt-6 pt-6 border-t border-slate-700">
         <h3 className="text-sm font-medium text-slate-300 mb-3">Quick Prompts</h3>
         
-        <div className="space-y-4">
-          {/* Category Buttons - Horizontal */}
-          <div className="flex flex-wrap gap-2">
+        <div className="space-y-3">
+          {/* Face Poses Category */}
+          <div>
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_poses' ? '' : 'face_poses')}
-              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                 promptCategory === 'face_poses' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300'
               }`}
             >
-              <User className="h-4 w-4 mr-2" />
-              Face Poses
+              <div className="flex items-center">
+                <User className="h-4 w-4 mr-3" />
+                Face Poses
+              </div>
+              <div className={`transition-transform duration-200 ${
+                promptCategory === 'face_poses' ? 'rotate-180' : ''
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </button>
             
+            {promptCategory === 'face_poses' && (
+              <div className="mt-2 p-3 bg-slate-800/70 rounded-lg border border-slate-600/50">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-32 overflow-y-auto">
+                  {promptSuggestions.face_poses.map((pose: any, index: number) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="flex flex-col items-center p-2 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors"
+                      onClick={() => {
+                        setPrompt(pose.prompt);
+                        setPromptCategory('');
+                      }}
+                      title={pose.prompt}
+                    >
+                      <span className="text-lg mb-1">{pose.icon}</span>
+                      <span className="text-center leading-tight">{pose.text}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Expressions Category */}
+          <div>
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'face_expressions' ? '' : 'face_expressions')}
-              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                 promptCategory === 'face_expressions' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300'
               }`}
             >
-              <Smile className="h-4 w-4 mr-2" />
-              Expressions
+              <div className="flex items-center">
+                <Smile className="h-4 w-4 mr-3" />
+                Expressions
+              </div>
+              <div className={`transition-transform duration-200 ${
+                promptCategory === 'face_expressions' ? 'rotate-180' : ''
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </button>
             
+            {promptCategory === 'face_expressions' && (
+              <div className="mt-2 p-3 bg-slate-800/70 rounded-lg border border-slate-600/50">
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                  {promptSuggestions.face_expressions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors whitespace-nowrap"
+                      onClick={() => {
+                        setPrompt(suggestion);
+                        setPromptCategory('');
+                      }}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Angles Category */}
+          <div>
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'camera_angles' ? '' : 'camera_angles')}
-              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                 promptCategory === 'camera_angles' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300'
               }`}
             >
-              <Camera className="h-4 w-4 mr-2" />
-              Angles
+              <div className="flex items-center">
+                <Camera className="h-4 w-4 mr-3" />
+                Angles
+              </div>
+              <div className={`transition-transform duration-200 ${
+                promptCategory === 'camera_angles' ? 'rotate-180' : ''
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </button>
             
+            {promptCategory === 'camera_angles' && (
+              <div className="mt-2 p-3 bg-slate-800/70 rounded-lg border border-slate-600/50">
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                  {promptSuggestions.camera_angles.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors whitespace-nowrap"
+                      onClick={() => {
+                        setPrompt(suggestion);
+                        setPromptCategory('');
+                      }}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Artistic Category */}
+          <div>
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'style_changes' ? '' : 'style_changes')}
-              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                 promptCategory === 'style_changes' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300'
               }`}
             >
-              <Palette className="h-4 w-4 mr-2" />
-              Artistic
+              <div className="flex items-center">
+                <Palette className="h-4 w-4 mr-3" />
+                Artistic
+              </div>
+              <div className={`transition-transform duration-200 ${
+                promptCategory === 'style_changes' ? 'rotate-180' : ''
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </button>
             
+            {promptCategory === 'style_changes' && (
+              <div className="mt-2 p-3 bg-slate-800/70 rounded-lg border border-slate-600/50">
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                  {promptSuggestions.style_changes.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors whitespace-nowrap"
+                      onClick={() => {
+                        setPrompt(suggestion);
+                        setPromptCategory('');
+                      }}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Lighting Category */}
+          <div>
             <button
               type="button"
               onClick={() => setPromptCategory(promptCategory === 'lighting' ? '' : 'lighting')}
-              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                 promptCategory === 'lighting' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/30'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300'
               }`}
             >
-              <Lightbulb className="h-4 w-4 mr-2" />
-              Lighting
+              <div className="flex items-center">
+                <Lightbulb className="h-4 w-4 mr-3" />
+                Lighting
+              </div>
+              <div className={`transition-transform duration-200 ${
+                promptCategory === 'lighting' ? 'rotate-180' : ''
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </button>
-
+            
+            {promptCategory === 'lighting' && (
+              <div className="mt-2 p-3 bg-slate-800/70 rounded-lg border border-slate-600/50">
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                  {promptSuggestions.lighting.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-600 rounded text-xs text-slate-300 hover:text-slate-100 transition-colors whitespace-nowrap"
+                      onClick={() => {
+                        setPrompt(suggestion);
+                        setPromptCategory('');
+                      }}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Selected Category Content */}
-          {promptCategory === 'face_poses' && (
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-32 overflow-y-auto">
-              {promptSuggestions.face_poses.map((pose: any, index: number) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="flex flex-col items-center p-2 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors"
-                  onClick={() => setPrompt(pose.prompt)}
-                  title={pose.prompt}
-                >
-                  <span className="text-lg mb-1">{pose.icon}</span>
-                  <span className="text-center leading-tight">{pose.text}</span>
-                </button>
-              ))}
-            </div>
-          )}
 
-          {promptCategory === 'face_expressions' && (
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-              {promptSuggestions.face_expressions.map((suggestion, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                  onClick={() => setPrompt(suggestion)}
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {promptCategory === 'camera_angles' && (
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-              {promptSuggestions.camera_angles.map((suggestion, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                  onClick={() => setPrompt(suggestion)}
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {promptCategory === 'style_changes' && (
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-              {promptSuggestions.style_changes.map((suggestion, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                  onClick={() => setPrompt(suggestion)}
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {promptCategory === 'lighting' && (
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-              {promptSuggestions.lighting.map((suggestion, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 rounded text-xs text-slate-300 hover:text-slate-200 transition-colors whitespace-nowrap"
-                  onClick={() => setPrompt(suggestion)}
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-          )}
 
           {promptCategory === 'general' && (
             <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
