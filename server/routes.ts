@@ -258,6 +258,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No image data provided" });
       }
 
+      // Validate base64 image data
+      if (!imageData.startsWith('data:image/')) {
+        return res.status(400).json({ error: "Invalid image data format" });
+      }
+
+      // Check file size (approximate - base64 is ~33% larger than original)
+      const sizeInBytes = (imageData.length * 3) / 4;
+      const maxSize = 5 * 1024 * 1024; // 5MB limit for faster processing
+      
+      if (sizeInBytes > maxSize) {
+        return res.status(400).json({ error: "Image too large. Maximum 5MB allowed." });
+      }
+
+      console.log(`Image uploaded successfully. Size: ${(sizeInBytes / 1024 / 1024).toFixed(2)}MB`);
+      
       // Return the base64 data URL directly for Replicate API
       res.json({ imageUrl: imageData });
     } catch (error) {

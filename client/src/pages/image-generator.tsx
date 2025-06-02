@@ -35,6 +35,43 @@ export default function ImageGenerator() {
 
   const hasApiKey = !!localStorage.getItem("replicate_api_token");
 
+  const compressImage = useCallback((file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        // Calculate optimal size (max 1024px on longest side)
+        const maxSize = 1024;
+        let { width, height } = img;
+        
+        if (width > height) {
+          if (width > maxSize) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress
+        ctx?.drawImage(img, 0, 0, width, height);
+        const compressedData = canvas.toDataURL('image/jpeg', 0.8);
+        resolve(compressedData);
+      };
+      
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
+    });
+  }, []);
+
   const handleFileUpload = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast({
@@ -45,44 +82,48 @@ export default function ImageGenerator() {
       return;
     }
 
-    try {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          const base64Data = e.target?.result as string;
-          
-          const response = await apiRequest("POST", "/api/upload", {
-            imageData: base64Data,
-          });
-          
-          if (response.ok) {
-            const result = await response.json();
-            setReferenceImageUrl(result.imageUrl);
-            toast({
-              title: language === 'es' ? 'Imagen cargada' : 'Image uploaded',
-              description: language === 'es' ? 'Ahora puedes usarla como referencia' : 'You can now use it as reference',
-            });
-          } else {
-            throw new Error("Failed to get image URL");
-          }
-        } catch (uploadError) {
-          console.error("Upload error:", uploadError);
-          toast({
-            title: language === 'es' ? 'Error' : 'Error',
-            description: language === 'es' ? 'Error al subir imagen' : 'Failed to upload image',
-            variant: "destructive",
-          });
-        }
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
       toast({
         title: language === 'es' ? 'Error' : 'Error',
-        description: language === 'es' ? 'Error al procesar imagen' : 'Failed to process image',
+        description: language === 'es' ? 'La imagen es muy grande. Máximo 10MB.' : 'Image too large. Maximum 10MB.',
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: language === 'es' ? 'Procesando...' : 'Processing...',
+      description: language === 'es' ? 'Optimizando imagen...' : 'Optimizing image...',
+    });
+
+    try {
+      // Compress image for faster upload
+      const compressedData = await compressImage(file);
+          
+      const response = await apiRequest("POST", "/api/upload", {
+        imageData: compressedData,
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        setReferenceImageUrl(result.imageUrl);
+        toast({
+          title: language === 'es' ? 'Imagen cargada' : 'Image uploaded',
+          description: language === 'es' ? 'Ahora puedes usarla como referencia' : 'You can now use it as reference',
+        });
+      } else {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast({
+        title: language === 'es' ? 'Error' : 'Error',
+        description: language === 'es' ? 'Error al subir imagen. Intenta con una imagen más pequeña.' : 'Failed to upload image. Try with a smaller image.',
         variant: "destructive",
       });
     }
-  }, [language, toast]);
+  }, [toast, language, compressImage]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
