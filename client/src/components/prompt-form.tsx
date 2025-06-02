@@ -619,7 +619,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
           disabled={generateMutation.isPending}
           className={`w-full font-bold py-6 transition-all duration-300 transform ${
             generateMutation.isPending 
-              ? 'bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white shadow-2xl shadow-red-500/50 scale-105 animate-pulse border-4 border-orange-300' 
+              ? 'bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 text-white shadow-2xl shadow-blue-500/50 scale-105 animate-pulse border-4 border-blue-300' 
               : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-105'
           }`}
         >
@@ -634,7 +634,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                       cy="18"
                       r="16"
                       fill="none"
-                      className="stroke-orange-200/40"
+                      className="stroke-blue-200/40"
                       strokeWidth="4"
                     />
                     <circle
@@ -656,7 +656,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
                   <div className="text-xl font-bold text-white tracking-wide">
                     🎨 {language === 'es' ? 'GENERANDO IMAGEN' : 'GENERATING IMAGE'}
                   </div>
-                  <div className="text-base text-orange-100 font-mono mt-2 bg-black/20 px-3 py-1 rounded-full">
+                  <div className="text-base text-blue-100 font-mono mt-2 bg-black/20 px-3 py-1 rounded-full">
                     {Math.floor(generationTimer / 60)}:{String(generationTimer % 60).padStart(2, '0')} • {Math.round((generationTimer / 120) * 100)}%
                   </div>
                 </div>
