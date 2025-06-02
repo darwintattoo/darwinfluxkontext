@@ -107,7 +107,8 @@ export default function PromptForm({ referenceImageUrl }: PromptFormProps) {
       "Apply minimalist line art style",
       "Convert to vintage engraving illustration style",
       "Transform to digital vector art with clean shapes",
-      "A hyper-realistic Engraving 3D monochrome illustration"
+      "A hyper-realistic Engraving 3D monochrome illustration",
+      "Hyper-realistic 3D wood-engraving illustration"
     ],
     animals: [
       "Make the cat sit upright with perfect posture and alert ears",
