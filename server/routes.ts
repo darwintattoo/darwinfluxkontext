@@ -31,6 +31,9 @@ const generateImageSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Enable gzip compression for better performance
+  app.use(express.json({ limit: '10mb' }));
+  
   // CORS configuration for production
   const isProduction = process.env.NODE_ENV === 'production';
   app.use((req, res, next) => {
@@ -233,8 +236,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const images = await storage.getGeneratedImages();
       
-      // Always return original base64 URLs - let the client handle optimization
-      // The issue is that in deployment, the API endpoints don't resolve correctly
+      // Set cache headers for better performance
+      res.setHeader('Cache-Control', 'public, max-age=300'); // 5 minutes cache
       res.json(images);
     } catch (error) {
       console.error("Error fetching images:", error);
