@@ -8,10 +8,11 @@ interface OptimizedImageProps {
 }
 
 export default function OptimizedImage({ src, alt, className = "", onClick }: OptimizedImageProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
+  const [fullImageLoaded, setFullImageLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
 
   // Generate thumbnail URL
   const getThumbnailUrl = (originalUrl: string) => {
@@ -79,7 +80,7 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
           src={src}
           alt={alt}
           className={`w-full h-auto min-h-[400px] object-cover transition-opacity duration-500 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
+            fullImageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={() => {
             setIsLoaded(true);
