@@ -6,6 +6,7 @@ import { insertImageSchema } from "@shared/schema";
 import { z } from "zod";
 import Replicate from "replicate";
 import { join } from 'path';
+import { existsSync, readFileSync } from 'fs';
 import sharp from 'sharp';
 
 const generateImageSchema = z.object({
