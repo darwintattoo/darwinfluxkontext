@@ -354,31 +354,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Servir imágenes desde la base de datos
-  app.get("/api/image/:id", async (req, res) => {
-    try {
-      const imageId = req.params.id;
-      const image = await storage.getGeneratedImageByUrl(`/api/image/${imageId}`);
-      
-      if (!image || !image.imageData) {
-        return res.status(404).json({ error: "Image not found" });
-      }
-      
-      // Convertir base64 a buffer y servir como imagen
-      const imageBuffer = Buffer.from(image.imageData, 'base64');
-      
-      res.set({
-        'Content-Type': 'image/png',
-        'Content-Length': imageBuffer.length,
-        'Cache-Control': 'public, max-age=86400' // Cache por 24 horas
-      });
-      
-      res.send(imageBuffer);
-    } catch (error) {
-      console.error("Error serving image:", error);
-      res.status(500).json({ error: "Failed to serve image" });
-    }
-  });
+
 
   // Delete an image
   app.delete("/api/images/:id", async (req, res) => {

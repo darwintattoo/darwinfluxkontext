@@ -35,7 +35,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
   React.useEffect(() => {
     if (referenceImageUrl) {
       setInputImageUrl(referenceImageUrl);
-      setPrompt("Change the expression to a warm, genuine smile");
+      setPrompt("Front view looking directly at camera, keep the same composition and elements");
       setAspectRatio("match_input_image"); // Mantener las proporciones de la imagen subida
     }
   }, [referenceImageUrl]);
