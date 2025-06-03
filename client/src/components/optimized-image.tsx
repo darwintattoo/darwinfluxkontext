@@ -5,9 +5,10 @@ interface OptimizedImageProps {
   alt: string;
   className?: string;
   onClick?: () => void;
+  onLoad?: () => void;
 }
 
-export default function OptimizedImage({ src, alt, className = "", onClick }: OptimizedImageProps) {
+export default function OptimizedImage({ src, alt, className = "", onClick, onLoad }: OptimizedImageProps) {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const [fullImageLoaded, setFullImageLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
@@ -74,6 +75,7 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
           onLoad={() => {
             setFullImageLoaded(true);
             setLoadingProgress(100);
+            onLoad?.();
           }}
           loading="lazy"
           decoding="async"

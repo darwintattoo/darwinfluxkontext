@@ -15,6 +15,7 @@ interface PromptFormProps {
   referenceImageUrl?: string;
   onGenerationStart?: () => void;
   onGenerationEnd?: () => void;
+  onImageReady?: () => void;
 }
 
 export default function PromptForm({ referenceImageUrl, onGenerationStart, onGenerationEnd }: PromptFormProps) {
@@ -191,6 +192,7 @@ export default function PromptForm({ referenceImageUrl, onGenerationStart, onGen
       queryClient.refetchQueries({ queryKey: ["/api/images"] });
       setGenerationTimer(0);
       onGenerationEnd?.();
+      onImageReady?.(); // Llamar cuando la imagen esté lista para mostrar
     },
     onError: (error: any) => {
       toast({

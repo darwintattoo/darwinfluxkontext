@@ -25,6 +25,7 @@ export default function ImageGenerator() {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isLoadingGeneratedImage, setIsLoadingGeneratedImage] = useState(false);
+  const [latestImageLoaded, setLatestImageLoaded] = useState(true);
   const { language, setLanguage, t } = useLanguage();
   const { toast } = useToast();
 
