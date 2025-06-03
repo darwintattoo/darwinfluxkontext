@@ -62,13 +62,13 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
   }, []);
 
   return (
-    <div className={`relative min-h-[400px] ${className}`} ref={imgRef} onClick={onClick}>
-      {/* Solo imagen de alta calidad - sin thumbnails borrosos */}
+    <div className={`relative ${className}`} ref={imgRef} onClick={onClick}>
+      {/* Solo imagen de alta calidad en tamaño original */}
       {isInView && (
         <img 
           src={src}
           alt={alt}
-          className={`w-full h-auto min-h-[400px] object-cover transition-opacity duration-500 ${
+          className={`w-auto h-auto max-w-full transition-opacity duration-500 ${
             fullImageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={() => {
@@ -80,13 +80,13 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
         />
       )}
       
-      {/* Loading indicator mientras carga la imagen de alta calidad */}
+      {/* Loading indicator mientras carga la imagen */}
       {isInView && !fullImageLoaded && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 min-h-[400px]">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 min-h-[300px]">
           <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-4" />
           <div className="text-center">
             <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Cargando imagen de alta calidad...
+              Cargando imagen...
             </div>
             <div className="w-32 bg-gray-300 dark:bg-gray-600 rounded-full h-2">
               <div 
@@ -103,7 +103,7 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
       
       {/* Placeholder cuando no está en vista */}
       {!isInView && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 min-h-[400px]">
+        <div className="flex items-center justify-center bg-gray-100 dark:bg-gray-800 min-h-[300px] w-full">
           <div className="text-gray-500 dark:text-gray-400">Imagen</div>
         </div>
       )}
