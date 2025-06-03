@@ -136,51 +136,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
 
   return (
     <div className="space-y-6">
-      {/* Generation Loading State */}
-      {isGenerating && (
-        <div className="bg-gradient-to-br from-blue-500/30 via-blue-600/30 to-indigo-600/30 backdrop-blur-sm rounded-2xl border-4 border-blue-400/50 p-8 shadow-2xl shadow-blue-500/30 animate-pulse">
-          <div className="flex flex-col items-center justify-center space-y-6">
-            <div className="relative">
-              <svg className="w-20 h-20 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="16"
-                  fill="none"
-                  className="stroke-blue-300/40"
-                  strokeWidth="4"
-                />
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="16"
-                  fill="none"
-                  className="stroke-blue-400"
-                  strokeWidth="4"
-                  strokeDasharray="70 30"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 bg-blue-400 rounded-full animate-bounce"></div>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-200 mb-2 tracking-wide">
-                PROCESANDO NUEVA IMAGEN
-              </div>
-              <div className="text-lg text-blue-300 font-medium bg-black/30 px-4 py-2 rounded-full">
-                La imagen aparecerá aquí cuando esté lista
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce"></div>
-              <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-              <div className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Image Loading State - Después de generar */}
       {isLoadingGeneratedImage && (
