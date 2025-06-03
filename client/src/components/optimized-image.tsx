@@ -14,6 +14,11 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
 
   // Generate thumbnail URL
   const getThumbnailUrl = (originalUrl: string) => {
+    // Si es una URL base64, usar directamente
+    if (originalUrl.startsWith('data:image')) {
+      return originalUrl;
+    }
+    // Para URLs de archivos antiguos
     if (originalUrl.includes('/images/')) {
       const filename = originalUrl.split('/images/')[1];
       return `/images/thumb_${filename}`;
