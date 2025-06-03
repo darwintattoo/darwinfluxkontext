@@ -140,45 +140,16 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
 
       {/* Image Loading State - Después de generar */}
       {isLoadingGeneratedImage && (
-        <div className="bg-gradient-to-br from-green-500/30 via-green-600/30 to-emerald-600/30 backdrop-blur-sm rounded-2xl border-4 border-green-400/50 p-8 shadow-2xl shadow-green-500/30">
-          <div className="flex flex-col items-center justify-center space-y-6">
-            <div className="relative">
-              <svg className="w-20 h-20 transform -rotate-90 animate-spin" viewBox="0 0 36 36">
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="16"
-                  fill="none"
-                  className="stroke-green-300/40"
-                  strokeWidth="4"
-                />
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="16"
-                  fill="none"
-                  className="stroke-green-400"
-                  strokeWidth="4"
-                  strokeDasharray="60 40"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 bg-green-400 rounded-full animate-pulse"></div>
-              </div>
-            </div>
+        <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-6">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="w-6 h-6 border-2 border-green-400 border-t-transparent rounded-full animate-spin"></div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-200 mb-2 tracking-wide">
-                CARGANDO IMAGEN FINAL
+              <div className="text-lg font-medium text-green-400 mb-1">
+                Preparando imagen
               </div>
-              <div className="text-lg text-green-300 font-medium bg-black/30 px-4 py-2 rounded-full">
-                Imagen generada exitosamente • Preparando visualización
+              <div className="text-sm text-slate-400">
+                Imagen generada exitosamente
               </div>
-            </div>
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 bg-green-400 rounded-full animate-bounce"></div>
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-              <div className="w-3 h-3 bg-emerald-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
             </div>
           </div>
         </div>
