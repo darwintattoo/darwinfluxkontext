@@ -186,7 +186,11 @@ export default function ImageGenerator() {
         <div className="block lg:hidden space-y-6">
           {/* Form Section - Non-sticky on mobile */}
           <div className="w-full">
-            <PromptForm referenceImageUrl={referenceImageUrl} />
+            <PromptForm 
+              referenceImageUrl={referenceImageUrl} 
+              onGenerationStart={() => setIsGenerating(true)}
+              onGenerationEnd={() => setIsGenerating(false)}
+            />
           </div>
           
           {/* Gallery Section */}
@@ -194,6 +198,7 @@ export default function ImageGenerator() {
             <ImageGallery 
               images={images} 
               isLoading={isLoading}
+              isGenerating={isGenerating}
               onImageSelect={setSelectedImage}
               onUseAsReference={setReferenceImageUrl}
             />
