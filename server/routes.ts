@@ -251,17 +251,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
             thumbnailBase64 = thumbnailBuffer.toString('base64');
             
-            // Crear URL única para servir desde base de datos
-            const imageId = nanoid();
-            imageUrl = `/api/image/${imageId}`;
+            // Usar la imagen como base64 directamente
+            imageUrl = `data:image/png;base64,${optimizedImageBase64}`;
             
             console.log("Image optimized for database storage");
           } catch (optimizeError) {
             console.error("Image optimization failed:", optimizeError);
             optimizedImageBase64 = imageBuffer.toString('base64');
             thumbnailBase64 = optimizedImageBase64;
-            const imageId = nanoid();
-            imageUrl = `/api/image/${imageId}`;
+            imageUrl = `data:image/png;base64,${optimizedImageBase64}`;
           }
 
           // Guardar en base de datos inmediatamente después de procesar
