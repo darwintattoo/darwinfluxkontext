@@ -78,9 +78,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const images = await storage.getGeneratedImages();
       
-      // Always return original base64 URLs - let the client handle optimization
-      // The issue is that in deployment, the API endpoints don't resolve correctly
-      res.json(images);
+      // Para deployment, enviar solo metadatos y URLs del servidor
+      const optimizedImages = images.map(image => ({
+        ...image,
+        imageUrl: `/api/image/${image.id}`, // Usar ruta del servidor
+        imageData: null, // No enviar base64 en la lista
+        thumbnailData: null // No enviar thumbnail en la lista
+      }));
+      
+      res.json(optimizedImages);
     } catch (error) {
       console.error("Error fetching images:", error);
       res.status(500).json({ error: "Failed to fetch images" });
