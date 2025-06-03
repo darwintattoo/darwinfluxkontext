@@ -63,19 +63,7 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
 
   return (
     <div className={`relative min-h-[400px] ${className}`} ref={imgRef} onClick={onClick}>
-      {/* Thumbnail para carga rápida */}
-      <img 
-        src={thumbnailUrl}
-        alt={alt}
-        className={`absolute inset-0 w-full h-auto min-h-[400px] object-cover transition-opacity duration-300 ${
-          fullImageLoaded ? 'opacity-0' : 'opacity-100'
-        }`}
-        onLoad={() => setThumbnailLoaded(true)}
-        loading="lazy"
-        decoding="async"
-      />
-      
-      {/* Full Resolution Image */}
+      {/* Solo imagen de alta calidad - sin thumbnails borrosos */}
       {isInView && (
         <img 
           src={src}
@@ -92,24 +80,31 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
         />
       )}
       
-      {/* Loading indicator con progreso */}
+      {/* Loading indicator mientras carga la imagen de alta calidad */}
       {isInView && !fullImageLoaded && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-800/50 min-h-[400px]">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 min-h-[400px]">
           <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-4" />
           <div className="text-center">
-            <div className="text-sm font-medium text-white mb-2">
+            <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Cargando imagen de alta calidad...
             </div>
-            <div className="w-32 bg-gray-600 rounded-full h-2">
+            <div className="w-32 bg-gray-300 dark:bg-gray-600 rounded-full h-2">
               <div 
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${Math.min(loadingProgress, 100)}%` }}
               />
             </div>
-            <div className="text-xs text-gray-300 mt-1">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               {Math.round(loadingProgress)}%
             </div>
           </div>
+        </div>
+      )}
+      
+      {/* Placeholder cuando no está en vista */}
+      {!isInView && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 min-h-[400px]">
+          <div className="text-gray-500 dark:text-gray-400">Imagen</div>
         </div>
       )}
     </div>
