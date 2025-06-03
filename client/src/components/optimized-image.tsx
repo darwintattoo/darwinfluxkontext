@@ -63,13 +63,14 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
 
   return (
     <div className={`relative min-h-[400px] ${className}`} ref={imgRef} onClick={onClick}>
-      {/* Placeholder/Thumbnail */}
+      {/* Thumbnail para carga rápida */}
       <img 
-        src={isInView ? thumbnailUrl : ''}
+        src={thumbnailUrl}
         alt={alt}
-        className={`w-full h-auto min-h-[400px] object-cover transition-opacity duration-300 ${
-          isLoaded ? 'opacity-0 absolute inset-0' : 'opacity-100'
+        className={`absolute inset-0 w-full h-auto min-h-[400px] object-cover transition-opacity duration-300 ${
+          fullImageLoaded ? 'opacity-0' : 'opacity-100'
         }`}
+        onLoad={() => setThumbnailLoaded(true)}
         loading="lazy"
         decoding="async"
       />
@@ -83,7 +84,7 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
             fullImageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={() => {
-            setIsLoaded(true);
+            setFullImageLoaded(true);
             setLoadingProgress(100);
           }}
           loading="lazy"
@@ -92,7 +93,7 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
       )}
       
       {/* Loading indicator con progreso */}
-      {isInView && !isLoaded && (
+      {isInView && !fullImageLoaded && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-800/50 min-h-[400px]">
           <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-4" />
           <div className="text-center">
