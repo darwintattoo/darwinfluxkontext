@@ -223,13 +223,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Optimizar y almacenar imagen directamente en base de datos para deployment
           
           try {
-            // Optimizar imagen principal (máximo 1024x1024 para reducir tamaño)
+            // Optimizar imagen principal con compresión más agresiva
             const optimizedBuffer = await sharp(imageBuffer)
-              .png({
-                quality: 85,
-                compressionLevel: 9
+              .jpeg({
+                quality: 60,
+                progressive: true
               })
-              .resize(1024, 1024, { 
+              .resize(800, 800, { 
                 fit: 'inside',
                 withoutEnlargement: true 
               })
@@ -237,22 +237,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
             optimizedImageBase64 = optimizedBuffer.toString('base64');
             
-            // Generar thumbnail optimizado
+            // Generar thumbnail muy pequeño para la galería (200x200, calidad baja)
             const thumbnailBuffer = await sharp(imageBuffer)
-              .png({ 
-                quality: 60,
-                compressionLevel: 9
+              .jpeg({ 
+                quality: 30,
+                progressive: true
               })
-              .resize(400, 400, { 
-                fit: 'inside',
+              .resize(200, 200, { 
+                fit: 'cover',
                 withoutEnlargement: true 
               })
               .toBuffer();
             
             thumbnailBase64 = thumbnailBuffer.toString('base64');
             
-            // Usar la imagen como base64 directamente
-            imageUrl = `data:image/png;base64,${optimizedImageBase64}`;
+            // Usar thumbnail pequeño para la galería
+            imageUrl = `data:image/jpeg;base64,${thumbnailBase64}`;
             
             console.log("Image optimized for database storage");
           } catch (optimizeError) {
@@ -355,6 +355,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
 
+
+  // Servir imagen completa por ID
+  app.get("/api/images/:id/full", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "Invalid image ID" });
+      }
+      
+      const image = await storage.getGeneratedImage(id);
+      
+      if (!image || !image.imageData) {
+        return res.status(404).json({ error: "Image not found" });
+      }
+      
+      // Convertir base64 a buffer y servir como imagen
+      const imageBuffer = Buffer.from(image.imageData, 'base64');
+      
+      res.set({
+        'Content-Type': 'image/jpeg',
+        'Content-Length': imageBuffer.length,
+        'Cache-Control': 'public, max-age=3600'
+      });
+      
+      res.send(imageBuffer);
+    } catch (error) {
+      console.error("Error serving full image:", error);
+      res.status(500).json({ error: "Failed to serve image" });
+    }
+  });
 
   // Delete an image
   app.delete("/api/images/:id", async (req, res) => {
