@@ -29,7 +29,8 @@ export default function ImageGenerator() {
 
   const { data: images = [], isLoading, isFetching } = useQuery<GeneratedImage[]>({
     queryKey: ["/api/images"],
-    refetchInterval: 2000, // Auto-refresh every 2 seconds when generating
+    refetchInterval: isGenerating ? 3000 : false, // Solo refrescar cuando se está generando
+    staleTime: 30000, // Considerar datos válidos por 30 segundos
   });
 
   const hasApiKey = !!localStorage.getItem("replicate_api_token");
