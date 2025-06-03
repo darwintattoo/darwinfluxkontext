@@ -220,43 +220,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const imageBuffer = Buffer.concat(chunks);
           console.log("Original image buffer size:", imageBuffer.length);
           
-          // Optimizar y almacenar imagen directamente en base de datos para deployment
+          // Guardar imagen exactamente como la genera Replicate - SIN COMPRESIÓN
+          optimizedImageBase64 = imageBuffer.toString('base64');
+          thumbnailBase64 = optimizedImageBase64;
+          imageUrl = `data:image/png;base64,${optimizedImageBase64}`;
           
-          try {
-            // Mantener tamaño original y máxima calidad
-            const optimizedBuffer = await sharp(imageBuffer)
-              .jpeg({
-                quality: 98,
-                progressive: true
-              })
-              .toBuffer();
-            
-            optimizedImageBase64 = optimizedBuffer.toString('base64');
-            
-            // Generar thumbnail muy pequeño para la galería (200x200, calidad baja)
-            const thumbnailBuffer = await sharp(imageBuffer)
-              .jpeg({ 
-                quality: 30,
-                progressive: true
-              })
-              .resize(200, 200, { 
-                fit: 'cover',
-                withoutEnlargement: true 
-              })
-              .toBuffer();
-            
-            thumbnailBase64 = thumbnailBuffer.toString('base64');
-            
-            // Usar thumbnail pequeño para la galería
-            imageUrl = `data:image/jpeg;base64,${thumbnailBase64}`;
-            
-            console.log("Image optimized for database storage");
-          } catch (optimizeError) {
-            console.error("Image optimization failed:", optimizeError);
-            optimizedImageBase64 = imageBuffer.toString('base64');
-            thumbnailBase64 = optimizedImageBase64;
-            imageUrl = `data:image/png;base64,${optimizedImageBase64}`;
-          }
+          console.log("Image saved without any compression or processing");
 
           // Guardar en base de datos inmediatamente después de procesar
           const savedImage = await storage.createGeneratedImage({
