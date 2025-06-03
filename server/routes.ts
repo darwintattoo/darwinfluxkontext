@@ -2,13 +2,10 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { imageStorage } from "./imageStorage";
 import { insertImageSchema } from "@shared/schema";
 import { z } from "zod";
 import Replicate from "replicate";
-import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { nanoid } from 'nanoid';
 import sharp from 'sharp';
 
 const generateImageSchema = z.object({
