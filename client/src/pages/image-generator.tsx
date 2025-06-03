@@ -24,6 +24,7 @@ export default function ImageGenerator() {
   const [referenceImageUrl, setReferenceImageUrl] = useState<string>("");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isLoadingGeneratedImage, setIsLoadingGeneratedImage] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { toast } = useToast();
 
@@ -189,7 +190,11 @@ export default function ImageGenerator() {
             <PromptForm 
               referenceImageUrl={referenceImageUrl} 
               onGenerationStart={() => setIsGenerating(true)}
-              onGenerationEnd={() => setIsGenerating(false)}
+              onGenerationEnd={() => {
+                setIsGenerating(false);
+                setIsLoadingGeneratedImage(true);
+                setTimeout(() => setIsLoadingGeneratedImage(false), 2000);
+              }}
             />
           </div>
           
@@ -199,6 +204,7 @@ export default function ImageGenerator() {
               images={images} 
               isLoading={isLoading}
               isGenerating={isGenerating}
+              isLoadingGeneratedImage={isLoadingGeneratedImage}
               onImageSelect={setSelectedImage}
               onUseAsReference={setReferenceImageUrl}
             />
@@ -212,7 +218,11 @@ export default function ImageGenerator() {
             <PromptForm 
               referenceImageUrl={referenceImageUrl} 
               onGenerationStart={() => setIsGenerating(true)}
-              onGenerationEnd={() => setIsGenerating(false)}
+              onGenerationEnd={() => {
+                setIsGenerating(false);
+                setIsLoadingGeneratedImage(true);
+                setTimeout(() => setIsLoadingGeneratedImage(false), 2000);
+              }}
             />
           </div>
 
@@ -221,9 +231,10 @@ export default function ImageGenerator() {
             <ImageGallery 
               images={images} 
               isLoading={isLoading}
+              isGenerating={isGenerating}
+              isLoadingGeneratedImage={isLoadingGeneratedImage}
               onImageSelect={setSelectedImage}
               onUseAsReference={setReferenceImageUrl}
-              isGenerating={isGenerating}
             />
           </div>
         </div>

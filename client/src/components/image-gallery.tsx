@@ -13,9 +13,10 @@ interface ImageGalleryProps {
   onImageSelect: (image: GeneratedImage) => void;
   onUseAsReference?: (imageUrl: string) => void;
   isGenerating?: boolean;
+  isLoadingGeneratedImage?: boolean;
 }
 
-export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference, isGenerating }: ImageGalleryProps) {
+export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference, isGenerating, isLoadingGeneratedImage }: ImageGalleryProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
