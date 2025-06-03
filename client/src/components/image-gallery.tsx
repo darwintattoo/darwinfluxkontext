@@ -17,7 +17,7 @@ interface ImageGalleryProps {
   onLatestImageLoad?: () => void;
 }
 
-export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference, isGenerating, isLoadingGeneratedImage }: ImageGalleryProps) {
+export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference, isGenerating, isLoadingGeneratedImage, onLatestImageLoad }: ImageGalleryProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -186,6 +186,7 @@ export default function ImageGallery({ images, isLoading, onImageSelect, onUseAs
               alt={latestImage.prompt}
               className="cursor-pointer transition-transform duration-300 group-hover:scale-105"
               onClick={() => onImageSelect(latestImage)}
+              onLoad={onLatestImageLoad}
             />
             
             {/* Image Actions Overlay */}
