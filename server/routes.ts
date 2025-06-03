@@ -223,13 +223,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Optimizar y almacenar imagen directamente en base de datos para deployment
           
           try {
-            // Optimizar imagen principal manteniendo buena calidad
+            // Mantener máxima calidad de imagen
             const optimizedBuffer = await sharp(imageBuffer)
               .jpeg({
-                quality: 85,
+                quality: 98,
                 progressive: true
               })
-              .resize(1200, 1200, { 
+              .resize(1600, 1600, { 
                 fit: 'inside',
                 withoutEnlargement: true 
               })
