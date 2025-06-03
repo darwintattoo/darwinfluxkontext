@@ -2,7 +2,6 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertImageSchema } from "@shared/schema";
 import { z } from "zod";
 import Replicate from "replicate";
 import { join } from 'path';
