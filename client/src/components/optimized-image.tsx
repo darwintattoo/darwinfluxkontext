@@ -10,6 +10,7 @@ interface OptimizedImageProps {
 export default function OptimizedImage({ src, alt, className = "", onClick }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const imgRef = useRef<HTMLImageElement>(null);
 
   // Generate thumbnail URL
@@ -35,6 +36,16 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsInView(true);
+            // Simular progreso de carga
+            const interval = setInterval(() => {
+              setLoadingProgress(prev => {
+                if (prev >= 90) {
+                  clearInterval(interval);
+                  return prev;
+                }
+                return prev + Math.random() * 15;
+              });
+            }, 150);
             observer.unobserve(entry.target);
           }
         });
@@ -70,16 +81,33 @@ export default function OptimizedImage({ src, alt, className = "", onClick }: Op
           className={`w-full h-auto min-h-[400px] object-cover transition-opacity duration-500 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
-          onLoad={() => setIsLoaded(true)}
+          onLoad={() => {
+            setIsLoaded(true);
+            setLoadingProgress(100);
+          }}
           loading="lazy"
           decoding="async"
         />
       )}
       
-      {/* Loading indicator */}
+      {/* Loading indicator con progreso */}
       {isInView && !isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-800/50 min-h-[400px]">
-          <div className="animate-spin w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-800/50 min-h-[400px]">
+          <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-4" />
+          <div className="text-center">
+            <div className="text-sm font-medium text-white mb-2">
+              Cargando imagen de alta calidad...
+            </div>
+            <div className="w-32 bg-gray-600 rounded-full h-2">
+              <div 
+                className="bg-blue-500 h-2 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${Math.min(loadingProgress, 100)}%` }}
+              />
+            </div>
+            <div className="text-xs text-gray-300 mt-1">
+              {Math.round(loadingProgress)}%
+            </div>
+          </div>
         </div>
       )}
     </div>
