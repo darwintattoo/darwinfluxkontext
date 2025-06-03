@@ -34,22 +34,11 @@ export class DatabaseStorage implements IStorage {
 
   async getGeneratedImages(): Promise<GeneratedImage[]> {
     const images = await db
-      .select({
-        id: generatedImages.id,
-        prompt: generatedImages.prompt,
-        imageUrl: generatedImages.imageUrl,
-        inputImageUrl: generatedImages.inputImageUrl,
-        width: generatedImages.width,
-        height: generatedImages.height,
-        aspectRatio: generatedImages.aspectRatio,
-        cost: generatedImages.cost,
-        createdAt: generatedImages.createdAt,
-        // Excluir imageData y thumbnailData para mejorar rendimiento
-      })
+      .select()
       .from(generatedImages)
       .orderBy(desc(generatedImages.createdAt))
       .limit(20);
-    return images as GeneratedImage[];
+    return images;
   }
 
   async createGeneratedImage(insertImage: InsertImage): Promise<GeneratedImage> {
