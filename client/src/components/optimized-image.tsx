@@ -62,6 +62,13 @@ export default function OptimizedImage({ src, alt, className = "", onClick, onLo
     return () => observer.disconnect();
   }, []);
 
+  // Log image info for debugging
+  useEffect(() => {
+    if (src && src.startsWith('data:image')) {
+      console.log('Loading base64 image, size:', src.length, 'bytes');
+    }
+  }, [src]);
+
   return (
     <div className={`relative ${className}`} ref={imgRef} onClick={onClick}>
       {/* Solo imagen de alta calidad en tamaño original */}
@@ -76,6 +83,9 @@ export default function OptimizedImage({ src, alt, className = "", onClick, onLo
             setFullImageLoaded(true);
             setLoadingProgress(100);
             onLoad?.();
+          }}
+          onError={(e) => {
+            console.error('Error loading image:', src.substring(0, 100), e);
           }}
           loading="lazy"
           decoding="async"
