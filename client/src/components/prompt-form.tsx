@@ -18,7 +18,7 @@ interface PromptFormProps {
   onImageReady?: () => void;
 }
 
-export default function PromptForm({ referenceImageUrl, onGenerationStart, onGenerationEnd }: PromptFormProps) {
+export default function PromptForm({ referenceImageUrl, onGenerationStart, onGenerationEnd, onImageReady }: PromptFormProps) {
   const [prompt, setPrompt] = useState("Front view looking directly at camera, keep the same composition and elements");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [imageSize, setImageSize] = useState("1024x1024");

@@ -14,6 +14,7 @@ interface ImageGalleryProps {
   onUseAsReference?: (imageUrl: string) => void;
   isGenerating?: boolean;
   isLoadingGeneratedImage?: boolean;
+  onLatestImageLoad?: () => void;
 }
 
 export default function ImageGallery({ images, isLoading, onImageSelect, onUseAsReference, isGenerating, isLoadingGeneratedImage }: ImageGalleryProps) {

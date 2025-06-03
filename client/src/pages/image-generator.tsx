@@ -191,10 +191,10 @@ export default function ImageGenerator() {
             <PromptForm 
               referenceImageUrl={referenceImageUrl} 
               onGenerationStart={() => setIsGenerating(true)}
-              onGenerationEnd={() => {
-                setIsGenerating(false);
+              onGenerationEnd={() => setIsGenerating(false)}
+              onImageReady={() => {
+                setLatestImageLoaded(false);
                 setIsLoadingGeneratedImage(true);
-                setTimeout(() => setIsLoadingGeneratedImage(false), 2000);
               }}
             />
           </div>
@@ -208,6 +208,10 @@ export default function ImageGenerator() {
               isLoadingGeneratedImage={isLoadingGeneratedImage}
               onImageSelect={setSelectedImage}
               onUseAsReference={setReferenceImageUrl}
+              onLatestImageLoad={() => {
+                setIsLoadingGeneratedImage(false);
+                setLatestImageLoaded(true);
+              }}
             />
           </div>
         </div>
@@ -219,10 +223,10 @@ export default function ImageGenerator() {
             <PromptForm 
               referenceImageUrl={referenceImageUrl} 
               onGenerationStart={() => setIsGenerating(true)}
-              onGenerationEnd={() => {
-                setIsGenerating(false);
+              onGenerationEnd={() => setIsGenerating(false)}
+              onImageReady={() => {
+                setLatestImageLoaded(false);
                 setIsLoadingGeneratedImage(true);
-                setTimeout(() => setIsLoadingGeneratedImage(false), 2000);
               }}
             />
           </div>
@@ -236,6 +240,10 @@ export default function ImageGenerator() {
               isLoadingGeneratedImage={isLoadingGeneratedImage}
               onImageSelect={setSelectedImage}
               onUseAsReference={setReferenceImageUrl}
+              onLatestImageLoad={() => {
+                setIsLoadingGeneratedImage(false);
+                setLatestImageLoaded(true);
+              }}
             />
           </div>
         </div>
