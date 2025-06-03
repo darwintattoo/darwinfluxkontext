@@ -220,12 +220,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const imageBuffer = Buffer.concat(chunks);
           console.log("Original image buffer size:", imageBuffer.length);
           
-          // Guardar imagen exactamente como la genera Replicate - SIN COMPRESIÓN
-          optimizedImageBase64 = imageBuffer.toString('base64');
-          thumbnailBase64 = optimizedImageBase64;
-          imageUrl = `data:image/png;base64,${optimizedImageBase64}`;
+          // Optimizar imagen para web sin perder calidad visual
+          const optimizedBuffer = await sharp(imageBuffer)
+            .jpeg({ quality: 92, progressive: true })
+            .toBuffer();
           
-          console.log("Image saved without any compression or processing");
+          optimizedImageBase64 = optimizedBuffer.toString('base64');
+          thumbnailBase64 = optimizedImageBase64;
+          imageUrl = `data:image/jpeg;base64,${optimizedImageBase64}`;
+          
+          console.log(`Image optimized: ${imageBuffer.length} -> ${optimizedBuffer.length} bytes (${Math.round((1 - optimizedBuffer.length/imageBuffer.length) * 100)}% reduction)`);
 
           // Guardar en base de datos inmediatamente después de procesar
           const savedImage = await storage.createGeneratedImage({
